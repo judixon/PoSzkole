@@ -1,0 +1,49 @@
+package com.tomekw.poszkole.timetable;
+
+import com.tomekw.poszkole.users.teacher.Teacher;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GeneratorType;
+
+import javax.persistence.*;
+import java.awt.*;
+import java.util.List;
+import java.util.Objects;
+
+@Entity
+@NoArgsConstructor
+@Data
+public class Timetable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
+    private List<Week> weekList;
+
+    @OneToOne(mappedBy = "timetable",fetch = FetchType.LAZY)
+    private Teacher teacher;
+
+    @Override
+    public String toString() {
+        return "Timetable{" +
+                "id=" + id +
+                ", weekList=" + weekList +
+                ", teacher=" + teacher.getId() +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Timetable timetable = (Timetable) o;
+        return id.equals(timetable.id)  && teacher.getId().equals(timetable.teacher.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, teacher.getId());
+    }
+}
