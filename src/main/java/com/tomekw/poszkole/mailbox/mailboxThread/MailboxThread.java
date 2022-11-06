@@ -2,21 +2,27 @@ package com.tomekw.poszkole.mailbox.mailboxThread;
 
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.mailbox.mailboxMessage.MailboxMessage;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
 public class MailboxThread {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "mailboxThread")
     private List<MailboxMessage> mailboxMessageList;
 
-    @ManyToMany
-    private Mailbox mailbox;
+    @ManyToMany(mappedBy = "mailboxThreadList")
+    private List<Mailbox> mailboxList;
 
+    public MailboxThread(List<MailboxMessage> mailboxMessageList, List<Mailbox> mailboxList) {
+        this.mailboxMessageList = mailboxMessageList;
+        this.mailboxList = mailboxList;
+    }
 }

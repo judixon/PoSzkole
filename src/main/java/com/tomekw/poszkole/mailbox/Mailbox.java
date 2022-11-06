@@ -1,7 +1,5 @@
 package com.tomekw.poszkole.mailbox;
 
-
-import com.tomekw.poszkole.mailbox.mailboxMessage.MailboxMessage;
 import com.tomekw.poszkole.mailbox.mailboxThread.MailboxThread;
 import com.tomekw.poszkole.users.User;
 import lombok.Data;
@@ -27,10 +25,10 @@ public class Mailbox {
             joinColumns = @JoinColumn(name = "mailbox_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "mailbox_thread_id",referencedColumnName = "id")
     )
-    private List<MailboxThread> mailboxMessageList;
+    private List<MailboxThread> mailboxThreadList;
 
-    public Mailbox(User owner, List<MailboxThread> mailboxMessageList) {
+    public Mailbox(User owner, List<MailboxThread> mailboxThreadList) {
         this.owner = owner;
-        this.mailboxMessageList = mailboxMessageList;
+        this.mailboxThreadList = mailboxThreadList;
     }
 }
