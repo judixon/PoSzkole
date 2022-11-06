@@ -9,7 +9,7 @@ import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.payments.PaymentRepository;
 import com.tomekw.poszkole.payments.PaymentStatus;
 import com.tomekw.poszkole.users.UserRegistrationDto;
-import com.tomekw.poszkole.users.UserRegistrationDtoMapper;
+import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentDtoMapper;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentInfoParentViewDto;
@@ -33,7 +33,7 @@ import java.util.Optional;
 public class ParentService {
 
     private final ParentRepository parentRepository;
-    private final UserRegistrationDtoMapper userRegistrationDtoMapper;
+    private final UserDtoMapper userDtoMapper;
     private final ParentDtoMapper parentDtoMapper;
     private final StudentDtoMapper studentDtoMapper;
     private final PaymentDtoMapper paymentDtoMapper;
@@ -58,14 +58,14 @@ public class ParentService {
     }
 
     public List<ParentListDto> getAllParents() {
-        return parentRepository.findAll()
+        return parentRepository.findAllListResult()
                 .stream()
                 .map(parentDtoMapper::mapToParentListDto)
                 .toList();
     }
 
     public void register(UserRegistrationDto userRegistrationDto) {
-        Parent parent = userRegistrationDtoMapper.mapToParent(userRegistrationDto);
+        Parent parent = userDtoMapper.mapToParent(userRegistrationDto);
         parentRepository.save(parent);
     }
 
@@ -97,9 +97,7 @@ public class ParentService {
     @Transactional
     public void updateParent(Long parentId, ParentUpdateDto updatedParent) {
 
-        if (parentRepository.existsById(parentId)) {
-
-            Parent parent = parentRepository.findById(parentId).get();
+            Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: "+parentId+" not found."));
 
             if (!updatedParent.getUsername().equals(parent.getUsername())) {
                 usernameUniquenessValidator.validate(updatedParent.getUsername());
@@ -114,7 +112,6 @@ public class ParentService {
             parent.setRoles(userRoleMapper.mapToUserRoleList(updatedParent.getRoles()));
             parent.setWallet(updatedParent.getWallet());
 
-
             for (Long id : findIdsOfStudentsToAddTo(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
                 linkStudentWithParent(id,parent);
             }
@@ -125,12 +122,11 @@ public class ParentService {
 
             realizeWaitingPayments(parentId);
             parentRepository.save(parent);
-        }
     }
 
 
     Optional<ParentUpdateDto> getParentUpdateDto(Long parentId) {
-        return parentRepository.findById(parentId).map(parent -> parentDtoMapper.mapToParentUpdateDto(parent));
+        return parentRepository.findById(parentId).map(parentDtoMapper::mapToParentUpdateDto);
     }
 
     public void realizeWaitingPayments(Long parentId){
@@ -147,7 +143,6 @@ public class ParentService {
         }
         refreshDebt(parent);
         parentRepository.save(parent);
-
     }
 
     public void refreshDebt(Parent parent){
@@ -155,7 +150,7 @@ public class ParentService {
              .stream()
              .filter(payment -> payment.getPaymentStatus().equals(PaymentStatus.WAITING))
              .map(Payment::getCost)
-             .reduce(BigDecimal.ZERO,(subtotal, bigDecimal) -> subtotal.subtract(bigDecimal));
+             .reduce(BigDecimal.ZERO, BigDecimal::subtract);
 
      parent.setDebt(debt);
     }
@@ -180,8 +175,4 @@ public class ParentService {
         parent.getStudentList().stream().filter(student -> student.getId().equals(studentId)).forEach(student -> student.setParent(null));
         parent.getStudentList().removeIf(student -> student.getId().equals(studentId));
     }
-
-
-
-
 }

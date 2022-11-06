@@ -7,6 +7,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tomekw.poszkole.exceptions.ParentNotFoundException;
 import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.users.UserCredentialsDto;
 import com.tomekw.poszkole.users.UserRegistrationDto;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentInfoParentViewDto;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentListDto;
@@ -15,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +33,6 @@ public class ParentController {
     public ResponseEntity<List<ParentListDto>> getParents(){
         return ResponseEntity.ok(parentService.getAllParents());
     }
-
 
     @GetMapping("/{id}")
     ResponseEntity<ParentInfoDto> getParent(@PathVariable Long id){

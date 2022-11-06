@@ -18,10 +18,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserRegistrationDtoMapper {
+public class UserDtoMapper {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRoleMapper userRoleMapper;
@@ -92,6 +93,14 @@ public class UserRegistrationDtoMapper {
                 user.getUsername(),
                 user.getPassword(),
                 user.getRoles().stream().map(UserRole::getName).toList()
+        );
+    }
+
+    public UserCredentialsDto mapToUserCredentialsDto(User user){
+        return new UserCredentialsDto(
+                user.getUsername(),
+                user.getPassword(),
+                user.getRoles().stream().map(UserRole::getName).collect(Collectors.toSet())
         );
     }
 }

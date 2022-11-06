@@ -1,6 +1,7 @@
 package com.tomekw.poszkole.users.teacher;
 
 
+import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupDtoMapper;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkDtoMapper;
@@ -8,7 +9,7 @@ import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListTeacherViewDto;
 import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableDtoMapper;
 import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableTeacherViewDto;
 import com.tomekw.poszkole.users.UserRegistrationDto;
-import com.tomekw.poszkole.users.UserRegistrationDtoMapper;
+import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.userRole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class TeacherService {
 
     private final TeacherRepository teacherRepository;
-    private final UserRegistrationDtoMapper userRegistrationDtoMapper;
+    private final UserDtoMapper userDtoMapper;
     private final TeacherListDtoMapper teacherListDtoMapper;
     private final TimetableDtoMapper timetableDtoMapper;
     private final HomeworkDtoMapper homeworkDtoMapper;
@@ -35,8 +36,8 @@ public class TeacherService {
     private final UsernameUniquenessValidator usernameUniquenessValidator;
 
 
-    TeacherListDto register(UserRegistrationDto userRegistrationDto) {
-        Teacher teacher = userRegistrationDtoMapper.mapToTeacher(userRegistrationDto);
+  public   TeacherListDto register(UserRegistrationDto userRegistrationDto) {
+        Teacher teacher = userDtoMapper.mapToTeacher(userRegistrationDto);
         Teacher savedTeacher = teacherRepository.save(teacher);
         return teacherListDtoMapper.map(savedTeacher);
     }
@@ -54,11 +55,9 @@ public class TeacherService {
     }
 
     @Transactional
-    Optional<TeacherListDto> updateTeacher(UserRegistrationDto userRegistrationDto, Long id) {
+    void updateTeacher(UserRegistrationDto userRegistrationDto, Long id) {
 
-        if (teacherRepository.existsById(id)){
-
-                Teacher teacher = teacherRepository.findById(id).get();
+                Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: "+id+" not found"));
 
                 if (!userRegistrationDto.getUsername().equals(teacher.getUsername())){
                     usernameUniquenessValidator.validate(userRegistrationDto.getUsername());
@@ -72,27 +71,23 @@ public class TeacherService {
                 teacher.setPassword("{bcrypt}" + passwordEncoder.encode(userRegistrationDto.getPassword()));
                 teacher.setRoles( userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()));
 
-                return Optional.of(teacherListDtoMapper.map(teacherRepository.save(teacher)));
-        }
-        else {{
-            return Optional.empty();
-        }}
+                teacherRepository.save(teacher);
     }
 
     Optional<UserRegistrationDto> getUserRegistrationDto(Long id){
-        return teacherRepository.findById(id).map(userRegistrationDtoMapper::mapUserToUserRegistrationDto);
+        return teacherRepository.findById(id).map(userDtoMapper::mapUserToUserRegistrationDto);
     }
 
     void deleteTeacher(Long id) {
-       if (teacherRepository.existsById(id)){
-           teacherRepository.findById(id).get().getLessonGroups().stream().forEach(lessonGroup -> lessonGroup.setTeacher(null));
-           teacherRepository.findById(id).get().getHomeworkList().stream().forEach(homework -> homework.setHomeworkCreator(null));
-           teacherRepository.deleteById(id);
-       }
 
+      Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: "+id+" not found"));
+      teacher.getLessonGroups().forEach(lessonGroup -> lessonGroup.setTeacher(null));
+      teacher.getHomeworkList().forEach(homework -> homework.setHomeworkCreator(null));
+      teacherRepository.delete(teacher);
     }
 
     List<HomeworkListTeacherViewDto> getHomeworkList(Long id) {
+
         return teacherRepository.findById(id).map(Teacher::getHomeworkList)
                 .orElse(Collections.emptyList())
                 .stream()
@@ -110,7 +105,7 @@ public class TeacherService {
 
     Optional<TimetableTeacherViewDto> getTimetable(Long id){
         return teacherRepository.findById(id)
-                .map(teacher -> teacher.getTimetable()).map(timetableDtoMapper::mapToTimetableTeacherViewDto);
+                .map(Teacher::getTimetable).map(timetableDtoMapper::mapToTimetableTeacherViewDto);
     }
 
 

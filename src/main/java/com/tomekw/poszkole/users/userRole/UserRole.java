@@ -21,5 +21,8 @@ public class UserRole {
     private String name;
     private String description;
 
-
+    public UserRole(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }
