@@ -58,7 +58,7 @@ public class ParentService {
     }
 
     public List<ParentListDto> getAllParents() {
-        return parentRepository.findAllListResult()
+        return parentRepository.findAll()
                 .stream()
                 .map(parentDtoMapper::mapToParentListDto)
                 .toList();

@@ -10,6 +10,6 @@ public interface ParentRepository extends CrudRepository<Parent,Long> {
 
     Optional<Parent> findByUsername(String username);
 
-    List<Parent> findAllListResult();
+    List<Parent> findAll();
 
 }
