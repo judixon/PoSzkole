@@ -4,8 +4,8 @@ public enum PaymentStatus {
 
     DONE("done"),
     WAITING("waiting"),
-    CANCELED("canceled"),
-    EXPERIMENT("fff");
+    CANCELED("canceled");
+
 
     String description;
 
