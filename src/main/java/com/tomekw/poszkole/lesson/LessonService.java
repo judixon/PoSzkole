@@ -13,7 +13,7 @@ import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketReposit
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
 import com.tomekw.poszkole.payments.PaymentService;
 import com.tomekw.poszkole.timetable.Timetable;
-import com.tomekw.poszkole.timetable.Week;
+import com.tomekw.poszkole.timetable.week.Week;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,6 @@ public class LessonService {
 
     @Transactional
     List<LessonDto> saveLesson(LessonSaveDto lessonSaveDto) {
-
         LessonGroup lessonGroup = lessonGroupRepository.findById(lessonSaveDto.getOwnedByGroupId())
                 .orElseThrow(() -> new LessonGroupNotFoundException("Group with ID: " + lessonSaveDto.getOwnedByGroupId() + " not found."));
 
@@ -66,7 +65,6 @@ public class LessonService {
         teacherRepository.save(lessons.get(0).getOwnedByGroup().getTeacher());
 
         return lessons.stream().map(lessonDtoMapper::mapToLessonDto).toList();
-
     }
 
     private List<Lesson> lessonsToSave(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {

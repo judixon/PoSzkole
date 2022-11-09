@@ -8,8 +8,8 @@ import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentTeacherAndParentListView
 import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.payments.PaymentRepository;
 import com.tomekw.poszkole.payments.PaymentStatus;
-import com.tomekw.poszkole.users.UserRegistrationDto;
 import com.tomekw.poszkole.users.UserDtoMapper;
+import com.tomekw.poszkole.users.UserRegistrationDto;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentDtoMapper;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentInfoParentViewDto;
@@ -42,7 +42,6 @@ public class ParentService {
     private final UserRoleMapper userRoleMapper;
     private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
-
 
     @Transactional
     Optional<ParentInfoDto> getParent(Long id) {
@@ -90,38 +89,38 @@ public class ParentService {
     public Optional<StudentInfoParentViewDto> getStudent(Long parentId, Long studentId) {
         return parentRepository.findById(parentId)
                 .map(Parent::getStudentList)
-                .map(students -> students.stream().filter(student -> student.getId().equals(studentId)).toList().get(0))
+                .orElseThrow()
+                .stream().filter(student -> student.getId().equals(studentId)).findFirst()
                 .map(studentDtoMapper::mapToStudentInfoParentViewDto);
     }
 
     @Transactional
     public void updateParent(Long parentId, ParentUpdateDto updatedParent) {
+        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: " + parentId + " not found."));
 
-            Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: "+parentId+" not found."));
+        if (!updatedParent.getUsername().equals(parent.getUsername())) {
+            usernameUniquenessValidator.validate(updatedParent.getUsername());
+        }
 
-            if (!updatedParent.getUsername().equals(parent.getUsername())) {
-                usernameUniquenessValidator.validate(updatedParent.getUsername());
-            }
+        parent.setName(updatedParent.getName());
+        parent.setSurname(updatedParent.getSurname());
+        parent.setEmail(updatedParent.getEmail());
+        parent.setTelephoneNumber(updatedParent.getTelephoneNumber());
+        parent.setUsername(updatedParent.getUsername());
+        parent.setPassword("{bcrypt}" + passwordEncoder.encode(updatedParent.getPassword()));
+        parent.setRoles(userRoleMapper.mapToUserRoleList(updatedParent.getRoles()));
+        parent.setWallet(updatedParent.getWallet());
 
-            parent.setName(updatedParent.getName());
-            parent.setSurname(updatedParent.getSurname());
-            parent.setEmail(updatedParent.getEmail());
-            parent.setTelephoneNumber(updatedParent.getTelephoneNumber());
-            parent.setUsername(updatedParent.getUsername());
-            parent.setPassword("{bcrypt}" + passwordEncoder.encode(updatedParent.getPassword()));
-            parent.setRoles(userRoleMapper.mapToUserRoleList(updatedParent.getRoles()));
-            parent.setWallet(updatedParent.getWallet());
+        for (Long id : findIdsOfStudentsToAddTo(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
+            linkStudentWithParent(id, parent);
+        }
 
-            for (Long id : findIdsOfStudentsToAddTo(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
-                linkStudentWithParent(id,parent);
-            }
+        for (Long id : findIdsOfStudentsToRemoveFrom(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
+            unlinkStudentFromParent(id, parent);
+        }
 
-            for (Long id : findIdsOfStudentsToRemoveFrom(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
-                unlinkStudentFromParent(id,parent);
-            }
-
-            realizeWaitingPayments(parentId);
-            parentRepository.save(parent);
+        realizeWaitingPayments(parentId);
+        parentRepository.save(parent);
     }
 
 
@@ -129,15 +128,14 @@ public class ParentService {
         return parentRepository.findById(parentId).map(parentDtoMapper::mapToParentUpdateDto);
     }
 
-    public void realizeWaitingPayments(Long parentId){
-        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: "+parentId+" not found."));
+    public void realizeWaitingPayments(Long parentId) {
+        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: " + parentId + " not found."));
 
-        for (Payment p : paymentRepository.findPaymentsOfParentWaitingToRealize(parentId, PaymentStatus.WAITING)){
-            if (parent.getWallet().doubleValue()>p.getCost().doubleValue()){
+        for (Payment p : paymentRepository.findPaymentsOfParentWaitingToRealize(parentId, PaymentStatus.WAITING)) {
+            if (parent.getWallet().doubleValue() > p.getCost().doubleValue()) {
                 p.setPaymentStatus(PaymentStatus.DONE);
                 parent.setWallet(parent.getWallet().subtract(p.getCost()));
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -145,14 +143,14 @@ public class ParentService {
         parentRepository.save(parent);
     }
 
-    public void refreshDebt(Parent parent){
-     BigDecimal debt = parent.getPaymentList()
-             .stream()
-             .filter(payment -> payment.getPaymentStatus().equals(PaymentStatus.WAITING))
-             .map(Payment::getCost)
-             .reduce(BigDecimal.ZERO, BigDecimal::subtract);
+    public void refreshDebt(Parent parent) {
+        BigDecimal debt = parent.getPaymentList()
+                .stream()
+                .filter(payment -> payment.getPaymentStatus().equals(PaymentStatus.WAITING))
+                .map(Payment::getCost)
+                .reduce(BigDecimal.ZERO, BigDecimal::subtract);
 
-     parent.setDebt(debt);
+        parent.setDebt(debt);
     }
 
     private List<Long> findIdsOfStudentsToRemoveFrom(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {

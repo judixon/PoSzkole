@@ -22,7 +22,15 @@ public class SecurityConfig {
         return http.build();
     }
 
-
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.authorizeHttpRequests(requests -> requests.anyRequest().hasRole("ADMIN"));
+//        http.formLogin();
+//        http.httpBasic();
+//        http.headers().frameOptions().disable();
+//        http.csrf().disable();
+//        return http.build();
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder() {

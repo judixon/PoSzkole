@@ -28,8 +28,6 @@ public class HomeworkService {
     private final LessonRepository lessonRepository;
     private final HomeworkDtoMapper homeworkDtoMapper;
 
-
-
     List<HomeworkInfoDto> getAllHomeworks(){
         return homeworkRepository.findAll().stream().map(homeworkDtoMapper::mapToHomeworkInfoDto).toList();
     }
@@ -37,7 +35,6 @@ public class HomeworkService {
     Optional<HomeworkInfoDto> getHomework(Long id){
         return homeworkRepository.findById(id).map(homeworkDtoMapper::mapToHomeworkInfoDto);
     }
-
 
     HomeworkInfoDto saveHomework(HomeworkSaveDto homeworkSaveDto){
         Teacher teacher = teacherRepository.findById(homeworkSaveDto.getHomeworkCreatorId())

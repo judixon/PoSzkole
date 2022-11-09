@@ -18,7 +18,6 @@ public class HomeworkController {
 
     private final HomeworkService homeworkService;
 
-
     ResponseEntity<List<HomeworkInfoDto>> getAllHomeworks(){
         return ResponseEntity.ok(homeworkService.getAllHomeworks());
     }
@@ -27,7 +26,6 @@ public class HomeworkController {
     ResponseEntity<HomeworkInfoDto> getHomework(@PathVariable Long id){
         return homeworkService.getHomework(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-
 
     @PostMapping
     ResponseEntity<HomeworkInfoDto> saveHomework(@RequestBody HomeworkSaveDto homeworkSaveDto){

@@ -1,12 +1,11 @@
 package com.tomekw.poszkole.timetable;
 
+import com.tomekw.poszkole.timetable.week.Week;
 import com.tomekw.poszkole.users.teacher.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 

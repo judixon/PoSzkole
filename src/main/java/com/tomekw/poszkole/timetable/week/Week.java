@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.timetable;
+package com.tomekw.poszkole.timetable.week;
 
 
 import com.tomekw.poszkole.lesson.Lesson;

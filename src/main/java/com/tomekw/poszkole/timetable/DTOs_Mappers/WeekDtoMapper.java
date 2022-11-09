@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.timetable.DTOs_Mappers;
 
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDtoMapper;
-import com.tomekw.poszkole.timetable.Week;
+import com.tomekw.poszkole.timetable.week.Week;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

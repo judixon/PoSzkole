@@ -29,7 +29,6 @@ public class HomeworkDtoMapper {
     }
 
     public HomeworkListTeacherViewDto mapToHomeworkListTeacherViewDto(Homework homework){
-
        return new HomeworkListTeacherViewDto(homework.getId(),
                homework.getHomeworkReceiver().getId(),
                homework.getHomeworkReceiver().getName(),
