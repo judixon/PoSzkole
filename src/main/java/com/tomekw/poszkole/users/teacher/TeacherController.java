@@ -32,12 +32,6 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.getAllTeachers());
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id) {
-        return teacherService.getTeacher(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    //tutaj do zmiany typ zwracany - powinno być ResponseEntity z wiadomością CREATED np.
     @PostMapping
     ResponseEntity<TeacherListDto> register(@RequestBody UserRegistrationDto userRegistrationDto) {
         TeacherListDto savedTeacher = teacherService.register(userRegistrationDto);
@@ -46,7 +40,13 @@ public class TeacherController {
                 .buildAndExpand(savedTeacher.getId())
                 .toUri();
         return ResponseEntity.created(savedTeacherUri).body(savedTeacher);
+    }
 
+    @GetMapping("/{id}")
+    ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id) {
+        return teacherService.getTeacher(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -55,10 +55,24 @@ public class TeacherController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}")
+    ResponseEntity<?> updateTeacher(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
+        try {
+            UserRegistrationDto user = teacherService.getUserRegistrationDto(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: "+id+" not found"));
+            UserRegistrationDto userPatched = applyPatch(user, patch);
+            teacherService.updateTeacher(userPatched,id);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.internalServerError().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return   ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}/homeworks")
     ResponseEntity<List<HomeworkListTeacherViewDto>> getHomeworkList(@PathVariable Long id) {
         return ResponseEntity.ok(teacherService.getHomeworkList(id));
-
     }
 
     @GetMapping("/{id}/lessongroups")
@@ -69,22 +83,6 @@ public class TeacherController {
     @GetMapping("/{id}/timetable")
     ResponseEntity<TimetableTeacherViewDto> getTimetable(@PathVariable Long id) {
         return teacherService.getTimetable(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}")
-    ResponseEntity<?> updateTeacher(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
-
-        try {
-            UserRegistrationDto user = teacherService.getUserRegistrationDto(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: "+id+" not found"));
-            UserRegistrationDto userPatched = applyPatch(user, patch);
-            teacherService.updateTeacher(userPatched,id);
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.internalServerError().build();
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
-          return   ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.noContent().build();
     }
 
     private UserRegistrationDto applyPatch(UserRegistrationDto userToPatch, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

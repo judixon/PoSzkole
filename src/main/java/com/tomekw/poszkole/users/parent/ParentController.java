@@ -34,19 +34,33 @@ public class ParentController {
         return ResponseEntity.ok(parentService.getAllParents());
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<ParentInfoDto> getParent(@PathVariable Long id){
-        return parentService.getParent(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
     public void register(@RequestBody UserRegistrationDto userRegistrationDto){
         parentService.register(userRegistrationDto);
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<ParentInfoDto> getParent(@PathVariable Long id){
+        return parentService.getParent(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteParent(@PathVariable Long id){
         parentService.deleteParent(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<?> updateParent(@PathVariable Long id, @RequestBody JsonMergePatch patch){
+        try {
+            ParentUpdateDto parent = parentService.getParentUpdateDto(id).orElseThrow(() -> new ParentNotFoundException("Parent with ID: "+id+" not found"));
+            ParentUpdateDto updatedParent = applyPatch(parent,patch);
+            parentService.updateParent(id,updatedParent);
+        } catch (JsonProcessingException | JsonPatchException e) {
+            return ResponseEntity.internalServerError().build();
+        } catch ( ParentNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -63,20 +77,6 @@ public class ParentController {
     @GetMapping("/{parentId}/students/{studentId}")
     ResponseEntity<StudentInfoParentViewDto> getStudent(@PathVariable Long parentId, @PathVariable Long studentId ){
         return parentService.getStudent(parentId, studentId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}")
-    ResponseEntity<?> updateParent(@PathVariable Long id, @RequestBody JsonMergePatch patch){
-        try {
-            ParentUpdateDto parent = parentService.getParentUpdateDto(id).orElseThrow(() -> new ParentNotFoundException("Parent with ID: "+id+" not found"));
-            ParentUpdateDto updatedParent = applyPatch(parent,patch);
-            parentService.updateParent(id,updatedParent);
-        } catch (JsonProcessingException | JsonPatchException e) {
-            return ResponseEntity.internalServerError().build();
-        } catch ( ParentNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.noContent().build();
     }
 
     private ParentUpdateDto applyPatch(ParentUpdateDto parentToUpdate, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.config;
+package com.tomekw.poszkole.security;
 
 import com.tomekw.poszkole.users.UserCredentialsDto;
 import com.tomekw.poszkole.users.UserService;

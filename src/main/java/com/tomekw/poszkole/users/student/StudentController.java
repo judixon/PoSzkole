@@ -35,19 +35,35 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<StudentInfoDto> getStudent(@PathVariable Long id){
-        return studentService.getStudent(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping
     public void register(@RequestBody UserRegistrationDto userRegistrationDto){
         studentService.register(userRegistrationDto);
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<StudentInfoDto> getStudent(@PathVariable Long id){
+        return studentService.getStudent(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
+
+        try {
+            StudentUpdateDto student = studentService.getStudentUpdateDto(id).orElseThrow(() -> new StudentNotFoundException("Student with ID: "+id+" not found"));
+            StudentUpdateDto studentPatched = applyPatch(student,patch);
+            studentService.updateStudent(id,studentPatched);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            return ResponseEntity.internalServerError().build();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return   ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -69,22 +85,6 @@ public class StudentController {
     @GetMapping("/{id}/parent")
     ResponseEntity<ParentInfoDto> getParent(@PathVariable Long id){
         return studentService.getParent(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}")
-    ResponseEntity<?> updateStudent(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
-
-        try {
-            StudentUpdateDto student = studentService.getStudentUpdateDto(id).orElseThrow(() -> new StudentNotFoundException("Student with ID: "+id+" not found"));
-            StudentUpdateDto studentPatched = applyPatch(student,patch);
-            studentService.updateStudent(id,studentPatched);
-        } catch (JsonPatchException | JsonProcessingException e) {
-            return ResponseEntity.internalServerError().build();
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
-            return   ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.noContent().build();
     }
 
     private StudentUpdateDto applyPatch(StudentUpdateDto studentToPatch, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

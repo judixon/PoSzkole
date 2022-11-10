@@ -30,15 +30,9 @@ public class LessonGroupController {
     private final LessonGroupService lessonGroupService;
     private final ObjectMapper objectMapper;
 
-
     @GetMapping
     ResponseEntity<List<LessonGroupInfoDto>> getAllLessonGroups(){
         return ResponseEntity.ok(lessonGroupService.getAllLessonGroups());
-    }
-
-    @GetMapping("/{id}")
-    ResponseEntity<LessonGroupInfoDto> getLessonGroup(@PathVariable Long id){
-        return lessonGroupService.getLessonGroup(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -51,9 +45,30 @@ public class LessonGroupController {
         return ResponseEntity.created(savedGroupUri).body(saveGroup);
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<LessonGroupInfoDto> getLessonGroup(@PathVariable Long id){
+        return lessonGroupService.getLessonGroup(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteLessonGroup(@PathVariable Long id){
         lessonGroupService.deleteLessonGroup(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<?> updateLessonGroup(@PathVariable Long id,@RequestBody JsonMergePatch patch){
+        try {
+            LessonGroupUpdateDto lessonGroupToUpdate = lessonGroupService.getLessonGroupUpdateDto(id);
+            LessonGroupUpdateDto patchedLessonGroup = applyPatchLessonGroup(lessonGroupToUpdate,patch);
+            lessonGroupService.updateLessonGroup(patchedLessonGroup,id);
+        } catch (JsonPatchException | JsonProcessingException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        } catch (LessonGroupNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -75,22 +90,6 @@ public class LessonGroupController {
     @DeleteMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
     ResponseEntity<?> deleteStudentGroupBucket(@PathVariable Long lessonGroupId, @PathVariable Long studentLessonGroupBucketId){
         lessonGroupService.deleteStudentLessonGroupBucket(lessonGroupId,studentLessonGroupBucketId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/{id}")
-    ResponseEntity<?> updateLessonGroup(@PathVariable Long id,@RequestBody JsonMergePatch patch){
-        try {
-            LessonGroupUpdateDto lessonGroupToUpdate = lessonGroupService.getLessonGroupUpdateDto(id);
-            LessonGroupUpdateDto patchedLessonGroup = applyPatchLessonGroup(lessonGroupToUpdate,patch);
-            lessonGroupService.updateLessonGroup(patchedLessonGroup,id);
-        } catch (JsonPatchException | JsonProcessingException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        } catch (LessonGroupNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.noContent().build();
     }
 

@@ -17,7 +17,6 @@ public class ParentUpdateDto{
     private  String username;
     private  String password;
     private  BigDecimal wallet;
-    private  BigDecimal debt;
     private  List<Long> studentListIds;
     private List<String> roles;
 }

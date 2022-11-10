@@ -31,16 +31,9 @@ public class LessonController {
     private final LessonService lessonService;
     private final ObjectMapper objectMapper;
 
-
-
     @GetMapping
     ResponseEntity<List<LessonDto>> getAllLessons(){
         return ResponseEntity.ok(lessonService.getAllLessons());
-    }
-
-    @GetMapping("/{id}")
-    ResponseEntity<LessonDto> getLesson(@PathVariable Long id ){
-        return lessonService.getLesson(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -53,6 +46,11 @@ public class LessonController {
                 .toUri();
 
         return ResponseEntity.created(savedLessonURI).body(firstSavedLesson);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<LessonDto> getLesson(@PathVariable Long id ){
+        return lessonService.getLesson(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

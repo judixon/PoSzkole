@@ -28,10 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -80,7 +77,7 @@ public class StudentService {
         }
 
         student.getHomeworkList().forEach(homework -> homework.setHomeworkReceiver(null));
-        student.getParent().getStudentList().remove(student);
+        unlinkParentFromStudentLinkExists(student);
         studentRepository.deleteById(id);
     }
 
@@ -163,6 +160,12 @@ public class StudentService {
     private List<Long> findIdsOfGroupsToAddTo(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
         afterPatchState.removeAll(actualState);
         return afterPatchState;
+    }
+
+    private void unlinkParentFromStudentLinkExists(Student student){
+        if (Objects.nonNull(student.getParent())){
+            student.getParent().getStudentList().remove(student);
+        }
     }
 
 

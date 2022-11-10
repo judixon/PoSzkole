@@ -17,16 +17,9 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-
     @GetMapping
     ResponseEntity<List<PaymentDto>> getPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
-    }
-
-
-    @GetMapping("/{id}")
-    ResponseEntity<PaymentDto> getPayment(@PathVariable Long id) {
-        return paymentService.getPayment(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -39,12 +32,14 @@ public class PaymentController {
         return ResponseEntity.created(savedPaymentUri).body(savedPayment);
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<PaymentDto> getPayment(@PathVariable Long id) {
+        return paymentService.getPayment(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deletePayment(@PathVariable Long id){
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }

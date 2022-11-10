@@ -84,7 +84,6 @@ public class UserDtoMapper {
     }
 
     public UserRegistrationDto mapUserToUserRegistrationDto(User user){
-        System.out.println(user.getRoles().stream().map(UserRole::getName).toList());
         return new UserRegistrationDto(
                 user.getName(),
                 user.getSurname(),
