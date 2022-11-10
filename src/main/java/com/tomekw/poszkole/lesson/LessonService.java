@@ -1,8 +1,6 @@
 package com.tomekw.poszkole.lesson;
 
 import com.tomekw.poszkole.exceptions.*;
-import com.tomekw.poszkole.lessonGroup.LessonGroup;
-import com.tomekw.poszkole.lessonGroup.LessonGroupRepository;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDtoMapper;
@@ -11,7 +9,10 @@ import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonUpdateDto;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
+import com.tomekw.poszkole.lessonGroup.LessonGroup;
+import com.tomekw.poszkole.lessonGroup.LessonGroupRepository;
 import com.tomekw.poszkole.payments.PaymentService;
+import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.timetable.Timetable;
 import com.tomekw.poszkole.timetable.week.Week;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
@@ -35,17 +36,19 @@ public class LessonService {
     private final TeacherRepository teacherRepository;
     private final StudentLessonBucketRepository studentLessonBucketRepository;
     private final PaymentService paymentService;
-
+    private final ResourceAccessChecker resourceAccessChecker;
 
     List<LessonDto> getAllLessons() {
         return lessonRepository.findAll().stream().map(lessonDtoMapper::mapToLessonDto).toList();
     }
 
-    Optional<LessonDto> getLesson(Long id) {
+    Optional<LessonDto> getLesson(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(id);
         return lessonRepository.findById(id).map(lessonDtoMapper::mapToLessonDto);
     }
 
-    void deleteLesson(Long id) {
+    void deleteLesson(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(id);
         lessonRepository.deleteById(id);
     }
 
@@ -104,11 +107,13 @@ public class LessonService {
     }
 
     LessonUpdateDto getLessonUpdateDto(Long lessonId) {
-        return lessonDtoMapper.mapToLessonUpdateDto(lessonRepository.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson with ID: "+ lessonId +" not found")));
+        return lessonDtoMapper.mapToLessonUpdateDto(lessonRepository.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson with ID: " + lessonId + " not found")));
     }
 
-    void updateLesson(Long lessonId, LessonUpdateDto lessonUpdateDto){
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson with ID: "+ lessonId +" not found"));
+    void updateLesson(Long lessonId, LessonUpdateDto lessonUpdateDto) throws LessonNotFoundException, NoAccessToExactResourceException {
+        resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(lessonId);
+
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson with ID: " + lessonId + " not found"));
 
         lesson.setLessonPlan(lessonUpdateDto.getLessonPlan());
         lesson.setNotes(lessonUpdateDto.getNotes());
@@ -117,7 +122,8 @@ public class LessonService {
         lessonRepository.save(lesson);
     }
 
-    void updateStudentLessonBucket(Long lessonId, Long studentLessonBucketId, String studentPresenceStatus) throws LessonNotFoundException,StudentLessonBucketNotFoundException{
+    void updateStudentLessonBucket(Long lessonId, Long studentLessonBucketId, String studentPresenceStatus) throws LessonNotFoundException, StudentLessonBucketNotFoundException, NoAccessToExactResourceException {
+        resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(lessonId);
 
         try {
             StudentLessonBucket studentLessonBucketToUpdate = lessonRepository.findById(lessonId).map(Lesson::getStudentLessonBucketList)
@@ -130,17 +136,15 @@ public class LessonService {
             studentLessonBucketToUpdate.setStudentPresenceStatus(StudentPresenceStatus.valueOf(studentPresenceStatus));
 
             if (studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_PAYMENT) ||
-                    studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_PAYMENT)){
+                    studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_PAYMENT)) {
                 paymentService.createPaymentFromStudenLessonBucket(studentLessonBucketToUpdate);
-            }
-            else {
+            } else {
                 paymentService.removePayment(studentLessonBucketToUpdate);
             }
-
             studentLessonBucketRepository.save(studentLessonBucketToUpdate);
-
-        } catch (IndexOutOfBoundsException e){
-            throw new StudentLessonBucketNotFoundException("StudentLessonBucket with ID: "+studentLessonBucketId+" not found");
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new StudentLessonBucketNotFoundException("StudentLessonBucket with ID: " + studentLessonBucketId + " not found");
         }
     }
 
@@ -206,6 +210,4 @@ public class LessonService {
         }
         return weekToCreate;
     }
-
-
 }

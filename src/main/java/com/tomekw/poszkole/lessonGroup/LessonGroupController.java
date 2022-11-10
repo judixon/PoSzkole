@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tomekw.poszkole.exceptions.LessonGroupNotFoundException;
+import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.StudentLessonGroupBucketNotFoundException;
+import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupCreateDto;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupInfoDto;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupUpdateDto;
@@ -15,6 +17,7 @@ import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGro
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
 import com.tomekw.poszkole.users.teacher.TeacherListDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -62,10 +65,12 @@ public class LessonGroupController {
             LessonGroupUpdateDto lessonGroupToUpdate = lessonGroupService.getLessonGroupUpdateDto(id);
             LessonGroupUpdateDto patchedLessonGroup = applyPatchLessonGroup(lessonGroupToUpdate,patch);
             lessonGroupService.updateLessonGroup(patchedLessonGroup,id);
-        } catch (JsonPatchException | JsonProcessingException e) {
+        }
+        catch (JsonPatchException | JsonProcessingException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
-        } catch (LessonGroupNotFoundException e) {
+        }
+        catch (LessonGroupNotFoundException | TeacherNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
@@ -74,12 +79,22 @@ public class LessonGroupController {
 
     @GetMapping("/{id}/lessons")
     ResponseEntity<List<LessonDto>> getLessons(@PathVariable Long id){
-        return ResponseEntity.ok(lessonGroupService.getLessons(id));
+        try {
+            return ResponseEntity.ok(lessonGroupService.getLessons(id));
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/{id}/teacher")
     ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id){
+        try {
             return lessonGroupService.getTeacher(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/{id}/students")
@@ -89,8 +104,13 @@ public class LessonGroupController {
 
     @DeleteMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
     ResponseEntity<?> deleteStudentGroupBucket(@PathVariable Long lessonGroupId, @PathVariable Long studentLessonGroupBucketId){
-        lessonGroupService.deleteStudentLessonGroupBucket(lessonGroupId,studentLessonGroupBucketId);
-        return ResponseEntity.noContent().build();
+        try {
+            lessonGroupService.deleteStudentLessonGroupBucket(lessonGroupId,studentLessonGroupBucketId);
+            return ResponseEntity.noContent().build();
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PatchMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
@@ -98,12 +118,16 @@ public class LessonGroupController {
         try {
             StudentLessonGroupBucketUpdateDto studentLessonGroupBucketToUpdate = lessonGroupService.getStudentLessonGroupBucketUpdateDto(studentLessonGroupBucketId, lessonGroupId);
             StudentLessonGroupBucketUpdateDto patchedStudentLessonGroupBucket = applyPatchStudentLessonGroupBucket(studentLessonGroupBucketToUpdate,patch);
-            lessonGroupService.updateStudentLessonGroupBucket(studentLessonGroupBucketId,patchedStudentLessonGroupBucket);
-
-        } catch (JsonProcessingException | JsonPatchException e) {
+            lessonGroupService.updateStudentLessonGroupBucket(studentLessonGroupBucketId,patchedStudentLessonGroupBucket, lessonGroupId);
+        }
+        catch (JsonProcessingException | JsonPatchException e) {
             e.printStackTrace();
-            ResponseEntity.internalServerError().build();
-        } catch (StudentLessonGroupBucketNotFoundException e) {
+           return ResponseEntity.internalServerError().build();
+        }
+        catch (NoAccessToExactResourceException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        catch (StudentLessonGroupBucketNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }

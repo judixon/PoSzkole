@@ -1,5 +1,6 @@
 package com.tomekw.poszkole.users.student;
 
+import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.ParentNotFoundException;
 import com.tomekw.poszkole.exceptions.StudentNotFoundException;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkDtoMapper;
@@ -12,6 +13,7 @@ import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListStudentViewDt
 import com.tomekw.poszkole.lessonGroup.LessonGroup;
 import com.tomekw.poszkole.lessonGroup.LessonGroupService;
 import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UserRegistrationDto;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
@@ -46,11 +48,8 @@ public class StudentService {
     private final ParentRepository parentRepository;
     private final LessonGroupService lessonGroupService;
     private final ParentDtoMapper parentDtoMapper;
+    private final ResourceAccessChecker resourceAccessChecker;
 
-
-    Optional<StudentInfoDto> getStudent(Long id) {
-        return studentRepository.findById(id).map(student -> studentDtoMapper.mapToStudentInfoDto(student, studentDtoMapper));
-    }
 
     List<StudentListDto> getAllStudents() {
         return studentRepository.findAll()
@@ -59,10 +58,14 @@ public class StudentService {
                 .toList();
     }
 
-
     public void register(UserRegistrationDto userRegistrationDto) {
         Student student = userDtoMapper.mapToStudent(userRegistrationDto);
         studentRepository.save(student);
+    }
+
+    Optional<StudentInfoDto> getStudent(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+        return studentRepository.findById(id).map(student -> studentDtoMapper.mapToStudentInfoDto(student, studentDtoMapper));
     }
 
     void deleteStudent(Long id) {
@@ -81,7 +84,9 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    List<LessonGroupListStudentViewDto> getLessonGroups(Long id) {
+    List<LessonGroupListStudentViewDto> getLessonGroups(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+
         return studentRepository.findById(id)
                 .map(Student::getStudentLessonGroupBucketList)
                 .orElse(Collections.emptyList())
@@ -90,7 +95,9 @@ public class StudentService {
                 .toList();
     }
 
-    List<LessonStudentListViewDto> getLessons(Long id) {
+    List<LessonStudentListViewDto> getLessons(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+
         return studentRepository.findById(id)
                 .map(Student::getStudentLessonBucketList)
                 .orElse(Collections.emptyList())
@@ -100,7 +107,9 @@ public class StudentService {
                 .toList();
     }
 
-    List<HomeworkListStudentParentViewDto> getHomeworks(Long id) {
+    List<HomeworkListStudentParentViewDto> getHomeworks(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+
         return studentRepository.findById(id)
                 .map(Student::getHomeworkList)
                 .orElse(Collections.emptyList())
@@ -109,7 +118,9 @@ public class StudentService {
                 .toList();
     }
 
-    Optional<ParentInfoDto> getParent(Long id) {
+    Optional<ParentInfoDto> getParent(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+
         return studentRepository.findById(id)
                 .map(Student::getParent).map(parentDtoMapper::mapToParentInfoDto);
 
@@ -120,7 +131,7 @@ public class StudentService {
     }
 
     @Transactional
-    void updateStudent(Long id, StudentUpdateDto studentUpdateDto) {
+    void updateStudent(Long id, StudentUpdateDto studentUpdateDto) throws StudentNotFoundException,ParentNotFoundException{
 
         Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException("Student with ID " + id + " not found."));
 

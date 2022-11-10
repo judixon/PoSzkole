@@ -4,7 +4,6 @@ package com.tomekw.poszkole.users;
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.users.userRole.UserRole;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -16,7 +15,7 @@ import java.util.List;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-public abstract class User {
+public abstract class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)

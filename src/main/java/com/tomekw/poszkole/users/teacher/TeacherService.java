@@ -1,11 +1,13 @@
 package com.tomekw.poszkole.users.teacher;
 
 
+import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupDtoMapper;
 import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkDtoMapper;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListTeacherViewDto;
+import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableDtoMapper;
 import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableTeacherViewDto;
 import com.tomekw.poszkole.users.UserRegistrationDto;
@@ -34,7 +36,7 @@ public class TeacherService {
     private final PasswordEncoder passwordEncoder;
     private final UserRoleMapper userRoleMapper;
     private final UsernameUniquenessValidator usernameUniquenessValidator;
-
+    private final ResourceAccessChecker resourceAccessChecker;
 
   public   TeacherListDto register(UserRegistrationDto userRegistrationDto) {
         Teacher teacher = userDtoMapper.mapToTeacher(userRegistrationDto);
@@ -46,7 +48,6 @@ public class TeacherService {
         return teacherRepository.findById(id).map(teacherListDtoMapper::map);
     }
 
-
     List<TeacherListDto> getAllTeachers() {
         return teacherRepository.findAll()
                 .stream()
@@ -55,8 +56,7 @@ public class TeacherService {
     }
 
     @Transactional
-    void updateTeacher(UserRegistrationDto userRegistrationDto, Long id) {
-
+    void updateTeacher(UserRegistrationDto userRegistrationDto, Long id) throws TeacherNotFoundException{
                 Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: "+id+" not found"));
 
                 if (!userRegistrationDto.getUsername().equals(teacher.getUsername())){
@@ -79,15 +79,14 @@ public class TeacherService {
     }
 
     void deleteTeacher(Long id) {
-
       Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: "+id+" not found"));
       teacher.getLessonGroups().forEach(lessonGroup -> lessonGroup.setTeacher(null));
       teacher.getHomeworkList().forEach(homework -> homework.setHomeworkCreator(null));
       teacherRepository.delete(teacher);
     }
 
-    List<HomeworkListTeacherViewDto> getHomeworkList(Long id) {
-
+    List<HomeworkListTeacherViewDto> getHomeworkList(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkTeacherDetailedDataAccess(id);
         return teacherRepository.findById(id).map(Teacher::getHomeworkList)
                 .orElse(Collections.emptyList())
                 .stream()
@@ -95,7 +94,8 @@ public class TeacherService {
                 .toList();
     }
 
-    List<LessonGroupListTeacherViewDto> getLessonGroupList(Long id) {
+    List<LessonGroupListTeacherViewDto> getLessonGroupList(Long id) throws NoAccessToExactResourceException{
+        resourceAccessChecker.checkTeacherDetailedDataAccess(id);
         return teacherRepository.findById(id).map(Teacher::getLessonGroups)
                 .orElse(Collections.emptyList())
                 .stream()
@@ -103,10 +103,9 @@ public class TeacherService {
                 .toList();
     }
 
-    Optional<TimetableTeacherViewDto> getTimetable(Long id){
+    Optional<TimetableTeacherViewDto> getTimetable(Long id) throws NoAccessToExactResourceException{
+        resourceAccessChecker.checkTeacherDetailedDataAccess(id);
         return teacherRepository.findById(id)
                 .map(Teacher::getTimetable).map(timetableDtoMapper::mapToTimetableTeacherViewDto);
     }
-
-
 }

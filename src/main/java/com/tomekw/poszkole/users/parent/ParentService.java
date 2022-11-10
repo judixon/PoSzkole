@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.users.parent;
 
-
+import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.ParentNotFoundException;
 import com.tomekw.poszkole.exceptions.StudentNotFoundException;
 import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentDtoMapper;
@@ -8,6 +8,7 @@ import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentTeacherAndParentListView
 import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.payments.PaymentRepository;
 import com.tomekw.poszkole.payments.PaymentStatus;
+import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UserRegistrationDto;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
@@ -42,19 +43,7 @@ public class ParentService {
     private final UserRoleMapper userRoleMapper;
     private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
-
-    @Transactional
-    Optional<ParentInfoDto> getParent(Long id) {
-
-        Optional<Parent> parentOptional = parentRepository.findById(id);
-
-        if (parentOptional.isPresent()) {
-            Parent parent = parentOptional.get();
-            parent.setStudentList(parent.getStudentList());
-            return Optional.of(parentDtoMapper.mapToParentInfoDto(parent));
-        }
-        return parentOptional.map(parentDtoMapper::mapToParentInfoDto);
-    }
+    private final ResourceAccessChecker resourceAccessChecker;
 
     public List<ParentListDto> getAllParents() {
         return parentRepository.findAll()
@@ -68,25 +57,47 @@ public class ParentService {
         parentRepository.save(parent);
     }
 
+    @Transactional
+    Optional<ParentInfoDto> getParent(Long id) {
+        resourceAccessChecker.checkParentDetailedDataAccess(id);
+
+        Optional<Parent> parentOptional = parentRepository.findById(id);
+
+        if (parentOptional.isPresent()) {
+            Parent parent = parentOptional.get();
+            parent.setStudentList(parent.getStudentList());
+            return Optional.of(parentDtoMapper.mapToParentInfoDto(parent));
+        }
+        return parentOptional.map(parentDtoMapper::mapToParentInfoDto);
+    }
+
     void deleteParent(Long id) {
         parentRepository.deleteById(id);
     }
 
-    public List<StudentListDto> getStudents(Long id) {
-        return parentRepository.findById(id).map(Parent::getStudentList).orElse(Collections.emptyList())
+    public List<StudentListDto> getStudents(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkParentDetailedDataAccess(id);
+
+        return parentRepository.findById(id).map(Parent::getStudentList)
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(studentDtoMapper::mapToStudentListDto)
                 .toList();
     }
 
-    public List<PaymentTeacherAndParentListViewDto> getPayments(Long id) {
-        return parentRepository.findById(id).map(Parent::getPaymentList).orElse(Collections.emptyList())
+    public List<PaymentTeacherAndParentListViewDto> getPayments(Long id) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkParentDetailedDataAccess(id);
+
+        return parentRepository.findById(id).map(Parent::getPaymentList)
+                .orElse(Collections.emptyList())
                 .stream()
                 .map(paymentDtoMapper::mapToPaymentTeacherListViewDto)
                 .toList();
     }
 
-    public Optional<StudentInfoParentViewDto> getStudent(Long parentId, Long studentId) {
+    public Optional<StudentInfoParentViewDto> getStudent(Long parentId, Long studentId) throws NoAccessToExactResourceException {
+        resourceAccessChecker.checkParentDetailedDataAccess(parentId);
+
         return parentRepository.findById(parentId)
                 .map(Parent::getStudentList)
                 .orElseThrow()

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tomekw.poszkole.exceptions.LessonNotFoundException;
+import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.StudentLessonBucketNotFoundException;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonSaveDto;
@@ -15,6 +16,7 @@ import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -50,13 +52,23 @@ public class LessonController {
 
     @GetMapping("/{id}")
     ResponseEntity<LessonDto> getLesson(@PathVariable Long id ){
-        return lessonService.getLesson(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        try {
+            return lessonService.getLesson(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteLesson(@PathVariable Long id){
-        lessonService.deleteLesson(id);
-        return ResponseEntity.noContent().build();
+        try {
+            lessonService.deleteLesson(id);
+            return ResponseEntity.noContent().build();
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PatchMapping("/{id}")
@@ -65,10 +77,15 @@ public class LessonController {
             LessonUpdateDto lessonToUpdate = lessonService.getLessonUpdateDto(id);
             LessonUpdateDto patchedLesson = applyPatch(lessonToUpdate,patch);
             lessonService.updateLesson(id,patchedLesson);
-        } catch (JsonProcessingException | JsonPatchException e) {
+        }
+        catch (JsonProcessingException | JsonPatchException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
-        } catch (LessonNotFoundException e) {
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        catch (LessonNotFoundException | StudentLessonBucketNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
@@ -77,13 +94,14 @@ public class LessonController {
 
     @PatchMapping("/{lessonId}/students/{studentLessonBucketId}")
     ResponseEntity<?> updateStudentLessonBucket(@PathVariable Long lessonId, @PathVariable Long studentLessonBucketId, @RequestBody  JsonNode studentPresenceStatus){
-
-        System.out.println(studentPresenceStatus);
-        System.out.println(studentPresenceStatus.get("studentPresenceStatus").asText());
         try {
             lessonService.updateStudentLessonBucket(lessonId,studentLessonBucketId, studentPresenceStatus.get("studentPresenceStatus").asText());
-        }catch (LessonNotFoundException | StudentLessonBucketNotFoundException exception){
+        }
+        catch (LessonNotFoundException | StudentLessonBucketNotFoundException exception){
             return ResponseEntity.notFound().build();
+        }
+        catch (NoAccessToExactResourceException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.noContent().build();
     }
