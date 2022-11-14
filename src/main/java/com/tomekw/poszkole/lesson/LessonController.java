@@ -12,17 +12,12 @@ import com.tomekw.poszkole.exceptions.StudentLessonBucketNotFoundException;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonSaveDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonUpdateDto;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @RestController
@@ -53,7 +48,7 @@ public class LessonController {
     @GetMapping("/{id}")
     ResponseEntity<LessonDto> getLesson(@PathVariable Long id ){
         try {
-            return lessonService.getLesson(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+            return lessonService.createNewLesson(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
         }
         catch (NoAccessToExactResourceException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

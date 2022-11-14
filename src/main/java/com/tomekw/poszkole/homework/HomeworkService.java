@@ -1,10 +1,8 @@
 package com.tomekw.poszkole.homework;
 
-import com.tomekw.poszkole.exceptions.LessonNotFoundException;
-import com.tomekw.poszkole.exceptions.StudentNotFoundException;
-import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
-import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkInfoDto;
+import com.tomekw.poszkole.exceptions.*;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkDtoMapper;
+import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkInfoDto;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkSaveDto;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonRepository;
@@ -28,38 +26,49 @@ public class HomeworkService {
     private final LessonRepository lessonRepository;
     private final HomeworkDtoMapper homeworkDtoMapper;
 
-    List<HomeworkInfoDto> getAllHomeworks(){
+    List<HomeworkInfoDto> getAllHomeworks() {
         return homeworkRepository.findAll().stream().map(homeworkDtoMapper::mapToHomeworkInfoDto).toList();
     }
 
-    Optional<HomeworkInfoDto> getHomework(Long id){
+    Optional<HomeworkInfoDto> getHomework(Long id) {
         return homeworkRepository.findById(id).map(homeworkDtoMapper::mapToHomeworkInfoDto);
     }
 
-    HomeworkInfoDto saveHomework(HomeworkSaveDto homeworkSaveDto){
-        Teacher teacher = teacherRepository.findById(homeworkSaveDto.getHomeworkCreatorId())
-                .orElseThrow(() -> new TeacherNotFoundException("There is no teacher with ID: "+ homeworkSaveDto.getHomeworkCreatorId()));
+    Long saveHomework(HomeworkSaveDto homeworkSaveDto) {
 
-        Student student =studentRepository.findById(homeworkSaveDto.getHomeworkReceiverId())
-                .orElseThrow(() -> new StudentNotFoundException("There is no student with ID: "+ homeworkSaveDto.getHomeworkReceiverId()));
+        Teacher teacher = getTeacherFromRepositoryById(homeworkSaveDto.getHomeworkCreatorId());
 
-        Lesson deadlineLesson = lessonRepository.findById(homeworkSaveDto.getDeadlineLessonId())
-                .orElseThrow(() -> new LessonNotFoundException("There is no Lesson with ID: "+ homeworkSaveDto.getDeadlineLessonId()));
+        Student student = getStudentFromRepositoryById(homeworkSaveDto.getHomeworkReceiverId());
 
-        Lesson creatingLesson = lessonRepository.findById(homeworkSaveDto.getCreatingLessonId())
-                .orElseThrow(() -> new LessonNotFoundException("There is no Lesson with ID: "+ homeworkSaveDto.getDeadlineLessonId()));
+        Lesson deadlineLesson = getLessonFromRepositoryById(homeworkSaveDto.getDeadlineLessonId());
 
-        Homework homework = new Homework(teacher,student,deadlineLesson,creatingLesson, homeworkSaveDto.getHomeworkContents(), creatingLesson.getNotes(),HomeworkStatus.GIVEN);
+        Lesson creatingLesson = getLessonFromRepositoryById(homeworkSaveDto.getCreatingLessonId());
 
-        Homework savedHomework = homeworkRepository.save(homework);
-
-        HomeworkInfoDto homeworkInfoDto = homeworkDtoMapper.mapToHomeworkInfoDto(homework);
-
-        return homeworkInfoDto;
+      return homeworkRepository.save(new Homework(
+               teacher,
+               student,
+               deadlineLesson,
+               creatingLesson,
+               homeworkSaveDto.getHomeworkContents(),
+               creatingLesson.getNotes(),
+               HomeworkStatus.GIVEN)).getId();
     }
 
-    void deleteHomework(Long id){
+    void deleteHomework(Long id) {
         homeworkRepository.deleteById(id);
     }
 
+    private Teacher getTeacherFromRepositoryById(Long teacherId) {
+        return teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND, teacherId));
+    }
+    private Student getStudentFromRepositoryById(Long studentId) {
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND, studentId));
+    }
+
+    private Lesson getLessonFromRepositoryById(Long lessonId) {
+        return lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
+    }
 }

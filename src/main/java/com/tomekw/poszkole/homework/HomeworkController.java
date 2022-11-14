@@ -28,13 +28,13 @@ public class HomeworkController {
     }
 
     @PostMapping
-    ResponseEntity<HomeworkInfoDto> saveHomework(@RequestBody HomeworkSaveDto homeworkSaveDto){
-        HomeworkInfoDto savedHomework = homeworkService.saveHomework(homeworkSaveDto);
+    ResponseEntity<Long> saveHomework(@RequestBody HomeworkSaveDto homeworkSaveDto){
+       Long savedHomeworkId = homeworkService.saveHomework(homeworkSaveDto);
         URI savedHomeworkUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedHomework.getId())
+                .buildAndExpand(savedHomeworkId)
                 .toUri();
-        return ResponseEntity.created(savedHomeworkUri).body(savedHomework);
+        return ResponseEntity.created(savedHomeworkUri).body(savedHomeworkId);
     }
 
     @DeleteMapping("/{id}")

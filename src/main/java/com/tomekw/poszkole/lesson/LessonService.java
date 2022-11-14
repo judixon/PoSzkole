@@ -20,11 +20,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.transform.stream.StreamSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -42,112 +45,135 @@ public class LessonService {
         return lessonRepository.findAll().stream().map(lessonDtoMapper::mapToLessonDto).toList();
     }
 
-    Optional<LessonDto> getLesson(Long id) throws NoAccessToExactResourceException {
+    Optional<LessonDto> createNewLesson(Long id) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(id);
         return lessonRepository.findById(id).map(lessonDtoMapper::mapToLessonDto);
     }
 
-    void deleteLesson(Long id) throws NoAccessToExactResourceException {
+    void deleteLesson(Long id) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(id);
         lessonRepository.deleteById(id);
     }
 
     @Transactional
     List<LessonDto> saveLesson(LessonSaveDto lessonSaveDto) {
-        LessonGroup lessonGroup = lessonGroupRepository.findById(lessonSaveDto.getOwnedByGroupId())
-                .orElseThrow(() -> new LessonGroupNotFoundException("Group with ID: " + lessonSaveDto.getOwnedByGroupId() + " not found."));
+        LessonGroup lessonGroup = getLessonGroup(lessonSaveDto.getOwnedByGroupId());
 
-        Iterable<Lesson> lessonIterable = lessonRepository.saveAll(lessonsToSave(lessonGroup, lessonSaveDto));
+        List<Lesson> lessonList = StreamSupport.stream(lessonRepository.saveAll(getLessonsSequenceToSaveToRepository(lessonGroup, lessonSaveDto)).spliterator(),false)
+                .toList();
 
-        List<Lesson> lessons = new ArrayList<>();
-        lessonIterable.forEach(lessons::add);
+        lessonList.forEach(this::addLessonToTimetable);
 
-        for (Lesson lesson : lessons) {
-            addLessonToTimetable(lesson);
-        }
-        teacherRepository.save(lessons.get(0).getOwnedByGroup().getTeacher());
+        teacherRepository.save(lessonGroup.getTeacher());
 
-        return lessons.stream().map(lessonDtoMapper::mapToLessonDto).toList();
-    }
-
-    private List<Lesson> lessonsToSave(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {
-
-        LocalDate localDate = lessonSaveDto.getStartDateTime().toLocalDate();
-        List<Lesson> lessons = new ArrayList<>();
-        int incrementDays = 0;
-
-        do {
-            List<StudentLessonBucket> studentLessonBucketList = lessonGroup.getStudentLessonGroupBucketList().stream().map(studentGroupBucket -> new StudentLessonBucket(studentGroupBucket.getStudent(), StudentPresenceStatus.UNDETERMINED, null)).toList();
-
-            Lesson lesson = new Lesson(lessonSaveDto.getStartDateTime().plusDays(incrementDays),
-                    lessonSaveDto.getEndDateTime().plusDays(incrementDays),
-                    "brak",
-                    "brak",
-                    lessonGroup,
-                    new ArrayList<Homework>(),
-                    new ArrayList<Homework>(),
-                    lessonSaveDto.getStartDateTime().plusDays(incrementDays).isAfter(LocalDateTime.now()) ? studentLessonBucketList : new ArrayList<StudentLessonBucket>(),
-                    LessonStatus.WAITING);
-
-            lesson.getStudentLessonBucketList().stream().forEach(studentLessonBucket -> studentLessonBucket.setLesson(lesson));
-
-            lessons.add(lesson);
-
-            if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE)) {
-                return lessons;
-            } else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_WEEK)) {
-                incrementDays += 7;
-            } else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
-                incrementDays += 14;
-            } else {
-                throw new LessonFrequencyStatusUndefinedException();
-            }
-        } while (localDate.plusDays(incrementDays).isBefore(lessonSaveDto.getLessonSequenceBorder().plusDays(1)));
-        return lessons;
+        return lessonList.stream().map(lessonDtoMapper::mapToLessonDto).toList();
     }
 
     LessonUpdateDto getLessonUpdateDto(Long lessonId) {
-        return lessonDtoMapper.mapToLessonUpdateDto(lessonRepository.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson with ID: " + lessonId + " not found")));
+        return lessonDtoMapper.mapToLessonUpdateDto(getLessonFromRepositoryById(lessonId));
     }
 
-    void updateLesson(Long lessonId, LessonUpdateDto lessonUpdateDto) throws LessonNotFoundException, NoAccessToExactResourceException {
+    void updateLesson(Long lessonId, LessonUpdateDto lessonUpdateDto) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(lessonId);
 
-        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new LessonNotFoundException("Lesson with ID: " + lessonId + " not found"));
+        Lesson lesson = getLessonFromRepositoryById(lessonId);
 
-        lesson.setLessonPlan(lessonUpdateDto.getLessonPlan());
-        lesson.setNotes(lessonUpdateDto.getNotes());
-        lesson.setLessonStatus(LessonStatus.valueOf(lessonUpdateDto.getLessonStatus()));
+        updateLessonDataFromLessonUpdateDto(lessonUpdateDto, lesson);
 
         lessonRepository.save(lesson);
     }
 
-    void updateStudentLessonBucket(Long lessonId, Long studentLessonBucketId, String studentPresenceStatus) throws LessonNotFoundException, StudentLessonBucketNotFoundException, NoAccessToExactResourceException {
+    void updateStudentLessonBucket(Long lessonId, Long studentLessonBucketId, String studentPresenceStatus) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(lessonId);
 
-        try {
-            StudentLessonBucket studentLessonBucketToUpdate = lessonRepository.findById(lessonId).map(Lesson::getStudentLessonBucketList)
-                    .orElseThrow(() -> new LessonNotFoundException("Lesson with ID: " + lessonId + " not found"))
-                    .stream()
-                    .filter(studentLessonBucket -> studentLessonBucket.getId().equals(studentLessonBucketId))
-                    .toList()
-                    .get(0);
+        StudentLessonBucket studentLessonBucketToUpdate = getStudentLessonBucketFromLessonByIds(lessonId, studentLessonBucketId);
 
-            studentLessonBucketToUpdate.setStudentPresenceStatus(StudentPresenceStatus.valueOf(studentPresenceStatus));
+        studentLessonBucketToUpdate.setStudentPresenceStatus(StudentPresenceStatus.valueOf(studentPresenceStatus.toUpperCase()));
 
-            if (studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_PAYMENT) ||
-                    studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_PAYMENT)) {
-                paymentService.createPaymentFromStudentLessonBucket(studentLessonBucketToUpdate);
-            } else {
-                paymentService.removePayment(studentLessonBucketToUpdate);
-            }
-            studentLessonBucketRepository.save(studentLessonBucketToUpdate);
-        }
-        catch (IndexOutOfBoundsException e) {
-            throw new StudentLessonBucketNotFoundException("StudentLessonBucket with ID: " + studentLessonBucketId + " not found");
-        }
+        menageStudentsPaymentsAccordingToItsPresenceStatus(studentLessonBucketToUpdate);
+
+        studentLessonBucketRepository.save(studentLessonBucketToUpdate);
     }
 
+    private List<Lesson> getLessonsSequenceToSaveToRepository(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {
+
+        LocalDate localDate = lessonSaveDto.getStartDateTime().toLocalDate();
+        List<Lesson> lessons = new ArrayList<>();
+        int daysIncrement = 0;
+
+        do {
+            List<StudentLessonBucket> studentLessonBucketList = lessonGroup.getStudentLessonGroupBucketList()
+                    .stream()
+                    .map(studentGroupBucket -> new StudentLessonBucket(studentGroupBucket.getStudent(), StudentPresenceStatus.UNDETERMINED, null))
+                    .toList();
+
+            Lesson lesson = createNewLessonForLessonsSequence(lessonGroup, lessonSaveDto, daysIncrement, studentLessonBucketList);
+
+            lessons.add(lesson);
+
+            daysIncrement = getNewDaysIncrement(lessonSaveDto, lessons, daysIncrement);
+
+        } while (localDate.plusDays(daysIncrement).isBefore(lessonSaveDto.getLessonSequenceBorder().plusDays(1))
+                && !lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE));
+        return lessons;
+    }
+
+    private Lesson createNewLessonForLessonsSequence(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto, int incrementDays, List<StudentLessonBucket> studentLessonBucketList) {
+        Lesson lesson = new Lesson(lessonSaveDto.getStartDateTime().plusDays(incrementDays),
+                lessonSaveDto.getEndDateTime().plusDays(incrementDays),
+                "none",
+                "none",
+                lessonGroup,
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST,
+                lessonSaveDto.getStartDateTime().plusDays(incrementDays).isAfter(LocalDateTime.now()) ? studentLessonBucketList : Collections.EMPTY_LIST,
+                LessonStatus.WAITING);
+        lesson.getStudentLessonBucketList().forEach(studentLessonBucket -> studentLessonBucket.setLesson(lesson));
+        return lesson;
+    }
+
+    private int getNewDaysIncrement(LessonSaveDto lessonSaveDto, List<Lesson> lessons, int incrementDays) {
+        if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE)) {
+            return incrementDays;
+        }
+        else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_WEEK)) {
+            incrementDays += 7;
+        }
+        else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
+            incrementDays += 14;
+        }
+        else {
+            throw new LessonFrequencyStatusUndefinedException();
+        }
+        return incrementDays;
+    }
+
+    private void updateLessonDataFromLessonUpdateDto(LessonUpdateDto lessonUpdateDto, Lesson lessonToUpdate) {
+        lessonToUpdate.setLessonPlan(lessonUpdateDto.getLessonPlan());
+        lessonToUpdate.setNotes(lessonUpdateDto.getNotes());
+        lessonToUpdate.setLessonStatus(LessonStatus.valueOf(lessonUpdateDto.getLessonStatus()));
+    }
+
+    private StudentLessonBucket getStudentLessonBucketFromLessonByIds(Long lessonId, Long studentLessonBucketId) {
+        return lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId))
+                .getStudentLessonBucketList()
+                .stream()
+                .filter(studentLessonBucket -> studentLessonBucket.getId().equals(studentLessonBucketId))
+                .findFirst()
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
+    }
+
+    private void menageStudentsPaymentsAccordingToItsPresenceStatus(StudentLessonBucket studentLessonBucket) {
+        if (studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_PAYMENT) ||
+                studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_PAYMENT)) {
+            paymentService.createPaymentFromStudentLessonBucket(studentLessonBucket);
+        }
+        else if (studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_NO_PAYMENT) ||
+                studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_NO_PAYMENT)) {
+            paymentService.removePayment(studentLessonBucket);
+        }
+    }
 
     private void addLessonToTimetable(Lesson lesson) {
         Timetable timetable = lesson.getOwnedByGroup().getTeacher().getTimetable();
@@ -209,5 +235,15 @@ public class LessonService {
             }
         }
         return weekToCreate;
+    }
+
+    private Lesson getLessonFromRepositoryById(Long lessonId) {
+        return lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
+    }
+
+    private LessonGroup getLessonGroup(Long lessonId) {
+        return  lessonGroupRepository.findById(lessonId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
     }
 }
