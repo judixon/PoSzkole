@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.lesson.studentLessonBucket;
 
-import com.tomekw.poszkole.lessonGroup.LessonGroupSubject;
+import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import com.tomekw.poszkole.lesson.LessonStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;

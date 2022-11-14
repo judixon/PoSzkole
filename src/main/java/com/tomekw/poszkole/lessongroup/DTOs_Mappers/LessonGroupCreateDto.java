@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lessonGroup.DTOs_Mappers;
+package com.tomekw.poszkole.lessongroup.DTOs_Mappers;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

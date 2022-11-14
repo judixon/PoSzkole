@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.payments.DTOs_Mappers;
 
-import com.tomekw.poszkole.lessonGroup.LessonGroupSubject;
+import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import com.tomekw.poszkole.payments.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;

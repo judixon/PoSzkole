@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lessonGroup;
+package com.tomekw.poszkole.lessongroup;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

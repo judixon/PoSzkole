@@ -8,11 +8,11 @@ import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListStudentParentViewDt
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDtoMapper;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonStudentListViewDto;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupDtoMapper;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListStudentViewDto;
-import com.tomekw.poszkole.lessonGroup.LessonGroup;
-import com.tomekw.poszkole.lessonGroup.LessonGroupService;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupDtoMapper;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupListStudentViewDto;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.LessonGroupService;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UserRegistrationDto;

@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lessonGroup;
+package com.tomekw.poszkole.lessongroup;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,11 +9,11 @@ import com.tomekw.poszkole.exceptions.LessonGroupNotFoundException;
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.StudentLessonGroupBucketNotFoundException;
 import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupCreateDto;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupInfoDto;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupUpdateDto;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupCreateDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupInfoDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupUpdateDto;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
 import com.tomekw.poszkole.users.teacher.TeacherListDto;
 import lombok.RequiredArgsConstructor;

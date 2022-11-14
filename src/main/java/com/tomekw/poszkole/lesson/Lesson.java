@@ -2,7 +2,7 @@ package com.tomekw.poszkole.lesson;
 
 
 
-import com.tomekw.poszkole.lessonGroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import lombok.Data;

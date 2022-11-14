@@ -8,10 +8,9 @@ import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.ParentNotFoundException;
 import com.tomekw.poszkole.exceptions.StudentNotFoundException;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListStudentViewDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupListStudentViewDto;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListStudentParentViewDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonStudentListViewDto;
-import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.users.UserRegistrationDto;
 import com.tomekw.poszkole.users.parent.ParentInfoDto;
 import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentInfoDto;
@@ -20,11 +19,9 @@ import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor

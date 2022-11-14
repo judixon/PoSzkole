@@ -1,5 +1,6 @@
 package com.tomekw.poszkole.payments;
 
+import com.tomekw.poszkole.exceptions.ElementNotFoundException;
 import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentDto;
 import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentSaveDto;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,16 @@ public class PaymentController {
     @GetMapping
     ResponseEntity<List<PaymentDto>> getPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
+    }
+
+    @GetMapping("/throw")
+    void any(){
+        try {
+            paymentService.throwMethod();
+        }
+        catch (ElementNotFoundException e){
+            System.out.println("gagfaf");
+        }
     }
 
     @PostMapping

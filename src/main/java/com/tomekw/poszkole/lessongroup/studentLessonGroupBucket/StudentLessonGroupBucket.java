@@ -1,7 +1,7 @@
-package com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket;
+package com.tomekw.poszkole.lessongroup.studentLessonGroupBucket;
 
 
-import com.tomekw.poszkole.lessonGroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.users.student.Student;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

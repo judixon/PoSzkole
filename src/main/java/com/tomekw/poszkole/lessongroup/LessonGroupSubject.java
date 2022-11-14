@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lessonGroup;
+package com.tomekw.poszkole.lessongroup;
 
 public enum LessonGroupSubject {
 

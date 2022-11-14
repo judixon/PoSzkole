@@ -1,6 +1,6 @@
-package com.tomekw.poszkole.lessonGroup.DTOs_Mappers;
+package com.tomekw.poszkole.lessongroup.DTOs_Mappers;
 
-import com.tomekw.poszkole.lessonGroup.LessonGroupSubject;
+import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

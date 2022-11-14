@@ -1,10 +1,10 @@
-package com.tomekw.poszkole.lessonGroup.DTOs_Mappers;
+package com.tomekw.poszkole.lessongroup.DTOs_Mappers;
 
 
 
-import com.tomekw.poszkole.lessonGroup.LessonGroupStatus;
-import com.tomekw.poszkole.lessonGroup.LessonGroupSubject;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.LessonGroupStatus;
+import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
 import com.tomekw.poszkole.users.teacher.TeacherListDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,25 +1,22 @@
-package com.tomekw.poszkole.lessonGroup;
+package com.tomekw.poszkole.lessongroup;
 
 
-import com.tomekw.poszkole.exceptions.LessonGroupNotFoundException;
-import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
-import com.tomekw.poszkole.exceptions.StudentLessonGroupBucketNotFoundException;
-import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
+import com.tomekw.poszkole.exceptions.*;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
 import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDtoMapper;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupCreateDto;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupDtoMapper;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupInfoDto;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupUpdateDto;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucket;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucketRepository;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupCreateDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupDtoMapper;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupInfoDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupUpdateDto;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketRepository;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.teacher.Teacher;
@@ -158,7 +155,7 @@ public class LessonGroupService {
     }
 
     void updateLessonGroup(LessonGroupUpdateDto lessonGroupUpdateDto, Long lessonGroupId) throws LessonGroupNotFoundException,TeacherNotFoundException{
-        LessonGroup lessonGroup = lessonGroupRepository.findById(lessonGroupId).orElseThrow(() -> new LessonGroupNotFoundException("LessonGroup with ID: " + lessonGroupId + " not found"));
+        LessonGroup lessonGroup = lessonGroupRepository.findById(lessonGroupId).orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonGroupId));
 
         if (!lessonGroupUpdateDto.getTeacherId().equals(-1L)) {
             Teacher teacher = teacherRepository.findById(lessonGroupUpdateDto.getTeacherId()).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: " + lessonGroupUpdateDto.getTeacherId() + " not found"));

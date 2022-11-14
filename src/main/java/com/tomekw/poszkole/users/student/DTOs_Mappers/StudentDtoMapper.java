@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.users.student.DTOs_Mappers;
 
-import com.tomekw.poszkole.lessonGroup.LessonGroup;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDtoMapper;
 import com.tomekw.poszkole.users.parent.ParentDtoMapper;

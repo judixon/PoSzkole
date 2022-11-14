@@ -9,8 +9,8 @@ import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonUpdateDto;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
-import com.tomekw.poszkole.lessonGroup.LessonGroup;
-import com.tomekw.poszkole.lessonGroup.LessonGroupRepository;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.LessonGroupRepository;
 import com.tomekw.poszkole.payments.PaymentService;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.timetable.Timetable;
@@ -137,7 +137,7 @@ public class LessonService {
 
             if (studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_PAYMENT) ||
                     studentLessonBucketToUpdate.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_PAYMENT)) {
-                paymentService.createPaymentFromStudenLessonBucket(studentLessonBucketToUpdate);
+                paymentService.createPaymentFromStudentLessonBucket(studentLessonBucketToUpdate);
             } else {
                 paymentService.removePayment(studentLessonBucketToUpdate);
             }

@@ -1,7 +1,7 @@
-package com.tomekw.poszkole.lessonGroup;
+package com.tomekw.poszkole.lessongroup;
 
 
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.users.teacher.Teacher;

@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.payments;
 
 import com.tomekw.poszkole.exceptions.*;
-import com.tomekw.poszkole.lessonGroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
@@ -32,6 +32,9 @@ public class PaymentService {
     private final PaymentDtoMapper paymentDtoMapper;
     private final ParentService parentService;
 
+    void throwMethod(){
+        throw new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,14L);
+    }
 
     Optional<PaymentDto> getPayment(Long id) {
         return paymentRepository.findById(id).map(paymentDtoMapper::mapToPaymentDto);
@@ -72,7 +75,7 @@ public class PaymentService {
         paymentRepository.deleteById(id);
     }
 
-    public void createPaymentFromStudenLessonBucket(StudentLessonBucket studentLessonBucket) {
+    public void createPaymentFromStudentLessonBucket(StudentLessonBucket studentLessonBucket) {
         checkIfParentIsLinked(studentLessonBucket);
 
         Optional<Payment> paymentToCheckIfExists = paymentRepository.findPaymentToCheckIfExists(studentLessonBucket.getStudent().getId(),
@@ -125,8 +128,6 @@ public class PaymentService {
             paymentRepository.delete(paymentToCheckIfExists.get());
             parentService.refreshDebt(parent);
         }
-
-
     }
 
     private void checkIfParentIsLinked(StudentLessonBucket studentLessonBucket) {

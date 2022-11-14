@@ -8,7 +8,7 @@ import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListTeacherViewDto;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableTeacherViewDto;
 import com.tomekw.poszkole.users.UserRegistrationDto;
 import lombok.RequiredArgsConstructor;

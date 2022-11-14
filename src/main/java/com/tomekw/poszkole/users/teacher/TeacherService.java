@@ -3,8 +3,8 @@ package com.tomekw.poszkole.users.teacher;
 
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupDtoMapper;
-import com.tomekw.poszkole.lessonGroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupDtoMapper;
+import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkDtoMapper;
 import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListTeacherViewDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
