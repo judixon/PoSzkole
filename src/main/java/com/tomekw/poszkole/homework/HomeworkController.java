@@ -1,8 +1,8 @@
 package com.tomekw.poszkole.homework;
 
 
-import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkInfoDto;
-import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkSaveDto;
+import com.tomekw.poszkole.homework.mappers.HomeworkInfoDto;
+import com.tomekw.poszkole.homework.mappers.HomeworkSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,14 @@ public class HomeworkController {
 
     private final HomeworkService homeworkService;
 
+    @GetMapping
     ResponseEntity<List<HomeworkInfoDto>> getAllHomeworks(){
         return ResponseEntity.ok(homeworkService.getAllHomeworks());
     }
 
     @GetMapping("/{id}")
     ResponseEntity<HomeworkInfoDto> getHomework(@PathVariable Long id){
-        return homeworkService.getHomework(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(homeworkService.getHomework(id));
     }
 
     @PostMapping

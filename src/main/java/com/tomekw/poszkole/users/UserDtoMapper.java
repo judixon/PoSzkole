@@ -7,6 +7,8 @@ import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.timetable.Timetable;
+import com.tomekw.poszkole.users.dtos.UserCredentialsDto;
+import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.teacher.Teacher;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,8 +44,8 @@ public class UserDtoMapper {
                 "{bcrypt}" + passwordEncoder.encode(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
-                new ArrayList<LessonGroup>(),
-                new ArrayList<Homework>(),
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST,
                 new Timetable()
         );
     }
@@ -60,8 +63,9 @@ public class UserDtoMapper {
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
                 null,
-                new ArrayList<Homework>(), new ArrayList<StudentLessonBucket>(),
-                new ArrayList<StudentLessonGroupBucket>());
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST);
     }
 
     public Parent mapToParent(UserRegistrationDto userRegistrationDto){
@@ -76,11 +80,10 @@ public class UserDtoMapper {
                 "{bcrypt}" + passwordEncoder.encode(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
-                new ArrayList<Student>(),
-                new ArrayList<Payment>(),
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO);
-
     }
 
     public UserRegistrationDto mapUserToUserRegistrationDto(User user){

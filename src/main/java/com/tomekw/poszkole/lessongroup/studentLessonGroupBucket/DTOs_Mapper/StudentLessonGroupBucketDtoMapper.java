@@ -2,7 +2,7 @@ package com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper;
 
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
-import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentDtoMapper;
+import com.tomekw.poszkole.users.student.StudentDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

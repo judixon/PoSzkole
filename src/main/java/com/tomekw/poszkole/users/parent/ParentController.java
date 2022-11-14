@@ -7,21 +7,19 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.ParentNotFoundException;
-import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentTeacherAndParentListViewDto;
-import com.tomekw.poszkole.users.UserCredentialsDto;
-import com.tomekw.poszkole.users.UserRegistrationDto;
-import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentInfoParentViewDto;
-import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentListDto;
+import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
+import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
+import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
+import com.tomekw.poszkole.users.parent.dtos.ParentUpdateDto;
+import com.tomekw.poszkole.users.student.dtos.StudentInfoParentViewDto;
+import com.tomekw.poszkole.users.student.dtos.StudentListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor

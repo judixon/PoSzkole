@@ -5,9 +5,9 @@ import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGro
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
-import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentDto;
-import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentDtoMapper;
-import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentSaveDto;
+import com.tomekw.poszkole.payments.dtos.PaymentDto;
+import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
+import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.parent.ParentRepository;
 import com.tomekw.poszkole.users.parent.ParentService;

@@ -1,11 +1,13 @@
 package com.tomekw.poszkole.users.parent;
 
 
-import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentDtoMapper;
+import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
+import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
+import com.tomekw.poszkole.users.parent.dtos.ParentUpdateDto;
+import com.tomekw.poszkole.users.student.StudentDtoMapper;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.userRole.UserRole;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service

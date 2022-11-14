@@ -1,8 +1,8 @@
 package com.tomekw.poszkole.payments;
 
 import com.tomekw.poszkole.exceptions.ElementNotFoundException;
-import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentDto;
-import com.tomekw.poszkole.payments.DTOs_Mappers.PaymentSaveDto;
+import com.tomekw.poszkole.payments.dtos.PaymentDto;
+import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

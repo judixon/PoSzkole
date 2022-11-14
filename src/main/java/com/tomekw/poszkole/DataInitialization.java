@@ -1,6 +1,6 @@
 package com.tomekw.poszkole;
 
-import com.tomekw.poszkole.users.UserRegistrationDto;
+import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 
 import com.tomekw.poszkole.users.parent.ParentService;
 import com.tomekw.poszkole.users.student.StudentService;

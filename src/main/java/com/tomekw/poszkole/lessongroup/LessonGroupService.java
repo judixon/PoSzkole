@@ -2,25 +2,25 @@ package com.tomekw.poszkole.lessongroup;
 
 
 import com.tomekw.poszkole.exceptions.*;
-import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
-import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDtoMapper;
+import com.tomekw.poszkole.lesson.dtos.LessonDto;
+import com.tomekw.poszkole.lesson.LessonDtoMapper;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
-import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupCreateDto;
-import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupDtoMapper;
-import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupInfoDto;
-import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupUpdateDto;
+import com.tomekw.poszkole.lessongroup.dtos.LessonGroupCreateDto;
+import com.tomekw.poszkole.lessongroup.dtos.LessonGroupInfoDto;
+import com.tomekw.poszkole.lessongroup.dtos.LessonGroupUpdateDto;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketRepository;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
+import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.TeacherListDto;
+import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import com.tomekw.poszkole.users.teacher.TeacherListDtoMapper;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
@@ -148,17 +148,17 @@ public class LessonGroupService {
         studentLessonGroupBucketRepository.save(studentLessonGroupBucket);
     }
 
-    Optional<TeacherListDto> getTeacher(Long id) throws NoAccessToExactResourceException{
+    Optional<TeacherListDto> getTeacher(Long id) {
         resourceAccessChecker.checkLessonGroupDetailedDataAccessForParentOrStudent(id);
 
         return lessonGroupRepository.findById(id).map(LessonGroup::getTeacher).map(teacherListDtoMapper::map);
     }
 
-    void updateLessonGroup(LessonGroupUpdateDto lessonGroupUpdateDto, Long lessonGroupId) throws LessonGroupNotFoundException,TeacherNotFoundException{
-        LessonGroup lessonGroup = lessonGroupRepository.findById(lessonGroupId).orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonGroupId));
+    void updateLessonGroup(LessonGroupUpdateDto lessonGroupUpdateDto, Long lessonGroupId) {
+        LessonGroup lessonGroup = getGroupFromRepositoryById(lessonGroupId);
 
         if (!lessonGroupUpdateDto.getTeacherId().equals(-1L)) {
-            Teacher teacher = teacherRepository.findById(lessonGroupUpdateDto.getTeacherId()).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: " + lessonGroupUpdateDto.getTeacherId() + " not found"));
+            Teacher teacher = getTeacherFromRepositoryById(lessonGroupUpdateDto.getTeacherId());
             lessonGroup.setTeacher(teacher);
         }
 
@@ -166,6 +166,17 @@ public class LessonGroupService {
         lessonGroup.setLessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupUpdateDto.getLessonGroupSubject()));
         lessonGroup.setName(lessonGroupUpdateDto.getName());
         lessonGroup.setPrizePerStudent(lessonGroupUpdateDto.getPrizePerStudent());
+
         lessonGroupRepository.save(lessonGroup);
+    }
+
+    private Teacher getTeacherFromRepositoryById(Long teacherId) {
+        return teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND,teacherId));
+    }
+
+    private LessonGroup getGroupFromRepositoryById(Long lessonGroupId) {
+       return lessonGroupRepository.findById(lessonGroupId)
+               .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND, lessonGroupId));
     }
 }

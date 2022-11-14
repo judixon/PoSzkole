@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.users.userRole;
 
-import com.tomekw.poszkole.users.UserRegistrationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

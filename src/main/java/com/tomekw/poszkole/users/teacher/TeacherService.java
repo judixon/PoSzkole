@@ -3,16 +3,17 @@ package com.tomekw.poszkole.users.teacher;
 
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
-import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupDtoMapper;
-import com.tomekw.poszkole.lessongroup.DTOs_Mappers.LessonGroupListTeacherViewDto;
-import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkDtoMapper;
-import com.tomekw.poszkole.homework.DTOs_Mappers.HomeworkListTeacherViewDto;
+import com.tomekw.poszkole.lessongroup.LessonGroupDtoMapper;
+import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListTeacherViewDto;
+import com.tomekw.poszkole.homework.HomeworkDtoMapper;
+import com.tomekw.poszkole.homework.mappers.HomeworkListTeacherViewDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
-import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableDtoMapper;
-import com.tomekw.poszkole.timetable.DTOs_Mappers.TimetableTeacherViewDto;
-import com.tomekw.poszkole.users.UserRegistrationDto;
+import com.tomekw.poszkole.timetable.TimetableDtoMapper;
+import com.tomekw.poszkole.timetable.dtos.TimetableTeacherViewDto;
+import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
+import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import com.tomekw.poszkole.users.userRole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,7 +39,7 @@ public class TeacherService {
     private final UsernameUniquenessValidator usernameUniquenessValidator;
     private final ResourceAccessChecker resourceAccessChecker;
 
-  public   TeacherListDto register(UserRegistrationDto userRegistrationDto) {
+  public TeacherListDto register(UserRegistrationDto userRegistrationDto) {
         Teacher teacher = userDtoMapper.mapToTeacher(userRegistrationDto);
         Teacher savedTeacher = teacherRepository.save(teacher);
         return teacherListDtoMapper.map(savedTeacher);

@@ -1,18 +1,18 @@
 package com.tomekw.poszkole.lesson;
 
-import com.tomekw.poszkole.exceptions.*;
-import com.tomekw.poszkole.homework.Homework;
-import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDto;
-import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonDtoMapper;
-import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonSaveDto;
-import com.tomekw.poszkole.lesson.DTOs_Mappers.LessonUpdateDto;
+import com.tomekw.poszkole.exceptions.ElementNotFoundException;
+import com.tomekw.poszkole.exceptions.LessonFrequencyStatusUndefinedException;
+import com.tomekw.poszkole.lesson.dtos.LessonDto;
+import com.tomekw.poszkole.lesson.dtos.LessonSaveDto;
+import com.tomekw.poszkole.lesson.dtos.LessonUpdateDto;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
-import com.tomekw.poszkole.lessongroup.LessonGroupRepository;
 import com.tomekw.poszkole.payments.PaymentService;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
+import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
+import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.timetable.Timetable;
 import com.tomekw.poszkole.timetable.week.Week;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
@@ -20,13 +20,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.transform.stream.StreamSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -34,20 +32,20 @@ import java.util.stream.StreamSupport;
 public class LessonService {
 
     private final LessonRepository lessonRepository;
-    private final LessonGroupRepository lessonGroupRepository;
     private final LessonDtoMapper lessonDtoMapper;
     private final TeacherRepository teacherRepository;
     private final StudentLessonBucketRepository studentLessonBucketRepository;
     private final PaymentService paymentService;
     private final ResourceAccessChecker resourceAccessChecker;
+    private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
 
     List<LessonDto> getAllLessons() {
         return lessonRepository.findAll().stream().map(lessonDtoMapper::mapToLessonDto).toList();
     }
 
-    Optional<LessonDto> createNewLesson(Long id) {
+    LessonDto getLesson(Long id) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(id);
-        return lessonRepository.findById(id).map(lessonDtoMapper::mapToLessonDto);
+        return lessonDtoMapper.mapToLessonDto(commonRepositoriesFindMethods.getLessonFromRepositoryById(id));
     }
 
     void deleteLesson(Long id) {
@@ -57,9 +55,9 @@ public class LessonService {
 
     @Transactional
     List<LessonDto> saveLesson(LessonSaveDto lessonSaveDto) {
-        LessonGroup lessonGroup = getLessonGroup(lessonSaveDto.getOwnedByGroupId());
+        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroup(lessonSaveDto.getOwnedByGroupId());
 
-        List<Lesson> lessonList = StreamSupport.stream(lessonRepository.saveAll(getLessonsSequenceToSaveToRepository(lessonGroup, lessonSaveDto)).spliterator(),false)
+        List<Lesson> lessonList = StreamSupport.stream(lessonRepository.saveAll(getLessonsSequenceToSaveToRepository(lessonGroup, lessonSaveDto)).spliterator(), false)
                 .toList();
 
         lessonList.forEach(this::addLessonToTimetable);
@@ -70,13 +68,13 @@ public class LessonService {
     }
 
     LessonUpdateDto getLessonUpdateDto(Long lessonId) {
-        return lessonDtoMapper.mapToLessonUpdateDto(getLessonFromRepositoryById(lessonId));
+        return lessonDtoMapper.mapToLessonUpdateDto(commonRepositoriesFindMethods.getLessonFromRepositoryById(lessonId));
     }
 
     void updateLesson(Long lessonId, LessonUpdateDto lessonUpdateDto) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(lessonId);
 
-        Lesson lesson = getLessonFromRepositoryById(lessonId);
+        Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(lessonId);
 
         updateLessonDataFromLessonUpdateDto(lessonUpdateDto, lesson);
 
@@ -111,7 +109,7 @@ public class LessonService {
 
             lessons.add(lesson);
 
-            daysIncrement = getNewDaysIncrement(lessonSaveDto, lessons, daysIncrement);
+            daysIncrement = getNewDaysIncrement(lessonSaveDto, daysIncrement);
 
         } while (localDate.plusDays(daysIncrement).isBefore(lessonSaveDto.getLessonSequenceBorder().plusDays(1))
                 && !lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE));
@@ -132,17 +130,14 @@ public class LessonService {
         return lesson;
     }
 
-    private int getNewDaysIncrement(LessonSaveDto lessonSaveDto, List<Lesson> lessons, int incrementDays) {
+    private int getNewDaysIncrement(LessonSaveDto lessonSaveDto, int incrementDays) {
         if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE)) {
             return incrementDays;
-        }
-        else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_WEEK)) {
+        } else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_WEEK)) {
             incrementDays += 7;
-        }
-        else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
+        } else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
             incrementDays += 14;
-        }
-        else {
+        } else {
             throw new LessonFrequencyStatusUndefinedException();
         }
         return incrementDays;
@@ -168,8 +163,7 @@ public class LessonService {
         if (studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_PAYMENT) ||
                 studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_PAYMENT)) {
             paymentService.createPaymentFromStudentLessonBucket(studentLessonBucket);
-        }
-        else if (studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_NO_PAYMENT) ||
+        } else if (studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_NO_PAYMENT) ||
                 studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_NO_PAYMENT)) {
             paymentService.removePayment(studentLessonBucket);
         }
@@ -237,13 +231,13 @@ public class LessonService {
         return weekToCreate;
     }
 
-    private Lesson getLessonFromRepositoryById(Long lessonId) {
-        return lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
-    }
-
-    private LessonGroup getLessonGroup(Long lessonId) {
-        return  lessonGroupRepository.findById(lessonId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
-    }
+//    private Lesson getLessonFromRepositoryById(Long lessonId) {
+//        return lessonRepository.findById(lessonId)
+//                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
+//    }
+//
+//    private LessonGroup getLessonGroup(Long lessonId) {
+//        return  lessonGroupRepository.findById(lessonId)
+//                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
+//    }
 }

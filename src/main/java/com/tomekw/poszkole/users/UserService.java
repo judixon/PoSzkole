@@ -1,6 +1,7 @@
 package com.tomekw.poszkole.users;
 
 
+import com.tomekw.poszkole.users.dtos.UserCredentialsDto;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.parent.ParentRepository;
 import com.tomekw.poszkole.users.student.Student;

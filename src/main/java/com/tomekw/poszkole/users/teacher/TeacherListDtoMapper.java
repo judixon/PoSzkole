@@ -1,6 +1,7 @@
 package com.tomekw.poszkole.users.teacher;
 
 
+import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import org.springframework.stereotype.Service;
 
 @Service

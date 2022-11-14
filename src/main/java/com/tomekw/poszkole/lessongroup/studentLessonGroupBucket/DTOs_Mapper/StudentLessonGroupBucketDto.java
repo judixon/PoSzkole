@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper;
 
-import com.tomekw.poszkole.users.student.DTOs_Mappers.StudentListDto;
+import com.tomekw.poszkole.users.student.dtos.StudentListDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
