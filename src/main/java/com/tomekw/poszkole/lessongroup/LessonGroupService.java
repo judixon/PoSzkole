@@ -1,10 +1,12 @@
 package com.tomekw.poszkole.lessongroup;
 
 
-import com.tomekw.poszkole.exceptions.*;
-import com.tomekw.poszkole.lesson.dtos.LessonDto;
-import com.tomekw.poszkole.lesson.LessonDtoMapper;
+import com.tomekw.poszkole.exceptions.LessonGroupNotFoundException;
+import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
+import com.tomekw.poszkole.exceptions.StudentLessonGroupBucketNotFoundException;
 import com.tomekw.poszkole.lesson.Lesson;
+import com.tomekw.poszkole.lesson.LessonDtoMapper;
+import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
@@ -17,12 +19,12 @@ import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGro
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketRepository;
 import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
-import com.tomekw.poszkole.shared.DefaultExceptionMessages;
+import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import com.tomekw.poszkole.users.teacher.TeacherListDtoMapper;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
+import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,13 +40,13 @@ public class LessonGroupService {
 
     private final LessonGroupRepository lessonGroupRepository;
     private final LessonGroupDtoMapper lessonGroupDtoMapper;
-    private final TeacherRepository teacherRepository;
     private final StudentLessonBucketRepository studentLessonBucketRepository;
     private final StudentLessonGroupBucketRepository studentLessonGroupBucketRepository;
     private final LessonDtoMapper lessonDtoMapper;
     private final StudentLessonGroupBucketDtoMapper studentLessonGroupBucketDtoMapper;
     private final TeacherListDtoMapper teacherListDtoMapper;
     private final ResourceAccessChecker resourceAccessChecker;
+    private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
 
     List<LessonGroupInfoDto> getAllLessonGroups() {
         return lessonGroupRepository.findAll().stream()
@@ -52,8 +54,8 @@ public class LessonGroupService {
                 .toList();
     }
 
-    Optional<LessonGroupInfoDto> getLessonGroup(Long id) {
-        return lessonGroupRepository.findById(id).map(lessonGroupDtoMapper::mapToLessonGroupInfoDto);
+    LessonGroupInfoDto getLessonGroup(Long id) {
+        return lessonGroupDtoMapper.mapToLessonGroupInfoDto(commonRepositoriesFindMethods.getLessonGroup(id));
     }
 
     LessonGroupInfoDto saveGroup(LessonGroupCreateDto lessonGroupCreateDTO) {
@@ -68,6 +70,7 @@ public class LessonGroupService {
 
     void deleteStudentLessonGroupBucket(Long lessonGroupId, Long studentLessonGroupBucketId) {
         resourceAccessChecker.checkLessonGroupOperationsOnStudentsAccessForTeacher(lessonGroupId);
+
 
         studentLessonGroupBucketRepository.findById(studentLessonGroupBucketId).orElseThrow()
                 .getStudent().getStudentLessonGroupBucketList().removeIf(studentLessonGroupBucket -> studentLessonGroupBucket.getLessonGroup().getId().equals(lessonGroupId));
@@ -136,7 +139,7 @@ public class LessonGroupService {
                 .toList();
     }
 
-    void updateStudentLessonGroupBucket(Long studentLessonGroupBucketId, StudentLessonGroupBucketUpdateDto studentLessonGroupBucketUpdateDto, Long lessonGroupId) throws StudentLessonGroupBucketNotFoundException, NoAccessToExactResourceException{
+    void updateStudentLessonGroupBucket(Long studentLessonGroupBucketId, StudentLessonGroupBucketUpdateDto studentLessonGroupBucketUpdateDto, Long lessonGroupId) throws StudentLessonGroupBucketNotFoundException, NoAccessToExactResourceException {
         resourceAccessChecker.checkLessonGroupOperationsOnStudentsAccessForTeacher(lessonGroupId);
 
         StudentLessonGroupBucket studentLessonGroupBucket = studentLessonGroupBucketRepository.findById(studentLessonGroupBucketId)
@@ -155,10 +158,10 @@ public class LessonGroupService {
     }
 
     void updateLessonGroup(LessonGroupUpdateDto lessonGroupUpdateDto, Long lessonGroupId) {
-        LessonGroup lessonGroup = getGroupFromRepositoryById(lessonGroupId);
+        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroup(lessonGroupId);
 
         if (!lessonGroupUpdateDto.getTeacherId().equals(-1L)) {
-            Teacher teacher = getTeacherFromRepositoryById(lessonGroupUpdateDto.getTeacherId());
+            Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(lessonGroupUpdateDto.getTeacherId());
             lessonGroup.setTeacher(teacher);
         }
 
@@ -168,15 +171,5 @@ public class LessonGroupService {
         lessonGroup.setPrizePerStudent(lessonGroupUpdateDto.getPrizePerStudent());
 
         lessonGroupRepository.save(lessonGroup);
-    }
-
-    private Teacher getTeacherFromRepositoryById(Long teacherId) {
-        return teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND,teacherId));
-    }
-
-    private LessonGroup getGroupFromRepositoryById(Long lessonGroupId) {
-       return lessonGroupRepository.findById(lessonGroupId)
-               .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND, lessonGroupId));
     }
 }

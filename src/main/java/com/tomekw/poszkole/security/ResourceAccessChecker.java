@@ -39,7 +39,6 @@ public class ResourceAccessChecker {
     private final LessonRepository lessonRepository;
     private final LessonGroupRepository lessonGroupRepository;
 
-
     public void checkStudentDetailedDataAccess(Long requestedStudentId) throws NoAccessToExactResourceException {
         if (getUserRoles().contains(TEACHER_ROLE) || getUserRoles().contains(ADMIN_ROLE)) {
             return;

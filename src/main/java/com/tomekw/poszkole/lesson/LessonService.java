@@ -230,14 +230,4 @@ public class LessonService {
         }
         return weekToCreate;
     }
-
-//    private Lesson getLessonFromRepositoryById(Long lessonId) {
-//        return lessonRepository.findById(lessonId)
-//                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
-//    }
-//
-//    private LessonGroup getLessonGroup(Long lessonId) {
-//        return  lessonGroupRepository.findById(lessonId)
-//                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
-//    }
 }

@@ -50,7 +50,7 @@ public class LessonGroupController {
 
     @GetMapping("/{id}")
     ResponseEntity<LessonGroupInfoDto> getLessonGroup(@PathVariable Long id){
-        return lessonGroupService.getLessonGroup(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(lessonGroupService.getLessonGroup(id));
     }
 
     @DeleteMapping("/{id}")
@@ -67,34 +67,19 @@ public class LessonGroupController {
             lessonGroupService.updateLessonGroup(patchedLessonGroup,id);
         }
         catch (JsonPatchException | JsonProcessingException e) {
-            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
-        }
-        catch (LessonGroupNotFoundException | TeacherNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/lessons")
     ResponseEntity<List<LessonDto>> getLessons(@PathVariable Long id){
-        try {
             return ResponseEntity.ok(lessonGroupService.getLessons(id));
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
     }
 
     @GetMapping("/{id}/teacher")
-    ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id){
-        try {
-            return lessonGroupService.getTeacher(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id) {
+        return lessonGroupService.getTeacher(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/students")
@@ -104,13 +89,8 @@ public class LessonGroupController {
 
     @DeleteMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
     ResponseEntity<?> deleteStudentGroupBucket(@PathVariable Long lessonGroupId, @PathVariable Long studentLessonGroupBucketId){
-        try {
             lessonGroupService.deleteStudentLessonGroupBucket(lessonGroupId,studentLessonGroupBucketId);
             return ResponseEntity.noContent().build();
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
     }
 
     @PatchMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
@@ -121,15 +101,7 @@ public class LessonGroupController {
             lessonGroupService.updateStudentLessonGroupBucket(studentLessonGroupBucketId,patchedStudentLessonGroupBucket, lessonGroupId);
         }
         catch (JsonProcessingException | JsonPatchException e) {
-            e.printStackTrace();
-           return ResponseEntity.internalServerError().build();
-        }
-        catch (NoAccessToExactResourceException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        catch (StudentLessonGroupBucketNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.noContent().build();
     }

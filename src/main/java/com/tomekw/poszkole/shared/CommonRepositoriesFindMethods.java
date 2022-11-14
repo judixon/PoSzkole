@@ -5,8 +5,12 @@ import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.homework.HomeworkRepository;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonRepository;
+import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
+import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.lessongroup.LessonGroupRepository;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketRepository;
 import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.payments.PaymentRepository;
 import com.tomekw.poszkole.users.parent.Parent;
@@ -29,6 +33,8 @@ public class CommonRepositoriesFindMethods {
     private final ParentRepository parentRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
+    private final StudentLessonBucketRepository studentLessonBucketRepository;
+    private final StudentLessonGroupBucketRepository studentLessonGroupBucketRepository;
 
     public Lesson getLessonFromRepositoryById(Long lessonId) {
         return lessonRepository.findById(lessonId)
@@ -65,6 +71,13 @@ public class CommonRepositoriesFindMethods {
                 .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.PAYMENT_NOT_FOUND,paymentId));
     }
 
+    public StudentLessonBucket getStudentLessonBucketFromRepositoryById(Long studentLessonBucketId){
+        return studentLessonBucketRepository.findById(studentLessonBucketId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND,studentLessonBucketId));
+    }
 
-
+    public StudentLessonGroupBucket getStudentLessonGroupBucketFromRepositoryById(Long studentLessonGroupBucketId){
+        return studentLessonGroupBucketRepository.findById(studentLessonGroupBucketId)
+                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND,studentLessonGroupBucketId));
+    }
 }
