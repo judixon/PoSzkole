@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.exceptions.globalexceptionhandler;
 
-import com.tomekw.poszkole.exceptions.ElementNotFoundException;
+import com.tomekw.poszkole.exceptions.EntityNotFoundException;
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,8 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(value = {ElementNotFoundException.class})
-    public ResponseEntity<Object> handleElementNotFoundException(ElementNotFoundException e){
+    @ExceptionHandler(value = {EntityNotFoundException.class})
+    public ResponseEntity<Object> handleElementNotFoundException(EntityNotFoundException e){
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 HttpStatus.NOT_FOUND,
@@ -23,7 +23,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {NoAccessToExactResourceException.class})
-    private ResponseEntity<Object> handleNoAccessToExactResourceException(NoAccessToExactResourceException e){
+    public ResponseEntity<Object> handleNoAccessToExactResourceException(NoAccessToExactResourceException e){
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 HttpStatus.FORBIDDEN,
@@ -31,6 +31,4 @@ public class ApiExceptionHandler {
         );
         return new ResponseEntity<>(apiException,apiException.responseHttpStatus());
     }
-
-
 }

@@ -5,10 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.tomekw.poszkole.exceptions.LessonGroupNotFoundException;
-import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
-import com.tomekw.poszkole.exceptions.StudentLessonGroupBucketNotFoundException;
-import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupCreateDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupInfoDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupUpdateDto;
@@ -17,7 +13,6 @@ import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGro
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,13 +34,13 @@ public class LessonGroupController {
     }
 
     @PostMapping
-    ResponseEntity<LessonGroupInfoDto> create(@RequestBody LessonGroupCreateDto lessonGroupCreateDTO){
-        LessonGroupInfoDto saveGroup = lessonGroupService.saveGroup(lessonGroupCreateDTO);
+    ResponseEntity<Long> create(@RequestBody LessonGroupCreateDto lessonGroupCreateDTO){
+        Long savedGroupId = lessonGroupService.saveGroup(lessonGroupCreateDTO);
         URI savedGroupUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(saveGroup.getId())
+                .buildAndExpand(savedGroupId)
                 .toUri();
-        return ResponseEntity.created(savedGroupUri).body(saveGroup);
+        return ResponseEntity.created(savedGroupUri).body(savedGroupId);
     }
 
     @GetMapping("/{id}")
@@ -79,7 +74,7 @@ public class LessonGroupController {
 
     @GetMapping("/{id}/teacher")
     ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id) {
-        return lessonGroupService.getTeacher(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(lessonGroupService.getTeacherOfLessonGroup(id));
     }
 
     @GetMapping("/{id}/students")
@@ -117,5 +112,4 @@ public class LessonGroupController {
         JsonNode patchedStudentLessonGroupBucket = patch.apply(studentLessonGroupBucketToUpdate);
         return objectMapper.treeToValue(patchedStudentLessonGroupBucket,StudentLessonGroupBucketUpdateDto.class);
     }
-
 }

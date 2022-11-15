@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 @Service
@@ -36,9 +37,9 @@ public class LessonGroupDtoMapper {
                 lessonGroupCreateDTO.getPrizePerStudent(),
                 LessonGroupSubject.valueOf(lessonGroupCreateDTO.getGroupSubject().toUpperCase()),
                 teacher,
-                new ArrayList<StudentLessonGroupBucket>(),
-                new ArrayList<Homework>(),
-                new ArrayList<Lesson>()
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST
         );
     }
 
@@ -77,13 +78,11 @@ public class LessonGroupDtoMapper {
     }
 
     public LessonGroupUpdateDto mapToLessonGroupUpdateDto(LessonGroup lessonGroup){
-
         Long teacherId = -1L;
 
         if (Objects.nonNull(lessonGroup.getTeacher())){
             teacherId=lessonGroup.getTeacher().getId();
         }
-
         return new LessonGroupUpdateDto(
                 lessonGroup.getName(),
                 lessonGroup.getLessonGroupStatus().name(),

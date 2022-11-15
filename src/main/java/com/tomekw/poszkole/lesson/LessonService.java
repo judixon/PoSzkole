@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.lesson;
 
-import com.tomekw.poszkole.exceptions.ElementNotFoundException;
+import com.tomekw.poszkole.exceptions.EntityNotFoundException;
 import com.tomekw.poszkole.exceptions.LessonFrequencyStatusUndefinedException;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.dtos.LessonSaveDto;
@@ -55,7 +55,7 @@ public class LessonService {
 
     @Transactional
     List<LessonDto> saveLesson(LessonSaveDto lessonSaveDto) {
-        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroup(lessonSaveDto.getOwnedByGroupId());
+        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(lessonSaveDto.getOwnedByGroupId());
 
         List<Lesson> lessonList = StreamSupport.stream(lessonRepository.saveAll(getLessonsSequenceToSaveToRepository(lessonGroup, lessonSaveDto)).spliterator(), false)
                 .toList();
@@ -94,7 +94,6 @@ public class LessonService {
     }
 
     private List<Lesson> getLessonsSequenceToSaveToRepository(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {
-
         LocalDate localDate = lessonSaveDto.getStartDateTime().toLocalDate();
         List<Lesson> lessons = new ArrayList<>();
         int daysIncrement = 0;
@@ -151,12 +150,12 @@ public class LessonService {
 
     private StudentLessonBucket getStudentLessonBucketFromLessonByIds(Long lessonId, Long studentLessonBucketId) {
         return lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId))
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId))
                 .getStudentLessonBucketList()
                 .stream()
                 .filter(studentLessonBucket -> studentLessonBucket.getId().equals(studentLessonBucketId))
                 .findFirst()
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
     }
 
     private void menageStudentsPaymentsAccordingToItsPresenceStatus(StudentLessonBucket studentLessonBucket) {

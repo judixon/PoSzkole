@@ -33,7 +33,7 @@ public class PaymentService {
     private final ParentService parentService;
 
     void throwMethod(){
-        throw new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,14L);
+        throw new EntityNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,14L);
     }
 
     Optional<PaymentDto> getPayment(Long id) {

@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.payments;
 
-import com.tomekw.poszkole.exceptions.ElementNotFoundException;
+import com.tomekw.poszkole.exceptions.EntityNotFoundException;
 import com.tomekw.poszkole.payments.dtos.PaymentDto;
 import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class PaymentController {
         try {
             paymentService.throwMethod();
         }
-        catch (ElementNotFoundException e){
+        catch (EntityNotFoundException e){
             System.out.println("gagfaf");
         }
     }

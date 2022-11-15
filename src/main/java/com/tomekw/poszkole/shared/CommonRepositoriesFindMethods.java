@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.shared;
 
-import com.tomekw.poszkole.exceptions.ElementNotFoundException;
+import com.tomekw.poszkole.exceptions.EntityNotFoundException;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.homework.HomeworkRepository;
 import com.tomekw.poszkole.lesson.Lesson;
@@ -38,46 +38,63 @@ public class CommonRepositoriesFindMethods {
 
     public Lesson getLessonFromRepositoryById(Long lessonId) {
         return lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId));
     }
 
-    public LessonGroup getLessonGroup(Long lessonId) {
+    public LessonGroup getLessonGroupFromRepositoryById(Long lessonId) {
         return  lessonGroupRepository.findById(lessonId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
     }
 
     public Teacher getTeacherFromRepositoryById(Long teacherId) {
         return teacherRepository.findById(teacherId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND, teacherId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND_BY_ID, teacherId));
+    }
+
+    public Teacher getTeacherFromRepositoryByUsername(String username){
+        return teacherRepository.findByUsername((username))
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND_BY_USERNAME,username));
     }
 
     public Student getStudentFromRepositoryById(Long studentId) {
         return studentRepository.findById(studentId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND, studentId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND_BY_ID, studentId));
+    }
+
+    public Student getStudentFromRepositoryByUsername(String username){
+        return studentRepository.findByUsername((username))
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND_BY_USERNAME,username));
     }
 
     public Parent getParentFromRepositoryById(Long parentId){
         return parentRepository.findById(parentId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.PARENT_NOT_FOUND, parentId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.PARENT_NOT_FOUND_BY_ID, parentId));
+    }
+
+    public Parent getParentFromRepositoryByUsername(String username){
+        return parentRepository.findByUsername((username))
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.PARENT_NOT_FOUND_BY_USERNAME,username));
     }
 
     public Homework getHomeworkFromRepositoryById(Long homeworkId){
         return homeworkRepository.findById(homeworkId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.HOMEWORK_NOT_FOUND, homeworkId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.HOMEWORK_NOT_FOUND, homeworkId));
     }
 
     public Payment getPaymentFromRepositoryById(Long paymentId){
         return paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.PAYMENT_NOT_FOUND,paymentId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.PAYMENT_NOT_FOUND,paymentId));
     }
 
     public StudentLessonBucket getStudentLessonBucketFromRepositoryById(Long studentLessonBucketId){
         return studentLessonBucketRepository.findById(studentLessonBucketId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND,studentLessonBucketId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND,studentLessonBucketId));
     }
 
     public StudentLessonGroupBucket getStudentLessonGroupBucketFromRepositoryById(Long studentLessonGroupBucketId){
         return studentLessonGroupBucketRepository.findById(studentLessonGroupBucketId)
-                .orElseThrow(() -> new ElementNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND,studentLessonGroupBucketId));
+                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND,studentLessonGroupBucketId));
     }
+
+
 }
