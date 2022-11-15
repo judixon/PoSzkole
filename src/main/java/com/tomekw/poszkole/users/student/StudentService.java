@@ -14,7 +14,9 @@ import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.lessongroup.LessonGroupService;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
+import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.UserDtoMapper;
+import com.tomekw.poszkole.users.UserService;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.parent.ParentDtoMapper;
@@ -48,7 +50,8 @@ public class StudentService {
     private final LessonGroupService lessonGroupService;
     private final ParentDtoMapper parentDtoMapper;
     private final ResourceAccessChecker resourceAccessChecker;
-
+    private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
+    private final UserService userService;
 
     List<StudentListDto> getAllStudents() {
         return studentRepository.findAll()
@@ -130,44 +133,44 @@ public class StudentService {
     }
 
     @Transactional
-    void updateStudent(Long id, StudentUpdateDto studentUpdateDto) throws StudentNotFoundException,ParentNotFoundException{
+    void updateStudent(Long id, StudentUpdateDto studentUpdateDto) {
+        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(id);
 
-        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException("Student with ID " + id + " not found."));
+        userService.updateUserWithStandardUserData(student,studentUpdateDto);
 
-        if (!studentUpdateDto.getUsername().equals(student.getUsername())) {
-            usernameUniquenessValidator.validate(studentUpdateDto.getUsername());
-        }
+        linkStudentWithParentIfPossible(studentUpdateDto, student);
 
-        student.setName(studentUpdateDto.getName());
-        student.setSurname(studentUpdateDto.getSurname());
-        student.setEmail(studentUpdateDto.getEmail());
-        student.setTelephoneNumber(studentUpdateDto.getTelephoneNumber());
-        student.setUsername(studentUpdateDto.getUsername());
-        student.setPassword("{bcrypt}" + passwordEncoder.encode(studentUpdateDto.getPassword()));
-        student.setRoles(userRoleMapper.mapToUserRoleList(studentUpdateDto.getRoles()));
+        removeStudentFromGivenGroups(studentUpdateDto, student);
 
-        if (!studentUpdateDto.getParentId().equals(-1L)) {
-            student.setParent(parentRepository.findById(studentUpdateDto.getParentId()).orElseThrow(() -> new ParentNotFoundException("Parent with ID: " + studentUpdateDto.getParentId() + " not found")));
-        } else {
-            student.setParent(null);
-        }
+        addStudentToGivenGroups(studentUpdateDto, student);
 
-        for (Long grupId : findIdsOfGroupsToRemoveFrom(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
-            lessonGroupService.removeStudentFromGroup(student, grupId);
-        }
-        for (Long grupId : findIdsOfGroupsToAddTo(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
-            lessonGroupService.addStudentToGroup(student, grupId);
-        }
         studentRepository.save(student);
     }
 
+    private void linkStudentWithParentIfPossible(StudentUpdateDto studentUpdateDto, Student student) {
+        studentUpdateDto.getParentId()
+                        .ifPresent(parentId -> student.setParent(commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)));
+    }
 
-    private List<Long> findIdsOfGroupsToRemoveFrom(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
+    private void addStudentToGivenGroups(StudentUpdateDto studentUpdateDto, Student student) {
+        for (Long grupId : findIdsOfGroupsToAddStudentTo(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
+            lessonGroupService.addStudentToGroup(student, grupId);
+        }
+    }
+
+    private void removeStudentFromGivenGroups(StudentUpdateDto studentUpdateDto, Student student) {
+        for (Long grupId : findIdsOfGroupsToRemoveStudentFrom(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
+            lessonGroupService.removeStudentFromGroup(student, grupId);
+        }
+    }
+
+
+    private List<Long> findIdsOfGroupsToRemoveStudentFrom(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
         actualState.removeAll(afterPatchState);
         return actualState;
     }
 
-    private List<Long> findIdsOfGroupsToAddTo(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
+    private List<Long> findIdsOfGroupsToAddStudentTo(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
         afterPatchState.removeAll(actualState);
         return afterPatchState;
     }
@@ -177,6 +180,4 @@ public class StudentService {
             student.getParent().getStudentList().remove(student);
         }
     }
-
-
 }

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -93,13 +94,6 @@ public class StudentDtoMapper {
 
 
     public StudentUpdateDto mapToStudentUpdateDto(Student student){
-
-        Long parentId = -1L;
-
-        if (Objects.nonNull(student.getParent())){
-            parentId = student.getParent().getId();
-        }
-
         return new StudentUpdateDto(
                 student.getName(),
                 student.getSurname(),
@@ -107,9 +101,9 @@ public class StudentDtoMapper {
                 student.getTelephoneNumber(),
                 student.getUsername(),
                 student.getPassword(),
-                parentId,
-                student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList(),
-                student.getRoles().stream().map(UserRole::getName).toList()
+                student.getRoles().stream().map(UserRole::getName).toList(),
+                Objects.nonNull(student.getParent())? Optional.of(student.getParent().getId()) :Optional.empty(),
+                student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()
         );
     }
 

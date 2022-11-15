@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
-import com.tomekw.poszkole.exceptions.ParentNotFoundException;
 import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
@@ -15,10 +13,11 @@ import com.tomekw.poszkole.users.parent.dtos.ParentUpdateDto;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoParentViewDto;
 import com.tomekw.poszkole.users.student.dtos.StudentListDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,86 +29,61 @@ public class ParentController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public ResponseEntity<List<ParentListDto>> getParents(){
+    public ResponseEntity<List<ParentListDto>> getParents() {
         return ResponseEntity.ok(parentService.getAllParents());
     }
 
     @PostMapping
-    public void register(@RequestBody UserRegistrationDto userRegistrationDto){
-        parentService.register(userRegistrationDto);
+    ResponseEntity<?> registerParent(@RequestBody UserRegistrationDto userRegistrationDto) {
+        Long savedParentId = parentService.registerParent(userRegistrationDto);
+        URI savedTeacherUri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedParentId)
+                .toUri();
+        return ResponseEntity.created(savedTeacherUri).body(savedParentId);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<ParentInfoDto> getParent(@PathVariable Long id){
-        try {
-            return parentService.getParent(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ResponseEntity<ParentInfoDto> getParent(@PathVariable Long id) {
+        return ResponseEntity.ok(parentService.getParent(id));
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteParent(@PathVariable Long id){
+    ResponseEntity<?> deleteParent(@PathVariable Long id) {
         parentService.deleteParent(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
-    ResponseEntity<?> updateParent(@PathVariable Long id, @RequestBody JsonMergePatch patch){
+    ResponseEntity<?> updateParent(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
         try {
-            ParentUpdateDto parent = parentService.getParentUpdateDto(id).orElseThrow(() -> new ParentNotFoundException("Parent with ID: "+id+" not found"));
-            ParentUpdateDto updatedParent = applyPatch(parent,patch);
-            parentService.updateParent(id,updatedParent);
-        }
-        catch (JsonProcessingException | JsonPatchException e) {
+            ParentUpdateDto parent = parentService.getParentUpdateDto(id);
+            ParentUpdateDto updatedParent = applyPatch(parent, patch);
+            parentService.updateParent(id, updatedParent);
+        } catch (JsonProcessingException | JsonPatchException e) {
             return ResponseEntity.internalServerError().build();
-        }
-        catch ( ParentNotFoundException e) {
-            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/students")
-    ResponseEntity<List<StudentListDto>> getStudents(@PathVariable Long id){
-        try {
-            return ResponseEntity.ok(parentService.getStudents(id));
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ResponseEntity<List<StudentListDto>> getStudents(@PathVariable Long id) {
+        return ResponseEntity.ok(parentService.getStudentsBelongingToParent(id));
     }
 
     @GetMapping("/{id}/payments")
-    ResponseEntity<List<PaymentTeacherAndParentListViewDto>> getPayments(@PathVariable Long id){
-        try {
-            return ResponseEntity.ok(parentService.getPayments(id));
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ResponseEntity<List<PaymentTeacherAndParentListViewDto>> getPayments(@PathVariable Long id) {
+        return ResponseEntity.ok(parentService.getPayments(id));
     }
 
     @GetMapping("/{parentId}/students/{studentId}")
-    ResponseEntity<StudentInfoParentViewDto> getStudent(@PathVariable Long parentId, @PathVariable Long studentId ){
-        try {
-            return parentService.getStudent(parentId, studentId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-        }
-        catch (NoAccessToExactResourceException e){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+    ResponseEntity<StudentInfoParentViewDto> getStudent(@PathVariable Long parentId, @PathVariable Long studentId) {
+        return ResponseEntity.ok(parentService.getStudent(parentId, studentId));
     }
 
     private ParentUpdateDto applyPatch(ParentUpdateDto parentToUpdate, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {
         JsonNode parent = objectMapper.valueToTree(parentToUpdate);
         JsonNode updatedParent = patch.apply(parent);
-        return objectMapper.treeToValue(updatedParent,ParentUpdateDto.class);
+        return objectMapper.treeToValue(updatedParent, ParentUpdateDto.class);
     }
-
-
-
-
-
-
 }

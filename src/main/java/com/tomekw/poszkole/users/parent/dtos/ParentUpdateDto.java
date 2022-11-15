@@ -1,7 +1,10 @@
 package com.tomekw.poszkole.users.parent.dtos;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,14 +12,15 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class ParentUpdateDto{
-    private  String name;
-    private  String surname;
-    private  String email;
-    private  String telephoneNumber;
-    private  String username;
-    private  String password;
+@NoArgsConstructor
+public class ParentUpdateDto extends UserRegistrationDto {
     private  BigDecimal wallet;
     private  List<Long> studentListIds;
-    private List<String> roles;
+
+    public ParentUpdateDto(String name, String surname, String email, String telephoneNumber, String username, String password, List<String> roles, BigDecimal wallet, List<Long> studentListIds) {
+        super(name, surname, email, telephoneNumber, username, password, roles);
+        this.wallet = wallet;
+        this.studentListIds = studentListIds;
+    }
+
 }

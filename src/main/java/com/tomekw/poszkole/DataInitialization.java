@@ -67,7 +67,7 @@ public class DataInitialization {
 
     private void parentsInitializationTestData(){
 
-        parentService.register(new UserRegistrationDto(
+        parentService.registerParent(new UserRegistrationDto(
                 "Mike",
                 "Trumpet",
                 "exampleparent@example.com",

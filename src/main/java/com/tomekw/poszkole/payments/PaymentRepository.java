@@ -13,8 +13,8 @@ public interface PaymentRepository extends CrudRepository<Payment,Long> {
     List<Payment> findAll();
 
     @Query("SELECT p FROM Payment p WHERE p.lessonToPay.id = :lessonId and p.parentOfStudent.id = :parentId and p.studentBelongingPayment.id = :studentId")
-    Optional<Payment> findParentsPaymenetLinkedWithExactStudentAndLesson(Long studentId, Long parentId, Long lessonId);
+    Optional<Payment> findParentsPaymentLinkedWithExactStudentAndLesson(Long studentId, Long parentId, Long lessonId);
 
-    @Query("SELECT p FROM Payment p WHERE p.parentOfStudent.id = :parentId and p.paymentStatus = :paymentStatus")
-    List<Payment> findPaymentsOfParentWaitingToRealize(Long parentId, PaymentStatus paymentStatus);
+    @Query("SELECT p FROM Payment p WHERE p.parentOfStudent.id = :parentId and p.paymentStatus = :paymentStatus ORDER BY p.dateTimeOfPaymentAppearance ASC")
+    List<Payment> findPaymentsOfParentWithGivenPaymentStatus(Long parentId, PaymentStatus paymentStatus);
 }

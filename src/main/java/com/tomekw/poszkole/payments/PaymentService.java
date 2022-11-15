@@ -83,7 +83,7 @@ public class PaymentService {
                 null
         );
         paymentRepository.save(payment);
-        parentService.realizeWaitingPayments(studentLessonGroupBucket.getStudent().getParent().getId());
+        parentService.realizeWaitingPaymentsIfPossible(studentLessonGroupBucket.getStudent().getParent().getId());
     }
 
     public void removePaymentIfAlreadyExists(StudentLessonBucket studentLessonBucket) {
@@ -91,7 +91,7 @@ public class PaymentService {
 
         Parent parent = studentLessonBucket.getStudent().getParent();
 
-        Optional<Payment> potentiallyExistingPaymentForGivenData = paymentRepository.findParentsPaymenetLinkedWithExactStudentAndLesson(
+        Optional<Payment> potentiallyExistingPaymentForGivenData = paymentRepository.findParentsPaymentLinkedWithExactStudentAndLesson(
                 studentLessonBucket.getStudent().getId(),
                 parent.getId(),
                 studentLessonBucket.getLesson().getId());
@@ -100,7 +100,7 @@ public class PaymentService {
     }
 
     private void checkIfPaymentAlreadyExistsBeforeCreatingNewOne(StudentLessonBucket studentLessonBucket) {
-        Optional<Payment> paymentToCheckIfExists = paymentRepository.findParentsPaymenetLinkedWithExactStudentAndLesson(studentLessonBucket.getStudent().getId(),
+        Optional<Payment> paymentToCheckIfExists = paymentRepository.findParentsPaymentLinkedWithExactStudentAndLesson(studentLessonBucket.getStudent().getId(),
                 studentLessonBucket.getStudent().getParent().getId(),
                 studentLessonBucket.getLesson().getId());
         if (paymentToCheckIfExists.isPresent()) {

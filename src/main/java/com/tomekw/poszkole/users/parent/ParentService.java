@@ -1,52 +1,45 @@
 package com.tomekw.poszkole.users.parent;
 
-import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
-import com.tomekw.poszkole.exceptions.ParentNotFoundException;
-import com.tomekw.poszkole.exceptions.StudentNotFoundException;
-import com.tomekw.poszkole.payments.PaymentDtoMapper;
-import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.exceptions.StudentNotLinkedWithParentException;
 import com.tomekw.poszkole.payments.Payment;
+import com.tomekw.poszkole.payments.PaymentDtoMapper;
 import com.tomekw.poszkole.payments.PaymentRepository;
 import com.tomekw.poszkole.payments.PaymentStatus;
+import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
+import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.UserDtoMapper;
+import com.tomekw.poszkole.users.UserService;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
-import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentUpdateDto;
+import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.student.StudentDtoMapper;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoParentViewDto;
 import com.tomekw.poszkole.users.student.dtos.StudentListDto;
-import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.student.StudentRepository;
-import com.tomekw.poszkole.users.userrole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ParentService {
 
+    private final static String PARENT_NOT_LINKED_WITH_STUDENT_EXCEPTION_MESSAGE = "Parent with ID:%s isn't linked with Student with ID:%s";
     private final ParentRepository parentRepository;
     private final UserDtoMapper userDtoMapper;
     private final ParentDtoMapper parentDtoMapper;
     private final StudentDtoMapper studentDtoMapper;
     private final PaymentDtoMapper paymentDtoMapper;
-    private final UsernameUniquenessValidator usernameUniquenessValidator;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final UserRoleMapper userRoleMapper;
-    private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
     private final ResourceAccessChecker resourceAccessChecker;
+    private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
+    private final UserService userService;
 
     public List<ParentListDto> getAllParents() {
         return parentRepository.findAll()
@@ -55,104 +48,80 @@ public class ParentService {
                 .toList();
     }
 
-    public void register(UserRegistrationDto userRegistrationDto) {
-        Parent parent = userDtoMapper.mapToParent(userRegistrationDto);
-        parentRepository.save(parent);
+    public Long registerParent(UserRegistrationDto userRegistrationDto) {
+        return parentRepository.save(userDtoMapper.mapToParent(userRegistrationDto)).getId();
     }
 
-    @Transactional
-    Optional<ParentInfoDto> getParent(Long id) {
-        resourceAccessChecker.checkParentDetailedDataAccess(id);
+    ParentInfoDto getParent(Long parentId) {
+        resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
-        Optional<Parent> parentOptional = parentRepository.findById(id);
-
-        if (parentOptional.isPresent()) {
-            Parent parent = parentOptional.get();
-            parent.setStudentList(parent.getStudentList());
-            return Optional.of(parentDtoMapper.mapToParentInfoDto(parent));
-        }
-        return parentOptional.map(parentDtoMapper::mapToParentInfoDto);
+        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(parentId);
+        return parentDtoMapper.mapToParentInfoDto(parent);
     }
 
-    void deleteParent(Long id) {
-        parentRepository.deleteById(id);
+    void deleteParent(Long parentId) {
+        parentRepository.deleteById(parentId);
     }
 
-    public List<StudentListDto> getStudents(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkParentDetailedDataAccess(id);
+    public List<StudentListDto> getStudentsBelongingToParent(Long parentId) {
+        resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
-        return parentRepository.findById(id).map(Parent::getStudentList)
-                .orElse(Collections.emptyList())
+        return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
+                .getStudentList()
                 .stream()
                 .map(studentDtoMapper::mapToStudentListDto)
                 .toList();
     }
 
-    public List<PaymentTeacherAndParentListViewDto> getPayments(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkParentDetailedDataAccess(id);
+    public List<PaymentTeacherAndParentListViewDto> getPayments(Long parentId) {
+        resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
-        return parentRepository.findById(id).map(Parent::getPaymentList)
-                .orElse(Collections.emptyList())
+        return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
+                .getPaymentList()
                 .stream()
                 .map(paymentDtoMapper::mapToPaymentTeacherListViewDto)
                 .toList();
     }
 
-    public Optional<StudentInfoParentViewDto> getStudent(Long parentId, Long studentId) throws NoAccessToExactResourceException {
+    public StudentInfoParentViewDto getStudent(Long parentId, Long studentId) {
         resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
-        return parentRepository.findById(parentId)
-                .map(Parent::getStudentList)
-                .orElseThrow()
-                .stream().filter(student -> student.getId().equals(studentId)).findFirst()
-                .map(studentDtoMapper::mapToStudentInfoParentViewDto);
+        return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
+                .getStudentList()
+                .stream()
+                .filter(student -> student.getId().equals(studentId))
+                .findFirst()
+                .map(studentDtoMapper::mapToStudentInfoParentViewDto)
+                .orElseThrow(() -> new StudentNotLinkedWithParentException(String.format(PARENT_NOT_LINKED_WITH_STUDENT_EXCEPTION_MESSAGE, parentId, studentId)));
     }
 
     @Transactional
     public void updateParent(Long parentId, ParentUpdateDto updatedParent) {
-        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: " + parentId + " not found."));
+        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(parentId);
 
-        if (!updatedParent.getUsername().equals(parent.getUsername())) {
-            usernameUniquenessValidator.validate(updatedParent.getUsername());
-        }
+        userService.updateUserWithStandardUserData(parent, updatedParent);
 
-        parent.setName(updatedParent.getName());
-        parent.setSurname(updatedParent.getSurname());
-        parent.setEmail(updatedParent.getEmail());
-        parent.setTelephoneNumber(updatedParent.getTelephoneNumber());
-        parent.setUsername(updatedParent.getUsername());
-        parent.setPassword("{bcrypt}" + passwordEncoder.encode(updatedParent.getPassword()));
-        parent.setRoles(userRoleMapper.mapToUserRoleList(updatedParent.getRoles()));
         parent.setWallet(updatedParent.getWallet());
 
-        for (Long id : findIdsOfStudentsToAddTo(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
-            linkStudentWithParent(id, parent);
-        }
+        linkParentWithNewStudents(updatedParent, parent);
 
-        for (Long id : findIdsOfStudentsToRemoveFrom(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))) {
-            unlinkStudentFromParent(id, parent);
-        }
+        unlinkParentFromGivenStudents(updatedParent, parent);
 
-        realizeWaitingPayments(parentId);
+        realizeWaitingPaymentsIfPossible(parentId);
+
         parentRepository.save(parent);
     }
 
-
-    Optional<ParentUpdateDto> getParentUpdateDto(Long parentId) {
-        return parentRepository.findById(parentId).map(parentDtoMapper::mapToParentUpdateDto);
+    ParentUpdateDto getParentUpdateDto(Long parentId) {
+        return parentDtoMapper.mapToParentUpdateDto(commonRepositoriesFindMethods.getParentFromRepositoryById(parentId));
     }
 
-    public void realizeWaitingPayments(Long parentId) {
-        Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new ParentNotFoundException("Parent with ID: " + parentId + " not found."));
+    public void realizeWaitingPaymentsIfPossible(Long parentId) {
+        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(parentId);
 
-        for (Payment p : paymentRepository.findPaymentsOfParentWaitingToRealize(parentId, PaymentStatus.WAITING)) {
-            if (parent.getWallet().doubleValue() > p.getCost().doubleValue()) {
-                p.setPaymentStatus(PaymentStatus.DONE);
-                parent.setWallet(parent.getWallet().subtract(p.getCost()));
-            } else {
-                break;
-            }
-        }
+        paymentRepository.findPaymentsOfParentWithGivenPaymentStatus(parentId, PaymentStatus.WAITING)
+                .forEach(payment -> coverPaymentIfPossible(payment, parent));
+
         refreshDebt(parent);
         parentRepository.save(parent);
     }
@@ -163,8 +132,25 @@ public class ParentService {
                 .filter(payment -> payment.getPaymentStatus().equals(PaymentStatus.WAITING))
                 .map(Payment::getCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::subtract);
-
         parent.setDebt(debt);
+    }
+
+    private void coverPaymentIfPossible(Payment payment, Parent parent) {
+        if (parent.getWallet().doubleValue() >= payment.getCost().doubleValue()) {
+            payment.setPaymentStatus(PaymentStatus.DONE);
+            parent.setWallet(parent.getWallet().subtract(payment.getCost()));
+        }
+    }
+
+    private void linkParentWithNewStudents(ParentUpdateDto updatedParent, Parent parent) {
+        findIdsOfStudentsToAddTo(new ArrayList<>(parent.getStudentList().stream().map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))
+                .forEach(studentId -> linkStudentWithParent(studentId, parent));
+    }
+
+    private void unlinkParentFromGivenStudents(ParentUpdateDto updatedParent, Parent parent) {
+        findIdsOfStudentsToRemoveFrom(new ArrayList<>(parent.getStudentList().stream()
+                .map(Student::getId).toList()), new ArrayList<>(updatedParent.getStudentListIds()))
+                .forEach(studentId -> unlinkStudentFromParent(studentId, parent));
     }
 
     private List<Long> findIdsOfStudentsToRemoveFrom(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
@@ -178,13 +164,17 @@ public class ParentService {
     }
 
     private void linkStudentWithParent(Long studentId, Parent parent) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotFoundException("Student with ID: " + studentId + " not found"));
+        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId);
         parent.getStudentList().add(student);
         student.setParent(parent);
     }
 
     private void unlinkStudentFromParent(Long studentId, Parent parent) {
-        parent.getStudentList().stream().filter(student -> student.getId().equals(studentId)).forEach(student -> student.setParent(null));
-        parent.getStudentList().removeIf(student -> student.getId().equals(studentId));
+        parent.getStudentList().stream()
+                .filter(student -> student.getId().equals(studentId))
+                .forEach(student -> student.setParent(null));
+
+        parent.getStudentList()
+                .removeIf(student -> student.getId().equals(studentId));
     }
 }

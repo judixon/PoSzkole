@@ -44,9 +44,9 @@ public class ParentDtoMapper {
                 parent.getTelephoneNumber(),
                 parent.getUsername(),
                 parent.getPassword(),
+                parent.getRoles().stream().map(UserRole::getName).toList(),
                 parent.getWallet(),
-                parent.getStudentList().stream().map(Student::getId).toList(),
-                parent.getRoles().stream().map(UserRole::getName).toList()
+                parent.getStudentList().stream().map(Student::getId).toList()
         );
     }
 }
