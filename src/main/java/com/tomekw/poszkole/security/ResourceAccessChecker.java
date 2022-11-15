@@ -3,7 +3,7 @@ package com.tomekw.poszkole.security;
 import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.student.Student;

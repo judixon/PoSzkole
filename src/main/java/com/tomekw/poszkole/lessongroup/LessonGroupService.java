@@ -1,20 +1,20 @@
 package com.tomekw.poszkole.lessongroup;
 
-import com.tomekw.poszkole.exceptions.EntityNotFoundException;
+import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonDtoMapper;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketRepository;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupCreateDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupInfoDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupUpdateDto;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDto;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketRepository;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucketUpdateDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketRepository;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
@@ -103,7 +103,7 @@ public class LessonGroupService {
                 .stream()
                 .filter(studentLessonGroupBucket1 -> studentLessonGroupBucket1.getId().equals(studentLessonGroupBucketId))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND, studentLessonGroupBucketId)));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND, studentLessonGroupBucketId)));
     }
 
     LessonGroupUpdateDto getLessonGroupUpdateDto(Long lessonGroupId) {

@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.users.userRole;
+package com.tomekw.poszkole.users.userrole;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

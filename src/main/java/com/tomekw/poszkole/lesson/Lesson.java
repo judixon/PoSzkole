@@ -4,7 +4,7 @@ package com.tomekw.poszkole.lesson;
 
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.homework.Homework;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -65,8 +65,8 @@ public class Lesson {
                 ", lessonPlan='" + lessonPlan + '\'' +
                 ", notes='" + notes + '\'' +
                 ", ownedByGroup=" + ownedByGroup.getId() +
-                ", createdHomeworkList=" + createdHomeworkList.stream().map(homework -> homework.getId()) +
-                ", toCheckHomeworkList=" + toCheckHomeworkList.stream().map(homework -> homework.getId()) +
+                ", createdHomeworkList=" + createdHomeworkList.stream().map(Homework::getId) +
+                ", toCheckHomeworkList=" + toCheckHomeworkList.stream().map(Homework::getId) +
                 ", studentLessonBucketList=" + studentLessonBucketList.stream().map(studentLessonBucket -> studentLessonBucket.getId() + studentLessonBucket.getStudent().getName()) +
                 ", lessonStatus=" + lessonStatus +
                 '}';

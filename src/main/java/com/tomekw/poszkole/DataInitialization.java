@@ -5,8 +5,8 @@ import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.parent.ParentService;
 import com.tomekw.poszkole.users.student.StudentService;
 import com.tomekw.poszkole.users.teacher.TeacherService;
-import com.tomekw.poszkole.users.userRole.UserRole;
-import com.tomekw.poszkole.users.userRole.UserRoleRepository;
+import com.tomekw.poszkole.users.userrole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

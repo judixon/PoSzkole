@@ -6,7 +6,7 @@ import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.dtos.LessonStudentListViewDto;
 import com.tomekw.poszkole.lesson.dtos.LessonTeacherTimetableViewDto;
 import com.tomekw.poszkole.lesson.dtos.LessonUpdateDto;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDtoMapper;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

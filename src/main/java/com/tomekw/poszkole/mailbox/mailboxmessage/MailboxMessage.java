@@ -1,7 +1,7 @@
-package com.tomekw.poszkole.mailbox.mailboxMessage;
+package com.tomekw.poszkole.mailbox.mailboxmessage;
 
 
-import com.tomekw.poszkole.mailbox.mailboxThread.MailboxThread;
+import com.tomekw.poszkole.mailbox.mailboxthread.MailboxThread;
 import com.tomekw.poszkole.users.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;

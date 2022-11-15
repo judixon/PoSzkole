@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lessongroup.studentLessonGroupBucket;
+package com.tomekw.poszkole.lessongroup.studentlessongroupbucket;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.lessongroup;
 
 
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.users.teacher.Teacher;
@@ -66,7 +66,7 @@ public class LessonGroup {
                 ", lessonGroupSubject=" + lessonGroupSubject +
                 ", teacher=" + teacher.getId()+ teacher.getName()+teacher.getSurname() +
                 ", studentGroupBucketList=" + studentLessonGroupBucketList.stream().map(StudentLessonGroupBucket::getId).toList() +
-                ", homeworkList=" + homeworkList.stream().map(homework -> homework.getId()).toList() +
+                ", homeworkList=" + homeworkList.stream().map(Homework::getId).toList() +
                 ", lessons=" + lessons.stream().map(Lesson::getId).toList() +
                 '}';
     }

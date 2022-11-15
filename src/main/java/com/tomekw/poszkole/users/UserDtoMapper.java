@@ -1,25 +1,19 @@
 package com.tomekw.poszkole.users;
 
-import com.tomekw.poszkole.lessongroup.LessonGroup;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
-import com.tomekw.poszkole.homework.Homework;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
 import com.tomekw.poszkole.mailbox.Mailbox;
-import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.timetable.Timetable;
 import com.tomekw.poszkole.users.dtos.UserCredentialsDto;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.userRole.UserRole;
-import com.tomekw.poszkole.users.userRole.UserRoleMapper;
+import com.tomekw.poszkole.users.userrole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 

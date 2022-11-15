@@ -2,7 +2,7 @@ package com.tomekw.poszkole.users;
 
 
 import com.tomekw.poszkole.mailbox.Mailbox;
-import com.tomekw.poszkole.users.userRole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

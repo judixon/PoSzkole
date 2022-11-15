@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lessongroup.studentLessonGroupBucket;
+package com.tomekw.poszkole.lessongroup.studentlessongroupbucket;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

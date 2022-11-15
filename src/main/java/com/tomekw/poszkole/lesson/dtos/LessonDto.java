@@ -2,7 +2,7 @@ package com.tomekw.poszkole.lesson.dtos;
 
 import com.tomekw.poszkole.homework.mappers.HomeworkContentDto;
 import com.tomekw.poszkole.lesson.LessonStatus;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDto;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

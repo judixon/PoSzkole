@@ -1,16 +1,16 @@
 package com.tomekw.poszkole.users.student;
 
 import com.tomekw.poszkole.lessongroup.LessonGroup;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDtoMapper;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDtoMapper;
 import com.tomekw.poszkole.users.parent.ParentDtoMapper;
 import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoDto;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoParentViewDto;
 import com.tomekw.poszkole.users.student.dtos.StudentListDto;
 import com.tomekw.poszkole.users.student.dtos.StudentUpdateDto;
-import com.tomekw.poszkole.users.userRole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

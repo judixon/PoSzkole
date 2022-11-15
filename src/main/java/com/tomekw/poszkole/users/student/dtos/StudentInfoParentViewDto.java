@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.users.student.dtos;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketDto;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDto;
 import lombok.Data;
 
 import java.io.Serializable;

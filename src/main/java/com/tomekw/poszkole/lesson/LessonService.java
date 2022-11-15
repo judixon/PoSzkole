@@ -1,13 +1,13 @@
 package com.tomekw.poszkole.lesson;
 
-import com.tomekw.poszkole.exceptions.EntityNotFoundException;
+import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
 import com.tomekw.poszkole.exceptions.LessonFrequencyStatusUndefinedException;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.dtos.LessonSaveDto;
 import com.tomekw.poszkole.lesson.dtos.LessonUpdateDto;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucketRepository;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketRepository;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.payments.PaymentService;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
@@ -150,12 +150,12 @@ public class LessonService {
 
     private StudentLessonBucket getStudentLessonBucketFromLessonByIds(Long lessonId, Long studentLessonBucketId) {
         return lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId))
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId))
                 .getStudentLessonBucketList()
                 .stream()
                 .filter(studentLessonBucket -> studentLessonBucket.getId().equals(studentLessonBucketId))
                 .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
     }
 
     private void menageStudentsPaymentsAccordingToItsPresenceStatus(StudentLessonBucket studentLessonBucket) {
@@ -164,7 +164,7 @@ public class LessonService {
             paymentService.createPaymentFromStudentLessonBucket(studentLessonBucket);
         } else if (studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.PRESENT_NO_PAYMENT) ||
                 studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_NO_PAYMENT)) {
-            paymentService.removePayment(studentLessonBucket);
+            paymentService.removePaymentIfAlreadyExists(studentLessonBucket);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.users.userRole;
+package com.tomekw.poszkole.users.userrole;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

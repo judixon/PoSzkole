@@ -2,13 +2,13 @@ package com.tomekw.poszkole.users.student;
 
 
 
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.users.User;
-import com.tomekw.poszkole.users.userRole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import com.tomekw.poszkole.users.parent.Parent;
 import lombok.Data;
 import lombok.NoArgsConstructor;

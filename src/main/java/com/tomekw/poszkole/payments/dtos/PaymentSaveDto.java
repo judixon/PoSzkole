@@ -13,7 +13,7 @@ public class PaymentSaveDto {
 
     private  Long lessonToPayId;
     private  Long studentBelongingPaymentId;
-    private  Long parentOfStudentId;
+    private  Long studentsParentId;
     private  BigDecimal cost;
     private PaymentStatus paymentStatus;
     private  LocalDateTime dateTimeOfPaymentAppearance;

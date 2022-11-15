@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lesson.studentLessonBucket;
+package com.tomekw.poszkole.lesson.studentlessonbucket;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import com.tomekw.poszkole.lesson.LessonStatus;

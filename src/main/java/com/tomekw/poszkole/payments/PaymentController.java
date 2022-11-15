@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.payments;
 
-import com.tomekw.poszkole.exceptions.EntityNotFoundException;
 import com.tomekw.poszkole.payments.dtos.PaymentDto;
 import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
 import lombok.RequiredArgsConstructor;
@@ -23,29 +22,19 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
-    @GetMapping("/throw")
-    void any(){
-        try {
-            paymentService.throwMethod();
-        }
-        catch (EntityNotFoundException e){
-            System.out.println("gagfaf");
-        }
-    }
-
     @PostMapping
     ResponseEntity<?> savePayment(PaymentSaveDto paymentSaveDto){
-        PaymentDto savedPayment = paymentService.savePayment(paymentSaveDto);
+        Long paymentId = paymentService.savePayment(paymentSaveDto);
         URI savedPaymentUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPayment.getId())
+                .buildAndExpand(paymentId)
                 .toUri();
-        return ResponseEntity.created(savedPaymentUri).body(savedPayment);
+        return ResponseEntity.created(savedPaymentUri).body(paymentId);
     }
 
     @GetMapping("/{id}")
     ResponseEntity<PaymentDto> getPayment(@PathVariable Long id) {
-        return paymentService.getPayment(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(paymentService.getPayment(id));
     }
 
     @DeleteMapping("/{id}")

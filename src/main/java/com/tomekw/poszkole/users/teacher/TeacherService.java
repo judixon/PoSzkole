@@ -14,7 +14,7 @@ import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
-import com.tomekw.poszkole.users.userRole.UserRoleMapper;
+import com.tomekw.poszkole.users.userrole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

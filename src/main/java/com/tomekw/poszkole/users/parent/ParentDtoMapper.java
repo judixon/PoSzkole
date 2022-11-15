@@ -6,7 +6,7 @@ import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentUpdateDto;
 import com.tomekw.poszkole.users.student.StudentDtoMapper;
 import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.userRole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

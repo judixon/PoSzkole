@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.lesson.studentLessonBucket;
+package com.tomekw.poszkole.lesson.studentlessonbucket;
 
 import org.springframework.stereotype.Service;
 

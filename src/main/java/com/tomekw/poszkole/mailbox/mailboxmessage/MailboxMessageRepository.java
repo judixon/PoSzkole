@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.mailbox.mailboxMessage;
+package com.tomekw.poszkole.mailbox.mailboxmessage;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

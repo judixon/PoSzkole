@@ -4,14 +4,16 @@ package com.tomekw.poszkole.users.parent;
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.users.User;
-import com.tomekw.poszkole.users.userRole.UserRole;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import com.tomekw.poszkole.users.student.Student;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+
 
 
 @Entity

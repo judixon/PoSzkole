@@ -20,7 +20,7 @@ import com.tomekw.poszkole.users.student.dtos.StudentInfoParentViewDto;
 import com.tomekw.poszkole.users.student.dtos.StudentListDto;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.student.StudentRepository;
-import com.tomekw.poszkole.users.userRole.UserRoleMapper;
+import com.tomekw.poszkole.users.userrole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
-package com.tomekw.poszkole.mailbox.mailboxThread;
+package com.tomekw.poszkole.mailbox.mailboxthread;
 
 import com.tomekw.poszkole.mailbox.Mailbox;
-import com.tomekw.poszkole.mailbox.mailboxMessage.MailboxMessage;
+import com.tomekw.poszkole.mailbox.mailboxmessage.MailboxMessage;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;

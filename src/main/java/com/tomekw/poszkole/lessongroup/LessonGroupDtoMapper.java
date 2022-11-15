@@ -3,11 +3,9 @@ package com.tomekw.poszkole.lessongroup;
 
 import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.lessongroup.dtos.*;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.DTOs_Mapper.StudentLessonGroupBucketTeacherViewDto;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
-import com.tomekw.poszkole.homework.Homework;
-import com.tomekw.poszkole.lesson.Lesson;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketTeacherViewDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.users.teacher.Teacher;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import com.tomekw.poszkole.users.teacher.TeacherListDtoMapper;
@@ -15,7 +13,6 @@ import com.tomekw.poszkole.users.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 

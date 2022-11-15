@@ -1,8 +1,7 @@
-package com.tomekw.poszkole.lesson.studentLessonBucket;
+package com.tomekw.poszkole.lesson.studentlessonbucket;
 
 
 import com.tomekw.poszkole.lesson.Lesson;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentPresenceStatus;
 import com.tomekw.poszkole.users.student.Student;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

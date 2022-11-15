@@ -1,18 +1,19 @@
 package com.tomekw.poszkole.payments;
 
-import com.tomekw.poszkole.exceptions.*;
-import com.tomekw.poszkole.lessongroup.studentLessonGroupBucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.exceptions.PaymentAlreadyExistsException;
+import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
+import com.tomekw.poszkole.exceptions.StudentNotLinkedWithParentException;
 import com.tomekw.poszkole.lesson.Lesson;
-import com.tomekw.poszkole.lesson.LessonRepository;
-import com.tomekw.poszkole.lesson.studentLessonBucket.StudentLessonBucket;
+import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.payments.dtos.PaymentDto;
 import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
+import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.parent.ParentRepository;
 import com.tomekw.poszkole.users.parent.ParentService;
 import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,34 +27,25 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-    private final LessonRepository lessonRepository;
-    private final StudentRepository studentRepository;
     private final ParentRepository parentRepository;
     private final PaymentDtoMapper paymentDtoMapper;
     private final ParentService parentService;
+    private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
+    private static final String PAYMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Payment for student %s %s with ID:%s connected with lesson with ID:%s already exist.";
+    private static final String STUDENT_LESSON_GROUP_BUCKET_DOESNT_EXIST = "StudentLessonGroupBucket for given StudentLessonBucket with ID:%s doesn't exist.";
 
-    void throwMethod(){
-        throw new EntityNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,14L);
-    }
-
-    Optional<PaymentDto> getPayment(Long id) {
-        return paymentRepository.findById(id).map(paymentDtoMapper::mapToPaymentDto);
+    PaymentDto getPayment(Long paymentId) {
+        return paymentDtoMapper.mapToPaymentDto(commonRepositoriesFindMethods.getPaymentFromRepositoryById(paymentId));
     }
 
     List<PaymentDto> getAllPayments() {
         return paymentRepository.findAll().stream().map(paymentDtoMapper::mapToPaymentDto).toList();
     }
 
-    public PaymentDto savePayment(PaymentSaveDto paymentSaveDto) {
-
-        Lesson lesson = lessonRepository.findById(paymentSaveDto.getLessonToPayId())
-                .orElseThrow(() -> new LessonNotFoundException("There is no Lesson with ID: " + paymentSaveDto.getLessonToPayId()));
-
-        Student student = studentRepository.findById(paymentSaveDto.getStudentBelongingPaymentId())
-                .orElseThrow(() -> new StudentNotFoundException("There is no Student with ID: " + paymentSaveDto.getStudentBelongingPaymentId()));
-
-        Parent parent = parentRepository.findById(paymentSaveDto.getParentOfStudentId())
-                .orElseThrow(() -> new ParentNotFoundException("There is no Parent with ID: " + paymentSaveDto.getParentOfStudentId()));
+    public Long savePayment(PaymentSaveDto paymentSaveDto) {
+        Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(paymentSaveDto.getLessonToPayId());
+        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(paymentSaveDto.getStudentBelongingPaymentId());
+        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(paymentSaveDto.getStudentsParentId());
 
         Payment payment = new Payment(
                 lesson,
@@ -64,11 +56,7 @@ public class PaymentService {
                 paymentSaveDto.getDateTimeOfPaymentAppearance(),
                 null
         );
-
-        Payment savedPayment = paymentRepository.save(payment);
-
-        return paymentDtoMapper.mapToPaymentDto(savedPayment);
-
+        return paymentRepository.save(payment).getId();
     }
 
     void deletePayment(Long id) {
@@ -76,30 +64,20 @@ public class PaymentService {
     }
 
     public void createPaymentFromStudentLessonBucket(StudentLessonBucket studentLessonBucket) {
-        checkIfParentIsLinked(studentLessonBucket);
+        checkIfParentIsLinkedWithStudent(studentLessonBucket);
+        checkIfPaymentAlreadyExistsBeforeCreatingNewOne(studentLessonBucket);
 
-        Optional<Payment> paymentToCheckIfExists = paymentRepository.findPaymentToCheckIfExists(studentLessonBucket.getStudent().getId(),
-                studentLessonBucket.getStudent().getParent().getId(),
-                studentLessonBucket.getLesson().getId());
+        StudentLessonGroupBucket studentLessonGroupBucket = getStudentLessonGroupBucketFromLessonBucket(studentLessonBucket);
 
-        if (paymentToCheckIfExists.isPresent()) {
-            throw new PaymentAlreadyExistsException("Payment for student " + studentLessonBucket.getStudent().getName() + " "
-                    + studentLessonBucket.getStudent().getSurname() + " with ID:" + studentLessonBucket.getStudent().getId() + " connected with lesson with ID:" +
-                    studentLessonBucket.getLesson().getId() + " already exists.");
-        }
-
-        StudentLessonGroupBucket studentLessonGroupBucket = studentLessonBucket.getLesson().getOwnedByGroup().getStudentLessonGroupBucketList().stream()
-                .filter(studentLessonGroupBucket1 -> studentLessonGroupBucket1.getStudent().equals(studentLessonBucket.getStudent())).toList().get(0);
-
-        BigDecimal cost = studentLessonGroupBucket.getAcceptIndividualPrize()?
-                studentLessonGroupBucket.getIndividualPrize():
+        BigDecimal lessonPrize = studentLessonGroupBucket.getAcceptIndividualPrize() ?
+                studentLessonGroupBucket.getIndividualPrize() :
                 studentLessonBucket.getLesson().getOwnedByGroup().getPrizePerStudent();
 
         Payment payment = new Payment(
                 studentLessonBucket.getLesson(),
                 studentLessonBucket.getStudent(),
                 studentLessonBucket.getStudent().getParent(),
-                cost,
+                lessonPrize,
                 PaymentStatus.WAITING,
                 LocalDateTime.now(),
                 null
@@ -108,34 +86,63 @@ public class PaymentService {
         parentService.realizeWaitingPayments(studentLessonGroupBucket.getStudent().getParent().getId());
     }
 
-    public void removePayment(StudentLessonBucket studentLessonBucket) {
+    public void removePaymentIfAlreadyExists(StudentLessonBucket studentLessonBucket) {
+        checkIfParentIsLinkedWithStudent(studentLessonBucket);
 
-        checkIfParentIsLinked(studentLessonBucket);
+        Parent parent = studentLessonBucket.getStudent().getParent();
 
-        Parent parent =studentLessonBucket.getStudent().getParent();
-
-        Optional<Payment> paymentToCheckIfExists = paymentRepository.findPaymentToCheckIfExists(studentLessonBucket.getStudent().getId(),
+        Optional<Payment> potentiallyExistingPaymentForGivenData = paymentRepository.findParentsPaymenetLinkedWithExactStudentAndLesson(
+                studentLessonBucket.getStudent().getId(),
                 parent.getId(),
                 studentLessonBucket.getLesson().getId());
 
-        if (paymentToCheckIfExists.get().getPaymentStatus().equals(PaymentStatus.DONE)){
+        manageParentDataIfPaymentAlreadyExists(potentiallyExistingPaymentForGivenData, parent, studentLessonBucket);
+    }
 
-            parent.setWallet(studentLessonBucket.getStudent().getParent().getWallet().add(paymentToCheckIfExists.get().getCost()));
-            parentRepository.save(parent);
-        }
-
-        if (paymentToCheckIfExists.isPresent()){
-            paymentRepository.delete(paymentToCheckIfExists.get());
-            parentService.refreshDebt(parent);
+    private void checkIfPaymentAlreadyExistsBeforeCreatingNewOne(StudentLessonBucket studentLessonBucket) {
+        Optional<Payment> paymentToCheckIfExists = paymentRepository.findParentsPaymenetLinkedWithExactStudentAndLesson(studentLessonBucket.getStudent().getId(),
+                studentLessonBucket.getStudent().getParent().getId(),
+                studentLessonBucket.getLesson().getId());
+        if (paymentToCheckIfExists.isPresent()) {
+            throw new PaymentAlreadyExistsException(String.format(PAYMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE,studentLessonBucket.getStudent().getName(),
+                    studentLessonBucket.getStudent().getSurname(),studentLessonBucket.getStudent().getId(),studentLessonBucket.getLesson().getId()));
         }
     }
 
-    private void checkIfParentIsLinked(StudentLessonBucket studentLessonBucket) {
+    private StudentLessonGroupBucket getStudentLessonGroupBucketFromLessonBucket(StudentLessonBucket studentLessonBucket) {
+        return studentLessonBucket.getLesson()
+                .getOwnedByGroup()
+                .getStudentLessonGroupBucketList()
+                .stream()
+                .filter(studentLessonGroupBucket1 -> studentLessonGroupBucket1.getStudent().equals(studentLessonBucket.getStudent()))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(STUDENT_LESSON_GROUP_BUCKET_DOESNT_EXIST,studentLessonBucket.getId())));
+    }
 
+    private void removePaymentFromParentPaymentList(Parent parent, Payment payment) {
+        paymentRepository.delete(payment);
+        parentService.refreshDebt(parent);
+    }
+
+    private void restoreParentsMoneyForRemovingAlreadyPaidPayment(StudentLessonBucket studentLessonBucket, Parent parent, Payment payment) {
+        if (payment.getPaymentStatus().equals(PaymentStatus.DONE)) {
+            parent.setWallet(studentLessonBucket.getStudent().getParent().getWallet().add(payment.getCost()));
+            parentRepository.save(parent);
+        }
+    }
+
+    private void manageParentDataIfPaymentAlreadyExists(Optional<Payment> potentiallyExistingPayment, Parent parent, StudentLessonBucket studentLessonBucket) {
+        if (potentiallyExistingPayment.isPresent()) {
+            restoreParentsMoneyForRemovingAlreadyPaidPayment(studentLessonBucket, parent, potentiallyExistingPayment.get());
+            removePaymentFromParentPaymentList(parent, potentiallyExistingPayment.get());
+        }
+    }
+
+    private void checkIfParentIsLinkedWithStudent(StudentLessonBucket studentLessonBucket) {
         Student student = studentLessonBucket.getStudent();
-
         if (student.getParent() == null) {
-            throw new StudentNotLinkedWithParentException("Student " + student.getName() + " " + student.getSurname() + " with ID: " + student.getId() + " is not linked with Parent");
+            throw new StudentNotLinkedWithParentException(String.format(
+                    DefaultExceptionMessages.STUDENT_NOT_LINKED_WITH_PARENT, student.getName(), student.getSurname(), student.getId()));
         }
     }
 }
