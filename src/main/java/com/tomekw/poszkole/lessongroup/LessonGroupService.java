@@ -10,11 +10,11 @@ import com.tomekw.poszkole.lesson.studentlessonbucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupCreateDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupInfoDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupUpdateDto;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDto;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketDtoMapper;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketRepository;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketUpdateDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
@@ -133,8 +133,8 @@ public class LessonGroupService {
 
         StudentLessonGroupBucket studentLessonGroupBucket = commonRepositoriesFindMethods.getStudentLessonGroupBucketFromRepositoryById(studentLessonGroupBucketId);
 
-        studentLessonGroupBucket.setAcceptIndividualPrize(studentLessonGroupBucketUpdateDto.getAcceptIndividualPrize());
-        studentLessonGroupBucket.setIndividualPrize(studentLessonGroupBucketUpdateDto.getIndividualPrize());
+        studentLessonGroupBucket.setAcceptIndividualPrize(studentLessonGroupBucketUpdateDto.acceptIndividualPrize());
+        studentLessonGroupBucket.setIndividualPrize(studentLessonGroupBucketUpdateDto.individualPrize());
 
         studentLessonGroupBucketRepository.save(studentLessonGroupBucket);
     }

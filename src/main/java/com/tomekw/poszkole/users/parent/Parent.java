@@ -37,7 +37,7 @@ public class Parent extends User {
     @Override
     public String toString() {
         return "Parent{" +
-                "id=" + super.getId() +
+                "lessonId=" + super.getId() +
                 ", studentList=" + studentList.stream().map(student -> student.getId() + " " + student.getName() + " " + student.getSurname()) +
                 ", paymentList=" + paymentList.stream().map(payment -> payment.getId() + " " + payment.getCost()) +
                 ", wallet=" + wallet +

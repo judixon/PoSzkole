@@ -2,7 +2,7 @@ package com.tomekw.poszkole.lessongroup.dtos;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketDto;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import lombok.Builder;
 

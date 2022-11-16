@@ -36,7 +36,7 @@ public class StudentLessonBucket {
     @Override
     public String toString() {
         return "StudentLessonBucket{" +
-                "id=" + id +
+                "lessonId=" + id +
                 ", student=" + student.getId() +
                 ", studentPresenceStatus=" + studentPresenceStatus +
                 ", lesson=" + lesson.getId() +

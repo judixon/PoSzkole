@@ -1,21 +1,16 @@
 package com.tomekw.poszkole.lesson.dtos;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-public class LessonStudentListViewDto {
+public record LessonStudentListViewDto(Long id, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                                       String ownedByGroupName, LessonGroupSubject ownedByGroupLessonGroupSubject,
+                                       String ownedByGroupTeacherName, String ownedByGroupTeacherSurname,
+                                       Long ownedByGroupTeacherId) {
 
-    private Long id;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
-    private String ownedByGroupName;
-    private LessonGroupSubject ownedByGroupLessonGroupSubject;
-    private String ownedByGroupTeacherName;
-    private String ownedByGroupTeacherSurname;
-    private Long ownedByGroupTeacherId;
+    @Builder
+    public LessonStudentListViewDto {
+    }
 }

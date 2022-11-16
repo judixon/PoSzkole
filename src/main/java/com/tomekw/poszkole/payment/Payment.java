@@ -50,7 +50,7 @@ public class Payment {
     @Override
     public String toString() {
         return "Payment{" +
-                "id=" + id +
+                "lessonId=" + id +
                 ", lessonToPay=" + lessonToPay.getId() +
                 ", studentBelongingPayment=" + studentBelongingPayment.getId() + studentBelongingPayment.getName() + studentBelongingPayment.getSurname() +
                 ", parentOfStudent=" + parentOfStudent.getId() + parentOfStudent.getName() + parentOfStudent.getSurname() +

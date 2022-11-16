@@ -22,8 +22,8 @@ public class Mailbox {
     @ManyToMany
     @JoinTable(
             name = "mailbox_threads",
-            joinColumns = @JoinColumn(name = "mailbox_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "mailbox_thread_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "mailbox_id", referencedColumnName = "lessonId"),
+            inverseJoinColumns = @JoinColumn(name = "mailbox_thread_id", referencedColumnName = "lessonId")
     )
     private List<MailboxThread> mailboxThreadList;
 

@@ -37,7 +37,7 @@ public class Teacher extends User {
     @Override
     public String toString() {
         return "Teacher{" +
-                "id=" + super.getId() +
+                "lessonId=" + super.getId() +
                 ", lessonGroups=" + lessonGroups.stream().map(LessonGroup::getId) +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", timetableID=" + timetable.getId() +

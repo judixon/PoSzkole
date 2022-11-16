@@ -9,8 +9,8 @@ import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupCreateDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupInfoDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupUpdateDto;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDto;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketUpdateDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class LessonGroupController {
     ResponseEntity<Long> create(@RequestBody LessonGroupCreateDto lessonGroupCreateDTO) {
         Long savedGroupId = lessonGroupService.saveGroup(lessonGroupCreateDTO);
         URI savedGroupUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{lessonId}")
                 .buildAndExpand(savedGroupId)
                 .toUri();
         return ResponseEntity.created(savedGroupUri).body(savedGroupId);

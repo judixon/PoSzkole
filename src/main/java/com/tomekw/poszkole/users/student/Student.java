@@ -43,7 +43,7 @@ public class Student extends User {
     @Override
     public String toString() {
         return "Student{" +
-                "id=" + super.getId() +
+                "lessonId=" + super.getId() +
                 ", parent=" + parent.getName() +" "+ parent.getSurname() +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", studentLessonBucketList=" + studentLessonBucketList.stream().map(StudentLessonBucket::getLesson).map(Lesson::getId) +

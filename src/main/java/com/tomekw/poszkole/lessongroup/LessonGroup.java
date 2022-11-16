@@ -63,7 +63,7 @@ public class LessonGroup {
     @Override
     public String toString() {
         return "LessonGroup{" +
-                "id=" + id +
+                "lessonId=" + id +
                 ", name='" + name + '\'' +
                 ", lessonGroupStatus=" + lessonGroupStatus +
                 ", prizePerStudent=" + prizePerStudent +

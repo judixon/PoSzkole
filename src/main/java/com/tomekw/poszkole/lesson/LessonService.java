@@ -55,7 +55,7 @@ public class LessonService {
 
     @Transactional
     List<LessonDto> saveLesson(LessonSaveDto lessonSaveDto) {
-        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(lessonSaveDto.getOwnedByGroupId());
+        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(lessonSaveDto.ownedByGroupId());
 
         List<Lesson> lessonList = StreamSupport.stream(lessonRepository.saveAll(getLessonsSequenceToSaveToRepository(lessonGroup, lessonSaveDto)).spliterator(), false)
                 .toList();
@@ -94,7 +94,7 @@ public class LessonService {
     }
 
     private List<Lesson> getLessonsSequenceToSaveToRepository(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {
-        LocalDate localDate = lessonSaveDto.getStartDateTime().toLocalDate();
+        LocalDate localDate = lessonSaveDto.startDateTime().toLocalDate();
         List<Lesson> lessons = new ArrayList<>();
         int daysIncrement = 0;
 
@@ -110,31 +110,31 @@ public class LessonService {
 
             daysIncrement = getNewDaysIncrement(lessonSaveDto, daysIncrement);
 
-        } while (localDate.plusDays(daysIncrement).isBefore(lessonSaveDto.getLessonSequenceBorder().plusDays(1))
-                && !lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE));
+        } while (localDate.plusDays(daysIncrement).isBefore(lessonSaveDto.lessonSequenceBorder().plusDays(1))
+                && !lessonSaveDto.lessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE));
         return lessons;
     }
 
     private Lesson createNewLessonForLessonsSequence(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto, int incrementDays, List<StudentLessonBucket> studentLessonBucketList) {
-        Lesson lesson = new Lesson(lessonSaveDto.getStartDateTime().plusDays(incrementDays),
-                lessonSaveDto.getEndDateTime().plusDays(incrementDays),
+        Lesson lesson = new Lesson(lessonSaveDto.startDateTime().plusDays(incrementDays),
+                lessonSaveDto.endDateTime().plusDays(incrementDays),
                 "none",
                 "none",
                 lessonGroup,
                 Collections.EMPTY_LIST,
                 Collections.EMPTY_LIST,
-                lessonSaveDto.getStartDateTime().plusDays(incrementDays).isAfter(LocalDateTime.now()) ? studentLessonBucketList : Collections.EMPTY_LIST,
+                lessonSaveDto.startDateTime().plusDays(incrementDays).isAfter(LocalDateTime.now()) ? studentLessonBucketList : Collections.EMPTY_LIST,
                 LessonStatus.WAITING);
         lesson.getStudentLessonBucketList().forEach(studentLessonBucket -> studentLessonBucket.setLesson(lesson));
         return lesson;
     }
 
     private int getNewDaysIncrement(LessonSaveDto lessonSaveDto, int incrementDays) {
-        if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE)) {
+        if (lessonSaveDto.lessonFrequencyStatus().equals(LessonFrequencyStatus.SINGLE)) {
             return incrementDays;
-        } else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_WEEK)) {
+        } else if (lessonSaveDto.lessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_WEEK)) {
             incrementDays += 7;
-        } else if (lessonSaveDto.getLessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
+        } else if (lessonSaveDto.lessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
             incrementDays += 14;
         } else {
             throw new LessonFrequencyStatusUndefinedException();
@@ -143,9 +143,9 @@ public class LessonService {
     }
 
     private void updateLessonDataFromLessonUpdateDto(LessonUpdateDto lessonUpdateDto, Lesson lessonToUpdate) {
-        lessonToUpdate.setLessonPlan(lessonUpdateDto.getLessonPlan());
-        lessonToUpdate.setNotes(lessonUpdateDto.getNotes());
-        lessonToUpdate.setLessonStatus(LessonStatus.valueOf(lessonUpdateDto.getLessonStatus()));
+        lessonToUpdate.setLessonPlan(lessonUpdateDto.lessonPlan());
+        lessonToUpdate.setNotes(lessonUpdateDto.notes());
+        lessonToUpdate.setLessonStatus(LessonStatus.valueOf(lessonUpdateDto.lessonStatus()));
     }
 
     private StudentLessonBucket getStudentLessonBucketFromLessonByIds(Long lessonId, Long studentLessonBucketId) {

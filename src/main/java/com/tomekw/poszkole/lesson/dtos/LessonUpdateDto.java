@@ -1,13 +1,10 @@
 package com.tomekw.poszkole.lesson.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-@AllArgsConstructor
-public class LessonUpdateDto {
+public record LessonUpdateDto(String lessonPlan, String notes, String lessonStatus) {
 
-    private String lessonPlan;
-    private String notes;
-    private String lessonStatus;
+    @Builder
+    public LessonUpdateDto {
+    }
 }

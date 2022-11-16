@@ -27,7 +27,7 @@ public class Timetable {
     @Override
     public String toString() {
         return "Timetable{" +
-                "id=" + id +
+                "lessonId=" + id +
                 ", weekList=" + weekList +
                 ", teacher=" + teacher.getId() +
                 '}';

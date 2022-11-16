@@ -34,8 +34,8 @@ public class LessonController {
         List<LessonDto> savedLessonsList = lessonService.saveLesson(lessonSaveDto);
         LessonDto firstSavedLesson = savedLessonsList.get(0);
         URI savedLessonURI = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(firstSavedLesson.getId())
+                .path("/{lessonId}")
+                .buildAndExpand(firstSavedLesson.lessonId())
                 .toUri();
         return ResponseEntity.created(savedLessonURI).body(firstSavedLesson);
     }

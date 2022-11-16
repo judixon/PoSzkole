@@ -2,7 +2,7 @@ package com.tomekw.poszkole.lessongroup.dtos;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketTeacherViewDto;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketTeacherViewDto;
 import lombok.Builder;
 
 import java.math.BigDecimal;

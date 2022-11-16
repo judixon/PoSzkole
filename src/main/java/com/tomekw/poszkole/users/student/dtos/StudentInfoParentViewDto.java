@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.users.student.dtos;
 
-import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDto;
+import com.tomekw.poszkole.lesson.studentlessonbucket.dtos.StudentLessonBucketDto;
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import lombok.Builder;
 

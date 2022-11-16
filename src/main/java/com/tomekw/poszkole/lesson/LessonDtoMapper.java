@@ -17,44 +17,49 @@ public class LessonDtoMapper {
     private final StudentLessonBucketDtoMapper studentLessonBucketDtoMapper;
 
     public LessonDto mapToLessonDto(Lesson lesson) {
-        return new LessonDto(lesson.getId(),
-                lesson.getStartDateTime(),
-                lesson.getEndDateTime(),
-                lesson.getLessonStatus(),
-                lesson.getLessonPlan(),
-                lesson.getNotes(),
-                lesson.getCreatedHomeworkList().stream().map(homeworkDtoMapper::mapToHomeworkContentDto).toList(),
-                lesson.getToCheckHomeworkList().stream().map(homeworkDtoMapper::mapToHomeworkContentDto).toList(),
-                lesson.getStudentLessonBucketList().stream().map(studentLessonBucketDtoMapper::mapToStudentLessonBucketDto).toList());
+        return LessonDto.builder()
+                .lessonId(lesson.getId())
+                .startDateTime(lesson.getStartDateTime())
+                .endDateTime(lesson.getEndDateTime())
+                .lessonStatus(lesson.getLessonStatus())
+                .lessonPlan(lesson.getLessonPlan())
+                .notes(lesson.getNotes())
+                .createdHomeworkList(lesson.getCreatedHomeworkList().stream().map(homeworkDtoMapper::mapToHomeworkContentDto).toList())
+                .toCheckHomeworkList(lesson.getToCheckHomeworkList().stream().map(homeworkDtoMapper::mapToHomeworkContentDto).toList())
+                .studentLessonBucketDtoList(lesson.getStudentLessonBucketList().stream().map(studentLessonBucketDtoMapper::mapToStudentLessonBucketDto).toList())
+                .build();
     }
 
+
     public LessonTeachersTimetableViewDto mapToLessonTeacherTimetableViewDto(Lesson lesson) {
-        return new LessonTeachersTimetableViewDto(
-                lesson.getId(),
-                lesson.getStartDateTime(),
-                lesson.getEndDateTime(),
-                lesson.getOwnedByGroup().getName(),
-                lesson.getOwnedByGroup().getLessonGroupStatus(),
-                lesson.getOwnedByGroup().getLessonGroupSubject()
-        );
+        return LessonTeachersTimetableViewDto.builder()
+                .id(lesson.getId())
+                .startDateTime(lesson.getStartDateTime())
+                .endDateTime(lesson.getEndDateTime())
+                .ownedByGroupName(lesson.getOwnedByGroup().getName())
+                .ownedByGroupLessonGroupStatus(lesson.getOwnedByGroup().getLessonGroupStatus())
+                .ownedByGroupLessonGroupSubject(lesson.getOwnedByGroup().getLessonGroupSubject())
+                .build();
     }
 
     public LessonStudentListViewDto mapToLessonStudentListViewDto(Lesson lesson) {
-        return new LessonStudentListViewDto(lesson.getId(),
-                lesson.getStartDateTime(),
-                lesson.getEndDateTime(),
-                lesson.getOwnedByGroup().getName(),
-                lesson.getOwnedByGroup().getLessonGroupSubject(),
-                lesson.getOwnedByGroup().getTeacher().getName(),
-                lesson.getOwnedByGroup().getTeacher().getSurname(),
-                lesson.getOwnedByGroup().getTeacher().getId());
+        return LessonStudentListViewDto.builder()
+                .id(lesson.getId())
+                .startDateTime(lesson.getStartDateTime())
+                .endDateTime(lesson.getEndDateTime())
+                .ownedByGroupName(lesson.getOwnedByGroup().getName())
+                .ownedByGroupLessonGroupSubject(lesson.getOwnedByGroup().getLessonGroupSubject())
+                .ownedByGroupTeacherId(lesson.getOwnedByGroup().getTeacher().getId())
+                .ownedByGroupTeacherName(lesson.getOwnedByGroup().getTeacher().getName())
+                .ownedByGroupTeacherSurname(lesson.getOwnedByGroup().getTeacher().getSurname())
+                .build();
     }
 
     public LessonUpdateDto mapToLessonUpdateDto(Lesson lesson) {
-        return new LessonUpdateDto(
-                lesson.getLessonPlan(),
-                lesson.getNotes(),
-                lesson.getLessonStatus().name()
-        );
+        return LessonUpdateDto.builder()
+                .lessonPlan(lesson.getLessonPlan())
+                .notes(lesson.getNotes())
+                .lessonStatus(lesson.getLessonStatus().name())
+                .build();
     }
 }

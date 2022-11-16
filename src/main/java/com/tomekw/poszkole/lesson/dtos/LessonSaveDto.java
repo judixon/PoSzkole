@@ -1,25 +1,15 @@
 package com.tomekw.poszkole.lesson.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tomekw.poszkole.lesson.LessonFrequencyStatus;
-import lombok.Data;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
-public class LessonSaveDto {
+public record LessonSaveDto(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate lessonSequenceBorder,
+                            Long ownedByGroupId, LessonFrequencyStatus lessonFrequencyStatus) {
 
-    @JsonFormat(pattern = "dd-MM-yyyy-HH-mm-ss")
-    private LocalDateTime startDateTime;
-
-    @JsonFormat(pattern = "dd-MM-yyyy-HH-mm-ss")
-    private LocalDateTime endDateTime;
-
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate lessonSequenceBorder;
-
-    private Long ownedByGroupId;
-    private LessonFrequencyStatus lessonFrequencyStatus;
-
+    @Builder
+    public LessonSaveDto {
+    }
 }

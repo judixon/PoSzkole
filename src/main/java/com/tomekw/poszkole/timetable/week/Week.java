@@ -58,7 +58,7 @@ public class Week {
     @Override
     public String toString() {
         return "Week{" +
-                "id=" + id +
+                "lessonId=" + id +
                 ", weekStartDate=" + weekStartDate +
                 ", weekEndDate=" + weekEndDate +
                 ", mondayLessons=" + mondayLessons.stream().map(lesson -> lesson.getId()).toList() +

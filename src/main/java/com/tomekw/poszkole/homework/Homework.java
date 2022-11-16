@@ -51,7 +51,7 @@ public class Homework {
     @Override
     public String toString() {
         return "Homework{" +
-                "id=" + id +
+                "lessonId=" + id +
                 ", homeworkCreator=" + homeworkCreator.getId() +
                 ", homeworkReceiver=" + homeworkReceiver.getId() +
                 ", deadlineLesson=" + deadlineLesson.getId() +

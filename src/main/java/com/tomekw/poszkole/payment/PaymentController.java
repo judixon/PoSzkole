@@ -26,7 +26,7 @@ public class PaymentController {
     ResponseEntity<?> savePayment(PaymentSaveDto paymentSaveDto) {
         Long paymentId = paymentService.savePayment(paymentSaveDto);
         URI savedPaymentUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{lessonId}")
                 .buildAndExpand(paymentId)
                 .toUri();
         return ResponseEntity.created(savedPaymentUri).body(paymentId);
