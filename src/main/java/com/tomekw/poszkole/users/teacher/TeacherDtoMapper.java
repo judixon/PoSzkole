@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 public class TeacherDtoMapper {
 
     public TeacherListDto mapToTeacherListDto(Teacher teacher) {
-        return new TeacherListDto(teacher.getId(),
-                teacher.getName(),
-                teacher.getSurname(),
-                teacher.getEmail(),
-                teacher.getTelephoneNumber());
+
+        return TeacherListDto.builder()
+                .id(teacher.getId())
+                .name(teacher.getName())
+                .surname(teacher.getSurname())
+                .email(teacher.getEmail())
+                .telephoneNumber(teacher.getTelephoneNumber())
+                .build();
     }
 }

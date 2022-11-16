@@ -91,7 +91,7 @@ public class UserDtoMapper {
     public UserCredentialsDto mapToUserCredentialsDto(User user) {
         return UserCredentialsDto.builder()
                 .username(user.getUsername())
-                .password(user.getUsername())
+                .password(user.getPassword().substring(user.getPassword().indexOf("}")+1))
                 .roles(user.getRoles().stream().map(UserRole::getName).collect(Collectors.toSet()))
                 .build();
     }

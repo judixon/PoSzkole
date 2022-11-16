@@ -1,16 +1,9 @@
 package com.tomekw.poszkole.users.teacher.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TeacherListDto {
-    private Long id;
-    private String name;
-    private String surname;
-    private String email;
-    private String telephoneNumber;
+public record TeacherListDto(Long id, String name, String surname, String email, String telephoneNumber) {
+    @Builder(toBuilder = true)
+    public TeacherListDto {
+    }
 }

@@ -26,78 +26,77 @@ public class StudentDtoMapper {
     public StudentInfoDto mapToStudentInfoDto(Student student) {
         ParentDtoMapper parentDtoMapper = new ParentDtoMapper(this);
 
-        ParentListDto parentListDto = null;
-
-        if (Objects.nonNull(student.getParent())) {
-            parentListDto = parentDtoMapper.mapToParentListDto(student.getParent());
-        }
-        return new StudentInfoDto(student.getId(),
-                student.getName(),
-                student.getSurname(),
-                student.getEmail(),
-                student.getTelephoneNumber(),
-                parentListDto
-        );
+        return StudentInfoDto.builder()
+                .id(student.getId())
+                .name(student.getName())
+                .surname(student.getSurname())
+                .email(student.getEmail())
+                .telephoneNumber(student.getTelephoneNumber())
+                .parentListDto(Objects.nonNull(student.getParent())?parentDtoMapper.mapToParentListDto(student.getParent()):null)
+                .build();
     }
 
     public StudentListDto mapToStudentListDto(Student student) {
-        return new StudentListDto(student.getId(),
-                student.getName(),
-                student.getSurname(),
-                student.getEmail(),
-                student.getTelephoneNumber());
+        return StudentListDto.builder()
+                .id(student.getId())
+                .name(student.getName())
+                .surname(student.getSurname())
+                .email(student.getEmail())
+                .telephoneNumber(student.getTelephoneNumber())
+                .build();
     }
 
     public StudentInfoParentViewDto mapToStudentInfoParentViewDto(Student student) {
-        return new StudentInfoParentViewDto(
-                student.getId(),
-                student.getName(),
-                student.getSurname(),
-                student.getEmail(),
-                student.getTelephoneNumber(),
-                student.getHomeworkList().stream().map(this::map).toList(),
-                student.getStudentLessonBucketList().stream().map(studentLessonBucketDtoMapper::mapToStudentLessonBucketDto).toList(),
-                student.getStudentLessonGroupBucketList().stream().map(this::map).toList()
-        );
+        return StudentInfoParentViewDto.builder()
+                .id(student.getId())
+                .name(student.getName())
+                .surname(student.getSurname())
+                .email(student.getEmail())
+                .telephoneNumber(student.getTelephoneNumber())
+                .homeworkList(student.getHomeworkList().stream().map(this::map).toList())
+                .studentLessonBucketList(student.getStudentLessonBucketList().stream().map(studentLessonBucketDtoMapper::mapToStudentLessonBucketDto).toList())
+                .studentGroupBucketList(student.getStudentLessonGroupBucketList().stream().map(this::map).toList())
+                .build();
     }
 
     private StudentInfoParentViewDto.HomeworkDto map(Homework homework) {
-        return new StudentInfoParentViewDto.HomeworkDto(
-                homework.getHomeworkCreator().getId(),
-                homework.getHomeworkCreator().getName(),
-                homework.getHomeworkCreator().getSurname(),
-                homework.getDeadlineLesson().getStartDateTime(),
-                homework.getDeadlineLesson().getEndDateTime(),
-                homework.getCreatingLesson().getStartDateTime(),
-                homework.getCreatingLesson().getEndDateTime(),
-                homework.getDeadlineLesson().getOwnedByGroup().getName(),
-                homework.getDeadlineLesson().getOwnedByGroup().getLessonGroupSubject(),
-                homework.getHomeworkContents(),
-                homework.getComment()
-        );
+        return StudentInfoParentViewDto.HomeworkDto.builder()
+                .homeworkCreatorId(homework.getHomeworkCreator().getId())
+                .homeworkCreatorName(homework.getHomeworkCreator().getName())
+                .homeworkCreatorSurname(homework.getHomeworkCreator().getSurname())
+                .deadlineLessonStartDateTime(homework.getDeadlineLesson().getStartDateTime())
+                .deadlineLessonEndDateTime(homework.getDeadlineLesson().getEndDateTime())
+                .creatingLessonStartDateTime(homework.getCreatingLesson().getStartDateTime())
+                .creatingLessonEndDateTime(homework.getCreatingLesson().getEndDateTime())
+                .deadlineLessonOwnedByGroupName(homework.getDeadlineLesson().getOwnedByGroup().getName())
+                .deadlineLessonOwnedByGroupLessonGroupSubject(homework.getDeadlineLesson().getOwnedByGroup().getLessonGroupSubject())
+                .homeworkContents(homework.getHomeworkContents())
+                .comment(homework.getComment())
+                .build();
+
     }
 
     private StudentInfoParentViewDto.StudentGroupBucketDto map(StudentLessonGroupBucket studentLessonGroupBucket) {
-        return new StudentInfoParentViewDto.StudentGroupBucketDto(
-                studentLessonGroupBucket.getAcceptIndividualPrize(),
-                studentLessonGroupBucket.getIndividualPrize(),
-                studentLessonGroupBucket.getLessonGroup().getName(),
-                studentLessonGroupBucket.getLessonGroup().getPrizePerStudent(),
-                studentLessonGroupBucket.getLessonGroup().getLessonGroupSubject()
-        );
+        return StudentInfoParentViewDto.StudentGroupBucketDto.builder()
+                .acceptIndividualPrize(studentLessonGroupBucket.getAcceptIndividualPrize())
+                .individualPrize(studentLessonGroupBucket.getIndividualPrize())
+                .lessonGroupName(studentLessonGroupBucket.getLessonGroup().getName())
+                .lessonGroupPrizePerStudent(studentLessonGroupBucket.getLessonGroup().getPrizePerStudent())
+                .lessonGroupLessonGroupSubject(studentLessonGroupBucket.getLessonGroup().getLessonGroupSubject())
+                .build();
     }
 
     public StudentUpdateDto mapToStudentUpdateDto(Student student) {
-        return new StudentUpdateDto(
-                student.getName(),
-                student.getSurname(),
-                student.getEmail(),
-                student.getTelephoneNumber(),
-                student.getUsername(),
-                student.getPassword(),
-                student.getRoles().stream().map(UserRole::getName).toList(),
-                Objects.nonNull(student.getParent()) ? Optional.of(student.getParent().getId()) : Optional.empty(),
-                student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()
-        );
+        return StudentUpdateDto.builder()
+                .name(student.getName())
+                .surname(student.getSurname())
+                .email(student.getEmail())
+                .telephoneNumber(student.getTelephoneNumber())
+                .username(student.getUsername())
+                .password(student.getPassword())
+                .roles(student.getRoles().stream().map(UserRole::getName).toList())
+                .parentId(Objects.nonNull(student.getParent()) ? Optional.of(student.getParent().getId()) : Optional.empty())
+                .lessonGroupsIds( student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList())
+                .build();
     }
 }
