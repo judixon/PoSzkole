@@ -1,14 +1,13 @@
 package com.tomekw.poszkole.users.parent.dtos;
 
-import lombok.Data;
+import lombok.Builder;
 
 import java.io.Serializable;
 
-@Data
-public class ParentListDto implements Serializable {
-    private final Long id;
-    private final String name;
-    private final String surname;
-    private final String email;
-    private final String telephoneNumber;
+public record ParentListDto(Long id, String name, String surname, String email,
+                            String telephoneNumber) implements Serializable {
+
+    @Builder(toBuilder = true)
+    public ParentListDto {
+    }
 }

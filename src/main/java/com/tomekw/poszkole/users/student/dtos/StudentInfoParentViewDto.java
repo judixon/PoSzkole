@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 public record StudentInfoParentViewDto(Long id, String name, String surname,
                                        String email, String telephoneNumber,
                                        List<HomeworkDto> homeworkList,

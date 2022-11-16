@@ -2,9 +2,9 @@ package com.tomekw.poszkole.users.parent.dtos;
 
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class ParentUpdateDto extends UserRegistrationDto {
     private BigDecimal wallet;
     private List<Long> studentListIds;

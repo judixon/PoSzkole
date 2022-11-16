@@ -1,7 +1,6 @@
 package com.tomekw.poszkole.users.student.dtos;
 
 import lombok.Builder;
-import lombok.Data;
 
 import java.io.Serializable;
 

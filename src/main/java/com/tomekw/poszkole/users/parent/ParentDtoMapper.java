@@ -16,35 +16,39 @@ public class ParentDtoMapper {
     private final StudentDtoMapper studentDtoMapper;
 
     public ParentInfoDto mapToParentInfoDto(Parent parent) {
-        return new ParentInfoDto(parent.getId(),
-                parent.getName(),
-                parent.getSurname(),
-                parent.getEmail(),
-                parent.getTelephoneNumber(),
-                parent.getStudentList().stream().map(studentDtoMapper::mapToStudentListDto).toList(),
-                parent.getWallet(),
-                parent.getDebt());
+        return ParentInfoDto.builder()
+                .id(parent.getId())
+                .name(parent.getName())
+                .surname(parent.getSurname())
+                .email(parent.getEmail())
+                .telephoneNumber(parent.getTelephoneNumber())
+                .studentList(parent.getStudentList().stream().map(studentDtoMapper::mapToStudentListDto).toList())
+                .wallet(parent.getWallet())
+                .debt(parent.getDebt())
+                .build();
     }
 
     public ParentListDto mapToParentListDto(Parent parent) {
-        return new ParentListDto(parent.getId(),
-                parent.getName(),
-                parent.getSurname(),
-                parent.getEmail(),
-                parent.getTelephoneNumber());
+        return ParentListDto.builder()
+                .id(parent.getId())
+                .name(parent.getName())
+                .surname(parent.getSurname())
+                .email(parent.getEmail())
+                .telephoneNumber(parent.getTelephoneNumber())
+                .build();
     }
 
     public ParentUpdateDto mapToParentUpdateDto(Parent parent) {
-        return new ParentUpdateDto(
-                parent.getName(),
-                parent.getSurname(),
-                parent.getEmail(),
-                parent.getTelephoneNumber(),
-                parent.getUsername(),
-                parent.getPassword(),
-                parent.getRoles().stream().map(UserRole::getName).toList(),
-                parent.getWallet(),
-                parent.getStudentList().stream().map(Student::getId).toList()
-        );
+        return ParentUpdateDto.builder()
+                .name(parent.getName())
+                .surname(parent.getSurname())
+                .email(parent.getEmail())
+                .telephoneNumber(parent.getTelephoneNumber())
+                .username(parent.getUsername())
+                .password(parent.getPassword())
+                .roles(parent.getRoles().stream().map(UserRole::getName).toList())
+                .wallet(parent.getWallet())
+                .studentListIds(parent.getStudentList().stream().map(Student::getId).toList())
+                .build();
     }
 }
