@@ -30,7 +30,6 @@ public class LessonDtoMapper {
                 .build();
     }
 
-
     public LessonTeachersTimetableViewDto mapToLessonTeacherTimetableViewDto(Lesson lesson) {
         return LessonTeachersTimetableViewDto.builder()
                 .id(lesson.getId())

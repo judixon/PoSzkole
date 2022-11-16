@@ -1,13 +1,13 @@
 package com.tomekw.poszkole.users.student;
 
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.users.User;
-import com.tomekw.poszkole.users.userrole.UserRole;
 import com.tomekw.poszkole.users.parent.Parent;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,11 +43,11 @@ public class Student extends User {
     @Override
     public String toString() {
         return "Student{" +
-                "lessonId=" + super.getId() +
-                ", parent=" + parent.getName() +" "+ parent.getSurname() +
+                "ID=" + super.getId() +
+                ", parent=" + parent.getName() + " " + parent.getSurname() +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", studentLessonBucketList=" + studentLessonBucketList.stream().map(StudentLessonBucket::getLesson).map(Lesson::getId) +
-                ", studentGroupBucketList=" + studentLessonGroupBucketList.stream().map(StudentLessonGroupBucket::getLessonGroup).map(lessonGroup -> lessonGroup.getId()+" "+ lessonGroup.getName()+" "+lessonGroup.getLessonGroupSubject()) +
+                ", studentGroupBucketList=" + studentLessonGroupBucketList.stream().map(StudentLessonGroupBucket::getLessonGroup).map(lessonGroup -> lessonGroup.getId() + " " + lessonGroup.getName() + " " + lessonGroup.getLessonGroupSubject()) +
                 '}';
     }
 }

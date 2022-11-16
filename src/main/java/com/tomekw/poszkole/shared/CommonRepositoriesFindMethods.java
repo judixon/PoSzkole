@@ -5,8 +5,6 @@ import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.homework.HomeworkRepository;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonRepository;
-import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
-import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.lessongroup.LessonGroupRepository;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
@@ -33,7 +31,6 @@ public class CommonRepositoriesFindMethods {
     private final ParentRepository parentRepository;
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
-    private final StudentLessonBucketRepository studentLessonBucketRepository;
     private final StudentLessonGroupBucketRepository studentLessonGroupBucketRepository;
 
     public Lesson getLessonFromRepositoryById(Long lessonId) {
@@ -84,11 +81,6 @@ public class CommonRepositoriesFindMethods {
     public Payment getPaymentFromRepositoryById(Long paymentId) {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.PAYMENT_NOT_FOUND, paymentId));
-    }
-
-    public StudentLessonBucket getStudentLessonBucketFromRepositoryById(Long studentLessonBucketId) {
-        return studentLessonBucketRepository.findById(studentLessonBucketId)
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
     }
 
     public StudentLessonGroupBucket getStudentLessonGroupBucketFromRepositoryById(Long studentLessonGroupBucketId) {

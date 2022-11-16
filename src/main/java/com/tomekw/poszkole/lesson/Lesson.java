@@ -58,7 +58,7 @@ public class Lesson {
     @Override
     public String toString() {
         return "Lesson{" +
-                "lessonId=" + id +
+                "ID=" + id +
                 ", startDateTime=" + startDateTime +
                 ", endDateTime=" + endDateTime +
                 ", lessonPlan='" + lessonPlan + '\'' +

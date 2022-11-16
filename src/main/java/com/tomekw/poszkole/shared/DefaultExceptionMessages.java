@@ -17,5 +17,5 @@ public class DefaultExceptionMessages {
 
     public static final String NO_ACCESS_TO_REQUESTED_RESOURCE = "%s %s %s with ID:%s, doesn't have authorisation to resource %s with ID:%s";
 
-    public static final String STUDENT_NOT_LINKED_WITH_PARENT= "Student %s %s with ID:%s is not linked with any Parent.";
+    public static final String STUDENT_NOT_LINKED_WITH_PARENT = "Student %s %s with ID:%s is not linked with any Parent.";
 }

@@ -13,8 +13,7 @@ import com.tomekw.poszkole.payment.PaymentService;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
-import com.tomekw.poszkole.timetable.Timetable;
-import com.tomekw.poszkole.timetable.week.Week;
+import com.tomekw.poszkole.timetable.TimetableService;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +37,7 @@ public class LessonService {
     private final PaymentService paymentService;
     private final ResourceAccessChecker resourceAccessChecker;
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
+    private final TimetableService timetableService;
 
     List<LessonDto> getAllLessons() {
         return lessonRepository.findAll().stream().map(lessonDtoMapper::mapToLessonDto).toList();
@@ -60,7 +60,7 @@ public class LessonService {
         List<Lesson> lessonList = StreamSupport.stream(lessonRepository.saveAll(getLessonsSequenceToSaveToRepository(lessonGroup, lessonSaveDto)).spliterator(), false)
                 .toList();
 
-        lessonList.forEach(this::addLessonToTimetable);
+        lessonList.forEach(timetableService::addLessonToTimetable);
 
         teacherRepository.save(lessonGroup.getTeacher());
 
@@ -166,67 +166,5 @@ public class LessonService {
                 studentLessonBucket.getStudentPresenceStatus().equals(StudentPresenceStatus.ABSENT_NO_PAYMENT)) {
             paymentService.removePaymentIfAlreadyExists(studentLessonBucket);
         }
-    }
-
-    private void addLessonToTimetable(Lesson lesson) {
-        Timetable timetable = lesson.getOwnedByGroup().getTeacher().getTimetable();
-        for (Week w : timetable.getWeekList()) {
-            if (lesson.getStartDateTime().toLocalDate().isAfter(w.getWeekStartDate().minusDays(1)) &&
-                    lesson.getStartDateTime().toLocalDate().isBefore(w.getWeekEndDate().plusDays(1))) {
-                addLessonToWeek(lesson, w);
-                return;
-            }
-        }
-        Week week = createNewWeek(lesson);
-        addLessonToWeek(lesson, week);
-        timetable.getWeekList().add(week);
-    }
-
-    private void addLessonToWeek(Lesson lesson, Week w) {
-        switch (lesson.getStartDateTime().toLocalDate().getDayOfWeek()) {
-            case MONDAY -> w.getMondayLessons().add(lesson);
-            case TUESDAY -> w.getTuesdayLessons().add(lesson);
-            case WEDNESDAY -> w.getWednesdayLessons().add(lesson);
-            case THURSDAY -> w.getThursdayLessons().add(lesson);
-            case FRIDAY -> w.getFridayLessons().add(lesson);
-            case SATURDAY -> w.getSaturdayLessons().add(lesson);
-            case SUNDAY -> w.getSundayLessons().add(lesson);
-        }
-    }
-
-    private Week createNewWeek(Lesson lesson) {
-        LocalDate localDate = lesson.getStartDateTime().toLocalDate();
-        Week weekToCreate = new Week(null, null);
-        switch (localDate.getDayOfWeek()) {
-            case MONDAY -> {
-                weekToCreate.setWeekStartDate(localDate);
-                weekToCreate.setWeekEndDate(localDate.plusDays(6));
-            }
-            case TUESDAY -> {
-                weekToCreate.setWeekStartDate(localDate.minusDays(1));
-                weekToCreate.setWeekEndDate(localDate.plusDays(5));
-            }
-            case WEDNESDAY -> {
-                weekToCreate.setWeekStartDate(localDate.minusDays(2));
-                weekToCreate.setWeekEndDate(localDate.plusDays(4));
-            }
-            case THURSDAY -> {
-                weekToCreate.setWeekStartDate(localDate.minusDays(3));
-                weekToCreate.setWeekEndDate(localDate.plusDays(3));
-            }
-            case FRIDAY -> {
-                weekToCreate.setWeekStartDate(localDate.minusDays(4));
-                weekToCreate.setWeekEndDate(localDate.plusDays(2));
-            }
-            case SATURDAY -> {
-                weekToCreate.setWeekStartDate(localDate.minusDays(5));
-                weekToCreate.setWeekEndDate(localDate.plusDays(1));
-            }
-            case SUNDAY -> {
-                weekToCreate.setWeekStartDate(localDate.minusDays(6));
-                weekToCreate.setWeekEndDate(localDate);
-            }
-        }
-        return weekToCreate;
     }
 }

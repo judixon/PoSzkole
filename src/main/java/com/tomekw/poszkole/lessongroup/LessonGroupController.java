@@ -37,7 +37,7 @@ public class LessonGroupController {
     ResponseEntity<Long> create(@RequestBody LessonGroupCreateDto lessonGroupCreateDTO) {
         Long savedGroupId = lessonGroupService.saveGroup(lessonGroupCreateDTO);
         URI savedGroupUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{lessonId}")
+                .path("/{id}")
                 .buildAndExpand(savedGroupId)
                 .toUri();
         return ResponseEntity.created(savedGroupUri).body(savedGroupId);

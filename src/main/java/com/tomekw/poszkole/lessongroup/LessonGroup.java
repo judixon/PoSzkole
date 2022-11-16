@@ -7,7 +7,6 @@ import com.tomekw.poszkole.users.teacher.Teacher;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -63,7 +62,7 @@ public class LessonGroup {
     @Override
     public String toString() {
         return "LessonGroup{" +
-                "lessonId=" + id +
+                "ID=" + id +
                 ", name='" + name + '\'' +
                 ", lessonGroupStatus=" + lessonGroupStatus +
                 ", prizePerStudent=" + prizePerStudent +

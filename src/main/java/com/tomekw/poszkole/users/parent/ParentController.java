@@ -37,7 +37,7 @@ public class ParentController {
     ResponseEntity<?> registerParent(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedParentId = parentService.registerParent(userRegistrationDto);
         URI savedParentUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{lessonId}")
+                .path("/{id}")
                 .buildAndExpand(savedParentId)
                 .toUri();
         return ResponseEntity.created(savedParentUri).body(savedParentId);

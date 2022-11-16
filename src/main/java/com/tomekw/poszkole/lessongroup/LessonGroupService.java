@@ -10,10 +10,10 @@ import com.tomekw.poszkole.lesson.studentlessonbucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupCreateDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupInfoDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupUpdateDto;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketDto;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketDtoMapper;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketDtoMapper;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketRepository;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketDto;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketUpdateDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
@@ -87,7 +87,6 @@ public class LessonGroupService {
 
     @Transactional
     public void removeStudentFromGroup(Student student, Long lessonGroupId) {
-
         List<StudentLessonBucket> studentLessonBucketsToRemove = studentLessonBucketRepository.findFStudentLessonBucketsOfFutureLessonsInLessonGroup(student.getId(), lessonGroupId, LocalDateTime.now());
         studentLessonBucketRepository.deleteAll(studentLessonBucketsToRemove);
 
@@ -155,7 +154,6 @@ public class LessonGroupService {
         lessonGroup.setLessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupUpdateDto.lessonGroupSubject()));
         lessonGroup.setName(lessonGroupUpdateDto.name());
         lessonGroup.setPrizePerStudent(lessonGroupUpdateDto.prizePerStudent());
-
         lessonGroupRepository.save(lessonGroup);
     }
 }

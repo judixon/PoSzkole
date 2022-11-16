@@ -5,7 +5,6 @@ import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDtoMapp
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.users.parent.ParentDtoMapper;
-import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoDto;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoParentViewDto;
 import com.tomekw.poszkole.users.student.dtos.StudentListDto;
@@ -32,7 +31,7 @@ public class StudentDtoMapper {
                 .surname(student.getSurname())
                 .email(student.getEmail())
                 .telephoneNumber(student.getTelephoneNumber())
-                .parentListDto(Objects.nonNull(student.getParent())?parentDtoMapper.mapToParentListDto(student.getParent()):null)
+                .parentListDto(Objects.nonNull(student.getParent()) ? parentDtoMapper.mapToParentListDto(student.getParent()) : null)
                 .build();
     }
 
@@ -96,7 +95,7 @@ public class StudentDtoMapper {
                 .password(student.getPassword())
                 .roles(student.getRoles().stream().map(UserRole::getName).toList())
                 .parentId(Objects.nonNull(student.getParent()) ? Optional.of(student.getParent().getId()) : Optional.empty())
-                .lessonGroupsIds( student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList())
+                .lessonGroupsIds(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList())
                 .build();
     }
 }

@@ -4,10 +4,12 @@ package com.tomekw.poszkole.timetable.week;
 import com.tomekw.poszkole.lesson.Lesson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.mapping.Collection;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -46,28 +48,28 @@ public class Week {
     public Week(LocalDate weekStartDate, LocalDate weekEndDate) {
         this.weekStartDate = weekStartDate;
         this.weekEndDate = weekEndDate;
-        this.mondayLessons = new ArrayList<Lesson>();
-        this.tuesdayLessons = new ArrayList<Lesson>();
-        this.wednesdayLessons = new ArrayList<Lesson>();
-        this.thursdayLessons = new ArrayList<Lesson>();
-        this.fridayLessons = new ArrayList<Lesson>();
-        this.saturdayLessons = new ArrayList<Lesson>();
-        this.sundayLessons = new ArrayList<Lesson>();
+        this.mondayLessons = Collections.EMPTY_LIST;
+        this.tuesdayLessons = Collections.EMPTY_LIST;
+        this.wednesdayLessons = Collections.EMPTY_LIST;
+        this.thursdayLessons = Collections.EMPTY_LIST;
+        this.fridayLessons = Collections.EMPTY_LIST;
+        this.saturdayLessons = Collections.EMPTY_LIST;
+        this.sundayLessons = Collections.EMPTY_LIST;
     }
 
     @Override
     public String toString() {
         return "Week{" +
-                "lessonId=" + id +
+                "ID=" + id +
                 ", weekStartDate=" + weekStartDate +
                 ", weekEndDate=" + weekEndDate +
-                ", mondayLessons=" + mondayLessons.stream().map(lesson -> lesson.getId()).toList() +
-                ", tuesdayLessons=" + tuesdayLessons.stream().map(lesson -> lesson.getId()).toList() +
-                ", wednesdayLessons=" + wednesdayLessons.stream().map(lesson -> lesson.getId()).toList() +
-                ", thursdayLessons=" + thursdayLessons.stream().map(lesson -> lesson.getId()).toList() +
-                ", fridayLessons=" + fridayLessons.stream().map(lesson -> lesson.getId()).toList() +
-                ", saturdayLessons=" + saturdayLessons.stream().map(lesson -> lesson.getId()).toList() +
-                ", sundayLessons=" + sundayLessons.stream().map(lesson -> lesson.getId()).toList() +
+                ", mondayLessons=" + mondayLessons.stream().map(Lesson::getId).toList() +
+                ", tuesdayLessons=" + tuesdayLessons.stream().map(Lesson::getId).toList() +
+                ", wednesdayLessons=" + wednesdayLessons.stream().map(Lesson::getId).toList() +
+                ", thursdayLessons=" + thursdayLessons.stream().map(Lesson::getId).toList() +
+                ", fridayLessons=" + fridayLessons.stream().map(Lesson::getId).toList() +
+                ", saturdayLessons=" + saturdayLessons.stream().map(Lesson::getId).toList() +
+                ", sundayLessons=" + sundayLessons.stream().map(Lesson::getId).toList() +
                 '}';
     }
 }

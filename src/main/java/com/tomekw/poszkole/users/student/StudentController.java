@@ -38,7 +38,7 @@ public class StudentController {
     ResponseEntity<?> registerStudent(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedStudentId = studentService.registerStudent(userRegistrationDto);
         URI savedStudentUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{lessonId}")
+                .path("/{id}")
                 .buildAndExpand(savedStudentId)
                 .toUri();
         return ResponseEntity.created(savedStudentUri).body(savedStudentId);

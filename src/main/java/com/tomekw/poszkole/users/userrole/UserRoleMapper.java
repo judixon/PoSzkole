@@ -1,39 +1,27 @@
 package com.tomekw.poszkole.users.userrole;
 
+import com.tomekw.poszkole.exceptions.globalexceptionhandler.RequestedUserRolesNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class UserRoleMapper {
 
+    private static final String REQUESTED_USER_ROLES_NOT_FOUND_EXCEPTION_MESSAGE = "Couldn't find given user roles: %s.";
     private final UserRoleRepository userRoleRepository;
 
-
-   public List<UserRole> mapToUserRoleList(List<String> userRoles){
-
+    public List<UserRole> mapToUserRoleList(List<String> userRoles) {
         List<UserRole> roleList = new ArrayList<>();
 
-        if (userRoles.isEmpty()){
-            return roleList;
-        }
-
-        for (String role : userRoles) {
-            UserRole userRole = userRoleRepository.findRole(role);
-
-            if (Objects.nonNull(userRole)) {
-                roleList.add(userRole);
-            }
-        }
+        userRoles.forEach(role -> userRoleRepository.findRole(role).ifPresent(roleList::add));
 
         if (roleList.size() == userRoles.size()) {
             return roleList;
         }
-        throw new NoSuchElementException();
+        throw new RequestedUserRolesNotFoundException(String.format(REQUESTED_USER_ROLES_NOT_FOUND_EXCEPTION_MESSAGE, userRoles));
     }
 }

@@ -32,7 +32,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {LessonFrequencyStatusUndefinedException.class, PaymentAlreadyExistsException.class, StudentNotLinkedWithParentException.class })
-    public ResponseEntity<Object> handleExceptionsCausedByConflictInsideServer(NoAccessToExactResourceException e) {
+    public ResponseEntity<Object> handleExceptionsCausedByConflictInsideServer(RuntimeException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 HttpStatus.CONFLICT,
@@ -42,10 +42,20 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {NotUniqueUsernameException.class})
-    public ResponseEntity<Object> handleNotUniqueUsernameException(NoAccessToExactResourceException e) {
+    public ResponseEntity<Object> handleNotUniqueUsernameException(NotUniqueUsernameException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 HttpStatus.OK,
+                ZonedDateTime.now()
+        );
+        return new ResponseEntity<>(apiException, apiException.responseHttpStatus());
+    }
+
+    @ExceptionHandler(value = {RequestedUserRolesNotFoundException.class})
+    public ResponseEntity<Object> handleRequestedUserRolesNotFoundException(RequestedUserRolesNotFoundException e) {
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                HttpStatus.BAD_REQUEST,
                 ZonedDateTime.now()
         );
         return new ResponseEntity<>(apiException, apiException.responseHttpStatus());

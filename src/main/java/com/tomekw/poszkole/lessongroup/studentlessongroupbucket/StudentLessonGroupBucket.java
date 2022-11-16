@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.lessongroup.studentlessongroupbucket;
 
-
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.users.student.Student;
 import lombok.Data;

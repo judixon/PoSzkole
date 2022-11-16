@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.users.teacher;
 
-import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.homework.Homework;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.timetable.Timetable;
 import com.tomekw.poszkole.users.User;
@@ -23,7 +23,7 @@ public class Teacher extends User {
     @OneToMany(mappedBy = "homeworkCreator", cascade = CascadeType.PERSIST)
     private List<Homework> homeworkList;
 
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "timetable_id")
     private Timetable timetable;
 
@@ -37,7 +37,7 @@ public class Teacher extends User {
     @Override
     public String toString() {
         return "Teacher{" +
-                "lessonId=" + super.getId() +
+                "ID=" + super.getId() +
                 ", lessonGroups=" + lessonGroups.stream().map(LessonGroup::getId) +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", timetableID=" + timetable.getId() +

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 public class TeacherDtoMapper {
 
     public TeacherListDto mapToTeacherListDto(Teacher teacher) {
-
         return TeacherListDto.builder()
                 .id(teacher.getId())
                 .name(teacher.getName())

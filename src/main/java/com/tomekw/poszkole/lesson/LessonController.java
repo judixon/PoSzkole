@@ -32,9 +32,9 @@ public class LessonController {
     @PostMapping
     ResponseEntity<?> saveLesson(@RequestBody LessonSaveDto lessonSaveDto) {
         List<LessonDto> savedLessonsList = lessonService.saveLesson(lessonSaveDto);
-        LessonDto firstSavedLesson = savedLessonsList.get(0);
+        LessonDto firstSavedLesson = savedLessonsList.stream().findFirst().orElseThrow();
         URI savedLessonURI = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{lessonId}")
+                .path("/{id}")
                 .buildAndExpand(firstSavedLesson.lessonId())
                 .toUri();
         return ResponseEntity.created(savedLessonURI).body(firstSavedLesson);

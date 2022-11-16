@@ -35,6 +35,4 @@ public class PaymentDtoMapper {
                 .paymentStatus(payment.getPaymentStatus())
                 .build();
     }
-
-
 }

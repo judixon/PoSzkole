@@ -18,16 +18,16 @@ public class Timetable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Week> weekList;
 
-    @OneToOne(mappedBy = "timetable",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "timetable", fetch = FetchType.LAZY)
     private Teacher teacher;
 
     @Override
     public String toString() {
         return "Timetable{" +
-                "lessonId=" + id +
+                "ID=" + id +
                 ", weekList=" + weekList +
                 ", teacher=" + teacher.getId() +
                 '}';
@@ -38,7 +38,7 @@ public class Timetable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Timetable timetable = (Timetable) o;
-        return id.equals(timetable.id)  && teacher.getId().equals(timetable.teacher.getId());
+        return id.equals(timetable.id) && teacher.getId().equals(timetable.teacher.getId());
     }
 
     @Override
