@@ -1,17 +1,12 @@
 package com.tomekw.poszkole.lessongroup.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 
-@Data
-@AllArgsConstructor
-public class LessonGroupCreateDto {
+public record LessonGroupCreateDto(String name, Long teacherId, BigDecimal prizePerStudent, String groupSubject) {
 
-    private String name;
-    private Long teacherId;
-    private BigDecimal prizePerStudent;
-    private String groupSubject;
-
+    @Builder
+    public LessonGroupCreateDto {
+    }
 }

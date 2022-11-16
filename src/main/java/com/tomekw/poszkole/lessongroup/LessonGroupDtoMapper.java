@@ -19,76 +19,80 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class LessonGroupDtoMapper {
 
-    private final TeacherRepository teacherRepository;
     private final TeacherDtoMapper teacherDtoMapper;
     private final StudentLessonGroupBucketDtoMapper studentLessonGroupBucketDtoMapper;
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
 
     public LessonGroup mapToLessonGroup(LessonGroupCreateDto lessonGroupCreateDTO) {
-        Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(lessonGroupCreateDTO.getTeacherId());
-        return new LessonGroup(
-                lessonGroupCreateDTO.getName(),
-                LessonGroupStatus.UNACTIVE,
-                lessonGroupCreateDTO.getPrizePerStudent(),
-                LessonGroupSubject.valueOf(lessonGroupCreateDTO.getGroupSubject().toUpperCase()),
-                teacher,
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST
-        );
+        Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(lessonGroupCreateDTO.teacherId());
+
+        return LessonGroup.builder()
+                .name(lessonGroupCreateDTO.name())
+                .lessonGroupStatus(LessonGroupStatus.UNACTIVE)
+                .prizePerStudent(lessonGroupCreateDTO.prizePerStudent())
+                .lessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupCreateDTO.groupSubject().toUpperCase()))
+                .teacher(teacher)
+                .homeworkList(Collections.EMPTY_LIST)
+                .studentLessonGroupBucketList(Collections.EMPTY_LIST)
+                .lessons(Collections.EMPTY_LIST)
+                .build();
     }
 
-    public LessonGroupInfoDto mapToLessonGroupInfoDto(LessonGroup lessongGroup) {
-        Teacher teacher = lessongGroup.getTeacher();
-        return new LessonGroupInfoDto(
-                lessongGroup.getId(),
-                lessongGroup.getName(),
-                lessongGroup.getLessonGroupStatus(),
-                lessongGroup.getPrizePerStudent(),
-                lessongGroup.getLessonGroupSubject(),
-                Objects.nonNull(teacher) ? teacherDtoMapper.mapToTeacherListDto(teacher) : null,
-                lessongGroup.getStudentLessonGroupBucketList().stream().map(studentLessonGroupBucketDtoMapper::mapToStudentGroupBucketDto).toList()
-        );
+    public LessonGroupInfoDto mapToLessonGroupInfoDto(LessonGroup lessonGroup) {
+        Teacher teacher = lessonGroup.getTeacher();
+
+        return LessonGroupInfoDto.builder()
+                .id(lessonGroup.getId())
+                .name(lessonGroup.getName())
+                .lessonGroupStatus(lessonGroup.getLessonGroupStatus())
+                .prizePerStudent(lessonGroup.getPrizePerStudent())
+                .lessonGroupSubject(lessonGroup.getLessonGroupSubject())
+                .teacher(Objects.nonNull(teacher) ? teacherDtoMapper.mapToTeacherListDto(teacher) : null)
+                .students(lessonGroup.getStudentLessonGroupBucketList().stream().map(studentLessonGroupBucketDtoMapper::mapToStudentGroupBucketDto).toList())
+                .build();
     }
 
     public LessonGroupListTeacherViewDto mapToLessonGroupListTeacherViewDto(LessonGroup lessonGroup) {
-        return new LessonGroupListTeacherViewDto(
-                lessonGroup.getId(),
-                lessonGroup.getName(),
-                lessonGroup.getLessonGroupStatus(),
-                lessonGroup.getPrizePerStudent(),
-                lessonGroup.getLessonGroupSubject(),
-                lessonGroup.getStudentLessonGroupBucketList().stream().map(this::mapToStudentGroupBucketDto).toList()
-        );
+        return LessonGroupListTeacherViewDto.builder()
+                .bucketId(lessonGroup.getId())
+                .name(lessonGroup.getName())
+                .lessonGroupStatus(lessonGroup.getLessonGroupStatus())
+                .prizePerStudent(lessonGroup.getPrizePerStudent())
+                .lessonGroupSubject(lessonGroup.getLessonGroupSubject())
+                .studentList(lessonGroup.getStudentLessonGroupBucketList().stream().map(this::mapToStudentGroupBucketDto).toList())
+                .build();
     }
 
     public LessonGroupUpdateDto mapToLessonGroupUpdateDto(LessonGroup lessonGroup) {
-        return new LessonGroupUpdateDto(
-                lessonGroup.getName(),
-                lessonGroup.getLessonGroupStatus().name(),
-                lessonGroup.getPrizePerStudent(),
-                lessonGroup.getLessonGroupSubject().name(),
-                Objects.nonNull(lessonGroup.getTeacher()) ? lessonGroup.getTeacher().getId() : -1L
-        );
+        return LessonGroupUpdateDto.builder()
+                .name(lessonGroup.getName())
+                .lessonGroupStatus(lessonGroup.getLessonGroupStatus().name())
+                .prizePerStudent(lessonGroup.getPrizePerStudent())
+                .lessonGroupSubject(lessonGroup.getLessonGroupSubject().name())
+                .teacherId(Objects.nonNull(lessonGroup.getTeacher()) ? lessonGroup.getTeacher().getId() : -1L)
+                .build();
     }
 
     public LessonGroupListStudentViewDto mapToLessonGroupListStudentViewDto(LessonGroup lessonGroup) {
-        return new LessonGroupListStudentViewDto(
-                lessonGroup.getId(),
-                lessonGroup.getName(),
-                lessonGroup.getLessonGroupSubject(),
-                lessonGroup.getTeacher().getId(),
-                lessonGroup.getTeacher().getName(),
-                lessonGroup.getTeacher().getSurname()
-        );
+        return LessonGroupListStudentViewDto.builder()
+                .id(lessonGroup.getId())
+                .name(lessonGroup.getName())
+                .lessonGroupSubject(lessonGroup.getLessonGroupSubject())
+                .teacherId(lessonGroup.getTeacher().getId())
+                .teacherName(lessonGroup.getTeacher().getName())
+                .teacherSurname(lessonGroup.getTeacher().getSurname())
+                .build();
     }
 
     private StudentLessonGroupBucketTeacherViewDto mapToStudentGroupBucketDto(StudentLessonGroupBucket studentLessonGroupBucket) {
-        return new StudentLessonGroupBucketTeacherViewDto(studentLessonGroupBucket.getId(),
-                studentLessonGroupBucket.getStudent().getId(),
-                studentLessonGroupBucket.getStudent().getName(),
-                studentLessonGroupBucket.getStudent().getSurname(),
-                studentLessonGroupBucket.getAcceptIndividualPrize(),
-                studentLessonGroupBucket.getIndividualPrize());
+        return StudentLessonGroupBucketTeacherViewDto.builder()
+                .bucketId(studentLessonGroupBucket.getId())
+                .studentId(studentLessonGroupBucket.getStudent().getId())
+                .name(studentLessonGroupBucket.getStudent().getName())
+                .surname(studentLessonGroupBucket.getStudent().getSurname())
+                .acceptIndividualPrize(studentLessonGroupBucket.getAcceptIndividualPrize())
+                .individualPrize(studentLessonGroupBucket.getIndividualPrize())
+                .build();
     }
+
 }

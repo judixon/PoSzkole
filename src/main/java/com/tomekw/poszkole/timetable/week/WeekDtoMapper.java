@@ -13,17 +13,17 @@ public class WeekDtoMapper {
     private final LessonDtoMapper lessonDtoMapper;
 
     public WeekTimetableTeacherViewDto mapToWeekTimetableTeacherViewDto(Week week) {
-        return new WeekTimetableTeacherViewDto(
-                week.getId(),
-                week.getWeekStartDate(),
-                week.getWeekEndDate(),
-                week.getMondayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList(),
-                week.getTuesdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList(),
-                week.getWednesdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList(),
-                week.getThursdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList(),
-                week.getFridayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList(),
-                week.getSaturdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList(),
-                week.getSundayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList()
-        );
+        return WeekTimetableTeacherViewDto.builder()
+                .id(week.getId())
+                .weekStartDate(week.getWeekStartDate())
+                .weekEndDate(week.getWeekEndDate())
+                .mondayLessons(week.getMondayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .tuesdayLessons(week.getTuesdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .wednesdayLessons(week.getWednesdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .thursdayLessons(week.getThursdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .fridayLessons(week.getFridayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .saturdayLessons(week.getSaturdayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .sundayLessons(week.getSundayLessons().stream().map(lessonDtoMapper::mapToLessonTeacherTimetableViewDto).toList())
+                .build();
     }
 }

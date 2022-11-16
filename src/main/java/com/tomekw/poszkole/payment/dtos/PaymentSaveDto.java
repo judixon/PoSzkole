@@ -1,22 +1,15 @@
 package com.tomekw.poszkole.payment.dtos;
 
 import com.tomekw.poszkole.payment.PaymentStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-public class PaymentSaveDto {
+public record PaymentSaveDto(Long lessonToPayId, Long studentBelongingPaymentId, Long studentsParentId, BigDecimal cost,
+                             PaymentStatus paymentStatus, LocalDateTime dateTimeOfPaymentAppearance) {
 
-    private Long lessonToPayId;
-    private Long studentBelongingPaymentId;
-    private Long studentsParentId;
-    private BigDecimal cost;
-    private PaymentStatus paymentStatus;
-    private LocalDateTime dateTimeOfPaymentAppearance;
-
-
+    @Builder
+    public PaymentSaveDto {
+    }
 }

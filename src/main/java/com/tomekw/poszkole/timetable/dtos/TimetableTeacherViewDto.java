@@ -1,14 +1,16 @@
 package com.tomekw.poszkole.timetable.dtos;
 
 import com.tomekw.poszkole.timetable.week.dtos.WeekTimetableTeacherViewDto;
-import lombok.Data;
+import lombok.Builder;
+
 import java.io.Serializable;
 import java.util.List;
 
-@Data
-public class TimetableTeacherViewDto implements Serializable {
+public record TimetableTeacherViewDto(Long id,
+                                      List<WeekTimetableTeacherViewDto> weekList,
+                                      Long teacherId) implements Serializable {
 
-    private final Long id;
-    private final List<WeekTimetableTeacherViewDto> weekList;
-    private final Long teacherId;
+    @Builder
+    public TimetableTeacherViewDto {
+    }
 }

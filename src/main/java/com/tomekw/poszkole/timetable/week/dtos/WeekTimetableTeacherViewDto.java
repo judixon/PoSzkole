@@ -1,24 +1,21 @@
 package com.tomekw.poszkole.timetable.week.dtos;
 
 import com.tomekw.poszkole.lesson.dtos.LessonTeachersTimetableViewDto;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
-@Data
-public class WeekTimetableTeacherViewDto {
+public record WeekTimetableTeacherViewDto(Long id, LocalDate weekStartDate, LocalDate weekEndDate,
+                                          List<LessonTeachersTimetableViewDto> mondayLessons,
+                                          List<LessonTeachersTimetableViewDto> tuesdayLessons,
+                                          List<LessonTeachersTimetableViewDto> wednesdayLessons,
+                                          List<LessonTeachersTimetableViewDto> thursdayLessons,
+                                          List<LessonTeachersTimetableViewDto> fridayLessons,
+                                          List<LessonTeachersTimetableViewDto> saturdayLessons,
+                                          List<LessonTeachersTimetableViewDto> sundayLessons) {
 
-    private  Long id;
-    private  LocalDate weekStartDate;
-    private  LocalDate weekEndDate;
-    private  List<LessonTeachersTimetableViewDto> mondayLessons;
-    private  List<LessonTeachersTimetableViewDto> tuesdayLessons;
-    private  List<LessonTeachersTimetableViewDto> wednesdayLessons;
-    private  List<LessonTeachersTimetableViewDto> thursdayLessons;
-    private  List<LessonTeachersTimetableViewDto> fridayLessons;
-    private  List<LessonTeachersTimetableViewDto> saturdayLessons;
-    private  List<LessonTeachersTimetableViewDto> sundayLessons;
+    @Builder
+    public WeekTimetableTeacherViewDto {
+    }
 }

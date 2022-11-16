@@ -43,17 +43,17 @@ public class PaymentService {
     }
 
     Long savePayment(PaymentSaveDto paymentSaveDto) {
-        Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(paymentSaveDto.getLessonToPayId());
-        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(paymentSaveDto.getStudentBelongingPaymentId());
-        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(paymentSaveDto.getStudentsParentId());
+        Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(paymentSaveDto.lessonToPayId());
+        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(paymentSaveDto.studentBelongingPaymentId());
+        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(paymentSaveDto.studentsParentId());
 
         Payment payment = new Payment(
                 lesson,
                 student,
                 parent,
-                paymentSaveDto.getCost(),
-                paymentSaveDto.getPaymentStatus(),
-                paymentSaveDto.getDateTimeOfPaymentAppearance(),
+                paymentSaveDto.cost(),
+                paymentSaveDto.paymentStatus(),
+                paymentSaveDto.dateTimeOfPaymentAppearance(),
                 null
         );
         return paymentRepository.save(payment).getId();

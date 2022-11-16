@@ -4,6 +4,8 @@ import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.users.teacher.Teacher;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +15,8 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
+@Builder(toBuilder = true)
+@AllArgsConstructor
 public class LessonGroup {
 
     @Id
@@ -52,6 +55,9 @@ public class LessonGroup {
         this.studentLessonGroupBucketList = studentLessonGroupBucketList;
         this.homeworkList = homeworkList;
         this.lessons = lessons;
+    }
+
+    public LessonGroup() {
     }
 
     @Override

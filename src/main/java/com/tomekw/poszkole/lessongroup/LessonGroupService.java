@@ -147,14 +147,14 @@ public class LessonGroupService {
     void updateLessonGroup(LessonGroupUpdateDto lessonGroupUpdateDto, Long lessonGroupId) {
         LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(lessonGroupId);
 
-        if (!lessonGroupUpdateDto.getTeacherId().equals(-1L)) {
-            Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(lessonGroupUpdateDto.getTeacherId());
+        if (!lessonGroupUpdateDto.teacherId().equals(-1L)) {
+            Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(lessonGroupUpdateDto.teacherId());
             lessonGroup.setTeacher(teacher);
         }
-        lessonGroup.setLessonGroupStatus(LessonGroupStatus.valueOf(lessonGroupUpdateDto.getLessonGroupStatus()));
-        lessonGroup.setLessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupUpdateDto.getLessonGroupSubject()));
-        lessonGroup.setName(lessonGroupUpdateDto.getName());
-        lessonGroup.setPrizePerStudent(lessonGroupUpdateDto.getPrizePerStudent());
+        lessonGroup.setLessonGroupStatus(LessonGroupStatus.valueOf(lessonGroupUpdateDto.lessonGroupStatus()));
+        lessonGroup.setLessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupUpdateDto.lessonGroupSubject()));
+        lessonGroup.setName(lessonGroupUpdateDto.name());
+        lessonGroup.setPrizePerStudent(lessonGroupUpdateDto.prizePerStudent());
 
         lessonGroupRepository.save(lessonGroup);
     }

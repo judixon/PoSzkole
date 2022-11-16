@@ -2,25 +2,21 @@ package com.tomekw.poszkole.payment.dtos;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import com.tomekw.poszkole.payment.PaymentStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-public class PaymentDto implements Serializable {
+public record PaymentDto(Long id, LocalDateTime lessonToPayStartDateTime, LocalDateTime lessonToPayEndDateTime,
+                         String lessonToPayOwnedByGroupName,
+                         LessonGroupSubject lessonToPayOwnedByGroupLessonGroupSubject,
+                         String studentBelongingPaymentName,
+                         String studentBelongingPaymentSurname,
+                         BigDecimal cost,
+                         PaymentStatus paymentStatus,
+                         LocalDateTime dateTimeOfPaymentAppearance) {
 
-    private Long id;
-    private LocalDateTime lessonToPayStartDateTime;
-    private LocalDateTime lessonToPayEndDateTime;
-    private String lessonToPayOwnedByGroupName;
-    private LessonGroupSubject lessonToPayOwnedByGroupLessonGroupSubject;
-    private String studentBelongingPaymentName;
-    private String studentBelongingPaymentSurname;
-    private BigDecimal cost;
-    private PaymentStatus paymentStatus;
-    private LocalDateTime dateTimeOfPaymentAppearance;
+    @Builder
+    public PaymentDto {
+    }
 }
