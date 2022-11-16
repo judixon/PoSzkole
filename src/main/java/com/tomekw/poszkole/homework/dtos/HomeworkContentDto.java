@@ -1,13 +1,11 @@
 package com.tomekw.poszkole.homework.dtos;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 
-@AllArgsConstructor
-public class HomeworkContentDto {
+public record HomeworkContentDto(Long id, String homeworkContents, String comment) {
 
-    private Long id;
-    private String homeworkContents;
-    private String comment;
-
+    @Builder
+    public HomeworkContentDto {
+    }
 }
 

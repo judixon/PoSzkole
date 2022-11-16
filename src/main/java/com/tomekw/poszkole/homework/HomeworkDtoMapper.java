@@ -10,56 +10,62 @@ import org.springframework.stereotype.Service;
 public class HomeworkDtoMapper {
 
     public HomeworkInfoDto mapToHomeworkInfoDto(Homework homework) {
-        return new HomeworkInfoDto(homework.getId(),
-                homework.getHomeworkCreator().getId(),
-                homework.getHomeworkCreator().getName(),
-                homework.getHomeworkCreator().getSurname(),
-                homework.getHomeworkReceiver().getId(),
-                homework.getHomeworkReceiver().getName(),
-                homework.getHomeworkReceiver().getSurname(),
-                homework.getDeadlineLesson().getId(),
-                homework.getDeadlineLesson().getStartDateTime(),
-                homework.getCreatingLesson().getId(),
-                homework.getCreatingLesson().getStartDateTime(),
-                homework.getHomeworkContents(),
-                homework.getComment(),
-                homework.getHomeworkStatus()
-        );
+        return HomeworkInfoDto.builder()
+                .id(homework.getId())
+                .homeworkCreatorId(homework.getHomeworkCreator().getId())
+                .homeworkCreatorName(homework.getHomeworkCreator().getName())
+                .homeworkCreatorSurname(homework.getHomeworkCreator().getSurname())
+                .homeworkReceiverId(homework.getHomeworkReceiver().getId())
+                .homeworkReceiverName(homework.getHomeworkReceiver().getName())
+                .homeworkReceiverSurname(homework.getHomeworkReceiver().getSurname())
+                .deadlineLessonId(homework.getDeadlineLesson().getId())
+                .deadlineLessonStartDateTime(homework.getDeadlineLesson().getStartDateTime())
+                .creatingLessonId(homework.getCreatingLesson().getId())
+                .creatingLessonStartDateTime(homework.getCreatingLesson().getStartDateTime())
+                .homeworkContents(homework.getHomeworkContents())
+                .comment(homework.getComment())
+                .homeworkStatus(homework.getHomeworkStatus())
+                .build();
     }
 
     public HomeworkContentDto mapToHomeworkContentDto(Homework homework) {
-        return new HomeworkContentDto(homework.getId(), homework.getHomeworkContents(), homework.getComment());
+        return HomeworkContentDto.builder()
+                .id(homework.getId())
+                .homeworkContents(homework.getHomeworkContents())
+                .comment(homework.getComment())
+                .build();
     }
 
     public HomeworkListTeacherViewDto mapToHomeworkListTeacherViewDto(Homework homework) {
-        return new HomeworkListTeacherViewDto(homework.getId(),
-                homework.getHomeworkReceiver().getId(),
-                homework.getHomeworkReceiver().getName(),
-                homework.getHomeworkReceiver().getSurname(),
-                homework.getDeadlineLesson().getId(),
-                homework.getDeadlineLesson().getStartDateTime(),
-                homework.getDeadlineLesson().getEndDateTime(),
-                homework.getCreatingLesson().getId(),
-                homework.getCreatingLesson().getStartDateTime(),
-                homework.getCreatingLesson().getEndDateTime(),
-                homework.getHomeworkStatus()
-        );
+        return HomeworkListTeacherViewDto.builder()
+                .id(homework.getId())
+                .homeworkReceiverId(homework.getHomeworkReceiver().getId())
+                .homeworkReceiverName(homework.getHomeworkReceiver().getName())
+                .homeworkReceiverSurname(homework.getHomeworkReceiver().getSurname())
+                .deadlineLessonId(homework.getDeadlineLesson().getId())
+                .deadlineLessonStartDateTime(homework.getDeadlineLesson().getStartDateTime())
+                .deadlineLessonEndDateTime( homework.getDeadlineLesson().getEndDateTime())
+                .creatingLessonId(homework.getCreatingLesson().getId())
+                .creatingLessonStartDateTime(homework.getCreatingLesson().getStartDateTime())
+                .creatingLessonEndDateTime(homework.getCreatingLesson().getEndDateTime())
+                .homeworkStatus(homework.getHomeworkStatus())
+                .build();
     }
 
     public HomeworkListDefaultViewDto mapToHomeworkListStudentParentViewDto(Homework homework) {
-        return new HomeworkListDefaultViewDto(
-                homework.getHomeworkReceiver().getId(),
-                homework.getHomeworkReceiver().getName(),
-                homework.getHomeworkReceiver().getSurname(),
-                homework.getDeadlineLesson().getId(),
-                homework.getDeadlineLesson().getStartDateTime(),
-                homework.getDeadlineLesson().getEndDateTime(),
-                homework.getCreatingLesson().getId(),
-                homework.getCreatingLesson().getStartDateTime(),
-                homework.getCreatingLesson().getEndDateTime(),
-                homework.getHomeworkStatus(),
-                homework.getHomeworkContents(),
-                homework.getComment()
-        );
+        return HomeworkListDefaultViewDto.builder()
+                .homeworkReceiverId(homework.getHomeworkReceiver().getId())
+                .homeworkReceiverName(homework.getHomeworkReceiver().getName())
+                .homeworkReceiverSurname(homework.getHomeworkReceiver().getSurname())
+                .deadlineLessonId(homework.getDeadlineLesson().getId())
+                .deadlineLessonStartDateTime(homework.getDeadlineLesson().getStartDateTime())
+                .deadlineLessonEndDateTime( homework.getDeadlineLesson().getEndDateTime())
+                .creatingLessonId(homework.getCreatingLesson().getId())
+                .creatingLessonStartDateTime(homework.getCreatingLesson().getStartDateTime())
+                .creatingLessonEndDateTime(homework.getCreatingLesson().getEndDateTime())
+                .homeworkStatus(homework.getHomeworkStatus())
+                .homeworkContents(homework.getHomeworkContents())
+                .comment(homework.getComment())
+                .build();
     }
 }

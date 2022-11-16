@@ -1,24 +1,18 @@
 package com.tomekw.poszkole.homework.dtos;
 
 import com.tomekw.poszkole.homework.HomeworkStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
-public class HomeworkListTeacherViewDto{
+public record HomeworkListTeacherViewDto(Long id, Long homeworkReceiverId, String homeworkReceiverName,
+                                         String homeworkReceiverSurname,
+                                         Long deadlineLessonId, LocalDateTime deadlineLessonStartDateTime,
+                                         LocalDateTime deadlineLessonEndDateTime, Long creatingLessonId,
+                                         LocalDateTime creatingLessonStartDateTime,
+                                         LocalDateTime creatingLessonEndDateTime, HomeworkStatus homeworkStatus) {
 
-    private  Long id;
-    private  Long homeworkReceiverId;
-    private  String homeworkReceiverName;
-    private  String homeworkReceiverSurname;
-    private  Long deadlineLessonId;
-    private  LocalDateTime deadlineLessonStartDateTime;
-    private  LocalDateTime deadlineLessonEndDateTime;
-    private  Long creatingLessonId;
-    private  LocalDateTime creatingLessonStartDateTime;
-    private  LocalDateTime creatingLessonEndDateTime;
-    private HomeworkStatus homeworkStatus;
+    @Builder
+    public HomeworkListTeacherViewDto {
+    }
 }

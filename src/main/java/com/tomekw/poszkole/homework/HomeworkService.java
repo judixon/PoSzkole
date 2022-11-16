@@ -29,17 +29,17 @@ public class HomeworkService {
 
     Long saveHomework(HomeworkSaveDto homeworkSaveDto) {
 
-        Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(homeworkSaveDto.getHomeworkCreatorId());
-        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(homeworkSaveDto.getHomeworkReceiverId());
-        Lesson deadlineLesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(homeworkSaveDto.getDeadlineLessonId());
-        Lesson creatingLesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(homeworkSaveDto.getCreatingLessonId());
+        Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(homeworkSaveDto.homeworkCreatorId());
+        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(homeworkSaveDto.homeworkReceiverId());
+        Lesson deadlineLesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(homeworkSaveDto.deadlineLessonId());
+        Lesson creatingLesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(homeworkSaveDto.creatingLessonId());
 
         return homeworkRepository.save(new Homework(
                 teacher,
                 student,
                 deadlineLesson,
                 creatingLesson,
-                homeworkSaveDto.getHomeworkContents(),
+                homeworkSaveDto.homeworkContents(),
                 creatingLesson.getNotes(),
                 HomeworkStatus.GIVEN)).getId();
     }

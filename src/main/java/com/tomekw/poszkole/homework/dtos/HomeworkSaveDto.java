@@ -1,13 +1,11 @@
 package com.tomekw.poszkole.homework.dtos;
 
-import lombok.Data;
+import lombok.Builder;
 
-@Data
-public class HomeworkSaveDto {
-    private  Long homeworkCreatorId;
-    private  Long homeworkReceiverId;
-    private  Long deadlineLessonId;
-    private  Long creatingLessonId;
-    private  String homeworkContents;
-    private  String comment;
+public record HomeworkSaveDto(Long homeworkCreatorId, Long homeworkReceiverId, Long deadlineLessonId,
+                              Long creatingLessonId, String homeworkContents, String comment) {
+
+    @Builder
+    public HomeworkSaveDto {
+    }
 }
