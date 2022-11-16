@@ -19,10 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Student extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Parent parent;
@@ -47,7 +43,7 @@ public class Student extends User {
     @Override
     public String toString() {
         return "Student{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", parent=" + parent.getName() +" "+ parent.getSurname() +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", studentLessonBucketList=" + studentLessonBucketList.stream().map(StudentLessonBucket::getLesson).map(Lesson::getId) +

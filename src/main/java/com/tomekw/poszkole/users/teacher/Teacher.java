@@ -17,10 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Teacher extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST})
     private List<LessonGroup> lessonGroups;
 
@@ -41,7 +37,7 @@ public class Teacher extends User {
     @Override
     public String toString() {
         return "Teacher{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", lessonGroups=" + lessonGroups.stream().map(LessonGroup::getId) +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", timetableID=" + timetable.getId() +

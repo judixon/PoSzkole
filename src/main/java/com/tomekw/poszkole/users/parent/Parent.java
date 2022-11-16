@@ -17,10 +17,6 @@ import java.util.List;
 @Data
 public class Parent extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
     private List<Student> studentList;
 
@@ -41,7 +37,7 @@ public class Parent extends User {
     @Override
     public String toString() {
         return "Parent{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", studentList=" + studentList.stream().map(student -> student.getId() + " " + student.getName() + " " + student.getSurname()) +
                 ", paymentList=" + paymentList.stream().map(payment -> payment.getId() + " " + payment.getCost()) +
                 ", wallet=" + wallet +
