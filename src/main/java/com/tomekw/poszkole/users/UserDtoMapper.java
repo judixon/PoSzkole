@@ -89,10 +89,10 @@ public class UserDtoMapper {
     }
 
     public UserCredentialsDto mapToUserCredentialsDto(User user) {
-        return new UserCredentialsDto(
-                user.getUsername(),
-                user.getPassword().substring(8),
-                user.getRoles().stream().map(UserRole::getName).collect(Collectors.toSet())
-        );
+        return UserCredentialsDto.builder()
+                .username(user.getUsername())
+                .password(user.getUsername())
+                .roles(user.getRoles().stream().map(UserRole::getName).collect(Collectors.toSet()))
+                .build();
     }
 }
