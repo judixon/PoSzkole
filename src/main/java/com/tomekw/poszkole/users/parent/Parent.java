@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.users.parent;
 
 import com.tomekw.poszkole.mailbox.Mailbox;
-import com.tomekw.poszkole.payments.Payment;
+import com.tomekw.poszkole.payment.Payment;
 import com.tomekw.poszkole.users.User;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.userrole.UserRole;

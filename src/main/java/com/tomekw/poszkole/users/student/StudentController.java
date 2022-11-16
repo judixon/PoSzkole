@@ -30,12 +30,12 @@ public class StudentController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public ResponseEntity<List<StudentListDto>> getStudents() {
+    ResponseEntity<List<StudentListDto>> getStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
     @PostMapping
-    public ResponseEntity<?> registerStudent(@RequestBody UserRegistrationDto userRegistrationDto) {
+    ResponseEntity<?> registerStudent(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedStudentId = studentService.registerStudent(userRegistrationDto);
         URI savedStudentUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

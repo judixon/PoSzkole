@@ -1,7 +1,7 @@
-package com.tomekw.poszkole.payments.dtos;
+package com.tomekw.poszkole.payment.dtos;
 
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
-import com.tomekw.poszkole.payments.PaymentStatus;
+import com.tomekw.poszkole.payment.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.payments;
+package com.tomekw.poszkole.payment;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

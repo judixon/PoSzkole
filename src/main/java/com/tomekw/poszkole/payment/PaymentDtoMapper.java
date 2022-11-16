@@ -1,8 +1,8 @@
-package com.tomekw.poszkole.payments;
+package com.tomekw.poszkole.payment;
 
-import com.tomekw.poszkole.payments.dtos.PaymentDto;
-import com.tomekw.poszkole.payments.dtos.PaymentFullInfoTeacherViewDto;
-import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.payment.dtos.PaymentDto;
+import com.tomekw.poszkole.payment.dtos.PaymentFullInfoTeacherViewDto;
+import com.tomekw.poszkole.payment.dtos.PaymentTeacherAndParentListViewDto;
 import org.springframework.stereotype.Service;
 
 @Service

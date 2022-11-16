@@ -9,7 +9,7 @@ import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
-import com.tomekw.poszkole.payments.PaymentService;
+import com.tomekw.poszkole.payment.PaymentService;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.payment.dtos.PaymentTeacherAndParentListViewDto;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
@@ -29,7 +29,7 @@ public class ParentController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public ResponseEntity<List<ParentListDto>> getParents() {
+    ResponseEntity<List<ParentListDto>> getParents() {
         return ResponseEntity.ok(parentService.getAllParents());
     }
 

@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.payments;
+package com.tomekw.poszkole.payment;
 
 public enum PaymentStatus {
 

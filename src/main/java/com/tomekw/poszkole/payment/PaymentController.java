@@ -1,7 +1,7 @@
-package com.tomekw.poszkole.payments;
+package com.tomekw.poszkole.payment;
 
-import com.tomekw.poszkole.payments.dtos.PaymentDto;
-import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
+import com.tomekw.poszkole.payment.dtos.PaymentDto;
+import com.tomekw.poszkole.payment.dtos.PaymentSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

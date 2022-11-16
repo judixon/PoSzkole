@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.payments;
+package com.tomekw.poszkole.payment;
 
 import com.tomekw.poszkole.exceptions.PaymentAlreadyExistsException;
 import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
@@ -6,8 +6,8 @@ import com.tomekw.poszkole.exceptions.StudentNotLinkedWithParentException;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
-import com.tomekw.poszkole.payments.dtos.PaymentDto;
-import com.tomekw.poszkole.payments.dtos.PaymentSaveDto;
+import com.tomekw.poszkole.payment.dtos.PaymentDto;
+import com.tomekw.poszkole.payment.dtos.PaymentSaveDto;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.users.parent.Parent;
@@ -42,7 +42,7 @@ public class PaymentService {
         return paymentRepository.findAll().stream().map(paymentDtoMapper::mapToPaymentDto).toList();
     }
 
-    public Long savePayment(PaymentSaveDto paymentSaveDto) {
+    Long savePayment(PaymentSaveDto paymentSaveDto) {
         Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(paymentSaveDto.getLessonToPayId());
         Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(paymentSaveDto.getStudentBelongingPaymentId());
         Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(paymentSaveDto.getStudentsParentId());

@@ -1,11 +1,11 @@
 package com.tomekw.poszkole.users.parent;
 
 import com.tomekw.poszkole.exceptions.StudentNotLinkedWithParentException;
-import com.tomekw.poszkole.payments.Payment;
-import com.tomekw.poszkole.payments.PaymentDtoMapper;
-import com.tomekw.poszkole.payments.PaymentRepository;
-import com.tomekw.poszkole.payments.PaymentStatus;
-import com.tomekw.poszkole.payments.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.payment.Payment;
+import com.tomekw.poszkole.payment.PaymentDtoMapper;
+import com.tomekw.poszkole.payment.PaymentRepository;
+import com.tomekw.poszkole.payment.PaymentStatus;
+import com.tomekw.poszkole.payment.dtos.PaymentTeacherAndParentListViewDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.UserDtoMapper;
@@ -63,7 +63,7 @@ public class ParentService {
         parentRepository.deleteById(parentId);
     }
 
-    public List<StudentListDto> getStudentsBelongingToParent(Long parentId) {
+    List<StudentListDto> getStudentsBelongingToParent(Long parentId) {
         resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
         return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
@@ -73,7 +73,7 @@ public class ParentService {
                 .toList();
     }
 
-    public List<PaymentTeacherAndParentListViewDto> getPayments(Long parentId) {
+    List<PaymentTeacherAndParentListViewDto> getPayments(Long parentId) {
         resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
         return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
@@ -83,7 +83,7 @@ public class ParentService {
                 .toList();
     }
 
-    public StudentInfoParentViewDto getStudent(Long parentId, Long studentId) {
+    StudentInfoParentViewDto getStudent(Long parentId, Long studentId) {
         resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
         return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
@@ -96,7 +96,7 @@ public class ParentService {
     }
 
     @Transactional
-    public void updateParent(Long parentId, ParentUpdateDto updatedParent) {
+    void updateParent(Long parentId, ParentUpdateDto updatedParent) {
         Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(parentId);
 
         userService.updateUserWithStandardUserData(parent, updatedParent);

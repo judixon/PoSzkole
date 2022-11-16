@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.payments;
+package com.tomekw.poszkole.payment;
 
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.users.parent.Parent;
