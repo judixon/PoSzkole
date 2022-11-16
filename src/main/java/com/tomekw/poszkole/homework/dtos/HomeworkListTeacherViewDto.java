@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.homework.mappers;
+package com.tomekw.poszkole.homework.dtos;
 
 import com.tomekw.poszkole.homework.HomeworkStatus;
 import lombok.AllArgsConstructor;
@@ -8,20 +8,17 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class HomeworkListStudentParentViewDto {
+public class HomeworkListTeacherViewDto{
 
+    private  Long id;
     private  Long homeworkReceiverId;
     private  String homeworkReceiverName;
     private  String homeworkReceiverSurname;
     private  Long deadlineLessonId;
-    private LocalDateTime deadlineLessonStartDateTime;
+    private  LocalDateTime deadlineLessonStartDateTime;
     private  LocalDateTime deadlineLessonEndDateTime;
     private  Long creatingLessonId;
     private  LocalDateTime creatingLessonStartDateTime;
     private  LocalDateTime creatingLessonEndDateTime;
     private HomeworkStatus homeworkStatus;
-    private String homeworkContents;
-    private String comment;
-
-
 }

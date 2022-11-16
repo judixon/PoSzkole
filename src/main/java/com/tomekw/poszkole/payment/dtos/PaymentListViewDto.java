@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class PaymentTeacherAndParentListViewDto {
+public class PaymentListViewDto {
 
     private Long id;
     private LocalDateTime lessonToPayStartDateTime;

@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.homework;
 
-import com.tomekw.poszkole.homework.mappers.HomeworkInfoDto;
-import com.tomekw.poszkole.homework.mappers.HomeworkSaveDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkInfoDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

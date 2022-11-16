@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.timetable.dtos;
 
-import com.tomekw.poszkole.timetable.week.WeekTimetableTeacherViewDto;
+import com.tomekw.poszkole.timetable.week.dtos.WeekTimetableTeacherViewDto;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.List;

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.tomekw.poszkole.homework.mappers.HomeworkListStudentParentViewDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkListDefaultViewDto;
 import com.tomekw.poszkole.lesson.dtos.LessonStudentListViewDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListStudentViewDto;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
@@ -78,7 +78,7 @@ public class StudentController {
     }
 
     @GetMapping("/{id}/homeworks")
-    ResponseEntity<List<HomeworkListStudentParentViewDto>> getHomeworks(@PathVariable Long id) {
+    ResponseEntity<List<HomeworkListDefaultViewDto>> getHomeworks(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getHomeworks(id));
     }
 

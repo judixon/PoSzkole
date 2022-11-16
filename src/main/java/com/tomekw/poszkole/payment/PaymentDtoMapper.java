@@ -1,8 +1,8 @@
 package com.tomekw.poszkole.payment;
 
 import com.tomekw.poszkole.payment.dtos.PaymentDto;
-import com.tomekw.poszkole.payment.dtos.PaymentFullInfoTeacherViewDto;
-import com.tomekw.poszkole.payment.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.payment.dtos.PaymentInfoTeacherViewDto;
+import com.tomekw.poszkole.payment.dtos.PaymentListViewDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +21,8 @@ public class PaymentDtoMapper {
                 payment.getDateTimeOfPaymentAppearance());
     }
 
-    public PaymentFullInfoTeacherViewDto mapToPaymentFullInfoTeacherViewDto(Payment payment) {
-        return new PaymentFullInfoTeacherViewDto(
+    public PaymentInfoTeacherViewDto mapToPaymentFullInfoTeacherViewDto(Payment payment) {
+        return new PaymentInfoTeacherViewDto(
                 payment.getId(),
                 payment.getLessonToPay().getOwnedByGroup().getId(),
                 payment.getLessonToPay().getOwnedByGroup().getName(),
@@ -43,8 +43,8 @@ public class PaymentDtoMapper {
         );
     }
 
-    public PaymentTeacherAndParentListViewDto mapToPaymentTeacherListViewDto(Payment payment) {
-        return new PaymentTeacherAndParentListViewDto(
+    public PaymentListViewDto mapToPaymentTeacherListViewDto(Payment payment) {
+        return new PaymentListViewDto(
                 payment.getId(),
                 payment.getLessonToPay().getStartDateTime(),
                 payment.getLessonToPay().getEndDateTime(),

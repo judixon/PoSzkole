@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.tomekw.poszkole.homework.mappers.HomeworkListTeacherViewDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkListTeacherViewDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.timetable.dtos.TimetableTeacherViewDto;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;

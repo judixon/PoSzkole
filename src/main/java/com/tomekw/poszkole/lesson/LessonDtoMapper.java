@@ -3,7 +3,7 @@ package com.tomekw.poszkole.lesson;
 import com.tomekw.poszkole.homework.HomeworkDtoMapper;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.dtos.LessonStudentListViewDto;
-import com.tomekw.poszkole.lesson.dtos.LessonTeacherTimetableViewDto;
+import com.tomekw.poszkole.lesson.dtos.LessonTeachersTimetableViewDto;
 import com.tomekw.poszkole.lesson.dtos.LessonUpdateDto;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class LessonDtoMapper {
                 lesson.getStudentLessonBucketList().stream().map(studentLessonBucketDtoMapper::mapToStudentLessonBucketDto).toList());
     }
 
-    public LessonTeacherTimetableViewDto mapToLessonTeacherTimetableViewDto(Lesson lesson) {
-        return new LessonTeacherTimetableViewDto(
+    public LessonTeachersTimetableViewDto mapToLessonTeacherTimetableViewDto(Lesson lesson) {
+        return new LessonTeachersTimetableViewDto(
                 lesson.getId(),
                 lesson.getStartDateTime(),
                 lesson.getEndDateTime(),

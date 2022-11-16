@@ -1,9 +1,9 @@
 package com.tomekw.poszkole.homework;
 
-import com.tomekw.poszkole.homework.mappers.HomeworkContentDto;
-import com.tomekw.poszkole.homework.mappers.HomeworkInfoDto;
-import com.tomekw.poszkole.homework.mappers.HomeworkListStudentParentViewDto;
-import com.tomekw.poszkole.homework.mappers.HomeworkListTeacherViewDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkContentDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkInfoDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkListDefaultViewDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkListTeacherViewDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,8 +46,8 @@ public class HomeworkDtoMapper {
         );
     }
 
-    public HomeworkListStudentParentViewDto mapToHomeworkListStudentParentViewDto(Homework homework) {
-        return new HomeworkListStudentParentViewDto(
+    public HomeworkListDefaultViewDto mapToHomeworkListStudentParentViewDto(Homework homework) {
+        return new HomeworkListDefaultViewDto(
                 homework.getHomeworkReceiver().getId(),
                 homework.getHomeworkReceiver().getName(),
                 homework.getHomeworkReceiver().getSurname(),

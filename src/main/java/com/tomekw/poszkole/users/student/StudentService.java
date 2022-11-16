@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.users.student;
 
 import com.tomekw.poszkole.homework.HomeworkDtoMapper;
-import com.tomekw.poszkole.homework.mappers.HomeworkListStudentParentViewDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkListDefaultViewDto;
 import com.tomekw.poszkole.lesson.LessonDtoMapper;
 import com.tomekw.poszkole.lesson.dtos.LessonStudentListViewDto;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
@@ -90,7 +90,7 @@ public class StudentService {
                 .toList();
     }
 
-    List<HomeworkListStudentParentViewDto> getHomeworks(Long studentId) {
+    List<HomeworkListDefaultViewDto> getHomeworks(Long studentId) {
         resourceAccessChecker.checkStudentDetailedDataAccess(studentId);
 
         return commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId)

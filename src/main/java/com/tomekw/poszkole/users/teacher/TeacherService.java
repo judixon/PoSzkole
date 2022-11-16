@@ -2,7 +2,7 @@ package com.tomekw.poszkole.users.teacher;
 
 
 import com.tomekw.poszkole.homework.HomeworkDtoMapper;
-import com.tomekw.poszkole.homework.mappers.HomeworkListTeacherViewDto;
+import com.tomekw.poszkole.homework.dtos.HomeworkListTeacherViewDto;
 import com.tomekw.poszkole.lessongroup.LessonGroupDtoMapper;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;

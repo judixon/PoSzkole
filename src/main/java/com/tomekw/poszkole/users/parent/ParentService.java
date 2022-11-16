@@ -5,7 +5,7 @@ import com.tomekw.poszkole.payment.Payment;
 import com.tomekw.poszkole.payment.PaymentDtoMapper;
 import com.tomekw.poszkole.payment.PaymentRepository;
 import com.tomekw.poszkole.payment.PaymentStatus;
-import com.tomekw.poszkole.payment.dtos.PaymentTeacherAndParentListViewDto;
+import com.tomekw.poszkole.payment.dtos.PaymentListViewDto;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.UserDtoMapper;
@@ -73,7 +73,7 @@ public class ParentService {
                 .toList();
     }
 
-    List<PaymentTeacherAndParentListViewDto> getPayments(Long parentId) {
+    List<PaymentListViewDto> getPayments(Long parentId) {
         resourceAccessChecker.checkParentDetailedDataAccess(parentId);
 
         return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)

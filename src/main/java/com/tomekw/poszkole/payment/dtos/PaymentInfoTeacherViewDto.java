@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class PaymentFullInfoTeacherViewDto implements Serializable {
+public class PaymentInfoTeacherViewDto implements Serializable {
     private final Long id;
     private final Long ownedByGroupId;
     private final String ownedByGroupName;

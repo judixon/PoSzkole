@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.homework.mappers;
+package com.tomekw.poszkole.homework.dtos;
 
 import com.tomekw.poszkole.homework.HomeworkStatus;
 import lombok.AllArgsConstructor;

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class LessonTeacherTimetableViewDto {
+public class LessonTeachersTimetableViewDto {
 
     private Long lessonId;
     private LocalDateTime startDateTime;
