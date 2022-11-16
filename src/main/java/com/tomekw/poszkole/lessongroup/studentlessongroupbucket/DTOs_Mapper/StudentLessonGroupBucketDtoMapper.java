@@ -12,7 +12,7 @@ public class StudentLessonGroupBucketDtoMapper {
 
     private final StudentDtoMapper studentListDtoMapper;
 
-  public StudentLessonGroupBucketDto mapToStudentGroupBucketDto(StudentLessonGroupBucket studentLessonGroupBucket){
+    public StudentLessonGroupBucketDto mapToStudentGroupBucketDto(StudentLessonGroupBucket studentLessonGroupBucket) {
         return new StudentLessonGroupBucketDto(
                 studentLessonGroupBucket.getId(),
                 studentListDtoMapper.mapToStudentListDto(studentLessonGroupBucket.getStudent()),
@@ -21,14 +21,10 @@ public class StudentLessonGroupBucketDtoMapper {
         );
     }
 
-    public StudentLessonGroupBucketUpdateDto mapToStudentLessonGroupBucketUpdateDto(StudentLessonGroupBucket studentLessonGroupBucket){
-      return new StudentLessonGroupBucketUpdateDto(
-              studentLessonGroupBucket.getAcceptIndividualPrize(),
-              studentLessonGroupBucket.getIndividualPrize()
-      );
+    public StudentLessonGroupBucketUpdateDto mapToStudentLessonGroupBucketUpdateDto(StudentLessonGroupBucket studentLessonGroupBucket) {
+        return new StudentLessonGroupBucketUpdateDto(
+                studentLessonGroupBucket.getAcceptIndividualPrize(),
+                studentLessonGroupBucket.getIndividualPrize()
+        );
     }
-
-
-
-
 }

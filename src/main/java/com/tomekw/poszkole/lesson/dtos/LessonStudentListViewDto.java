@@ -8,13 +8,14 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class LessonStudentListViewDto{
-    private  Long id;
-    private  LocalDateTime startDateTime;
-    private  LocalDateTime endDateTime;
-    private  String ownedByGroupName;
-    private  LessonGroupSubject ownedByGroupLessonGroupSubject;
-    private  String ownedByGroupTeacherName;
-    private  String ownedByGroupTeacherSurname;
-    private  Long ownedByGroupTeacherId;
+public class LessonStudentListViewDto {
+
+    private Long id;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
+    private String ownedByGroupName;
+    private LessonGroupSubject ownedByGroupLessonGroupSubject;
+    private String ownedByGroupTeacherName;
+    private String ownedByGroupTeacherSurname;
+    private Long ownedByGroupTeacherId;
 }

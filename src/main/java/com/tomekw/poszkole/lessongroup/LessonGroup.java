@@ -1,9 +1,8 @@
 package com.tomekw.poszkole.lessongroup;
 
-
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.users.teacher.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
-
 
 @Entity
 @Data
@@ -39,10 +37,10 @@ public class LessonGroup {
     @OneToMany(mappedBy = "lessonGroup", cascade = {CascadeType.ALL})
     private List<StudentLessonGroupBucket> studentLessonGroupBucketList;
 
-    @OneToMany(cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
+    @OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Homework> homeworkList;
 
-    @OneToMany(mappedBy = "ownedByGroup",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "ownedByGroup", cascade = CascadeType.REMOVE)
     private List<Lesson> lessons;
 
     public LessonGroup(String name, LessonGroupStatus lessonGroupStatus, BigDecimal prizePerStudent, LessonGroupSubject lessonGroupSubject, Teacher teacher, List<StudentLessonGroupBucket> studentLessonGroupBucketList, List<Homework> homeworkList, List<Lesson> lessons) {
@@ -64,7 +62,7 @@ public class LessonGroup {
                 ", lessonGroupStatus=" + lessonGroupStatus +
                 ", prizePerStudent=" + prizePerStudent +
                 ", lessonGroupSubject=" + lessonGroupSubject +
-                ", teacher=" + teacher.getId()+ teacher.getName()+teacher.getSurname() +
+                ", teacher=" + teacher.getId() + teacher.getName() + teacher.getSurname() +
                 ", studentGroupBucketList=" + studentLessonGroupBucketList.stream().map(StudentLessonGroupBucket::getId).toList() +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId).toList() +
                 ", lessons=" + lessons.stream().map(Lesson::getId).toList() +

@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.lesson;
 
-import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
 import com.tomekw.poszkole.exceptions.LessonFrequencyStatusUndefinedException;
+import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.dtos.LessonSaveDto;
 import com.tomekw.poszkole.lesson.dtos.LessonUpdateDto;

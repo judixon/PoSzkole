@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.security;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,14 +16,6 @@ public class SecurityConfig {
     private static final String PARENT_ROLE = "PARENT";
     private static final String TEACHER_ROLE = "TEACHER";
     private static final String[] ALL_FUNCTIONAL_ROLES = {ADMIN_ROLE, STUDENT_ROLE, PARENT_ROLE, TEACHER_ROLE};
-
-/*    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
-        http.headers().frameOptions().disable();
-        http.csrf().disable();
-        return http.build();
-    }*/
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

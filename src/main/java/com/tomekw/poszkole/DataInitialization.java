@@ -46,7 +46,7 @@ public class DataInitialization {
 
     private void teachersInitializationTestData(){
 
-        teacherService.register(new UserRegistrationDto(
+        teacherService.registerTeacher(new UserRegistrationDto(
                 "John",
                 "Wick",
                 "exampleteacher@example.com",
@@ -55,7 +55,7 @@ public class DataInitialization {
                 "teacher",
                 List.of("TEACHER")));
 
-        teacherService.register(new UserRegistrationDto(
+        teacherService.registerTeacher(new UserRegistrationDto(
                 "Adam",
                 "Pick",
                 "exampleteacheradmin@example.com",
@@ -79,7 +79,7 @@ public class DataInitialization {
 
 
     private void studentsInitializationTestData(){
-        studentService.register(new UserRegistrationDto(
+        studentService.registerStudent(new UserRegistrationDto(
                 "Mason",
                 "Mount",
                 "examplestudent@example.com",

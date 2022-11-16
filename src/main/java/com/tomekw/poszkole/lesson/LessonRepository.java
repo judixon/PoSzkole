@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LessonRepository extends CrudRepository<Lesson,Long> {
+public interface LessonRepository extends CrudRepository<Lesson, Long> {
 
     List<Lesson> findAll();
 }

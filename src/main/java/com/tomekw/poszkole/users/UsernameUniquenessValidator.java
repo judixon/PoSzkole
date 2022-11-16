@@ -10,20 +10,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UsernameUniquenessValidator {
+
+    private static final String NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE = "The username isn't unique. Can not register or update user.";
     private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final ParentRepository parentRepository;
 
-
-    public boolean validate(String username){
-
-
-        if (studentRepository.findByUsername(username).isEmpty() &&
-        teacherRepository.findByUsername(username).isEmpty() &&
-        parentRepository.findByUsername(username).isEmpty()){
-            return true;
+    public void validate(String username) {
+        if (!studentRepository.findByUsername(username).isEmpty() ||
+                !teacherRepository.findByUsername(username).isEmpty() ||
+                !parentRepository.findByUsername(username).isEmpty()) {
+            throw new NotUniqueUsernameException(NOT_UNIQUE_USERNAME_EXCEPTION_MESSAGE);
         }
-        throw new NotUniqueUsernameException("The username isn't unique. Can not register.");
-
     }
 }

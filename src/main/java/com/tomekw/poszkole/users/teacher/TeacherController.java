@@ -5,15 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
-import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
-import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.homework.mappers.HomeworkListTeacherViewDto;
 import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListTeacherViewDto;
 import com.tomekw.poszkole.timetable.dtos.TimetableTeacherViewDto;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,20 +32,18 @@ public class TeacherController {
     }
 
     @PostMapping
-    ResponseEntity<TeacherListDto> register(@RequestBody UserRegistrationDto userRegistrationDto) {
-        TeacherListDto savedTeacher = teacherService.register(userRegistrationDto);
+    ResponseEntity<Long> registerTeacher(@RequestBody UserRegistrationDto userRegistrationDto) {
+        Long savedTeacherId = teacherService.registerTeacher(userRegistrationDto);
         URI savedTeacherUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedTeacher.getId())
+                .buildAndExpand(savedTeacherId)
                 .toUri();
-        return ResponseEntity.created(savedTeacherUri).body(savedTeacher);
+        return ResponseEntity.created(savedTeacherUri).body(savedTeacherId);
     }
 
     @GetMapping("/{id}")
     ResponseEntity<TeacherListDto> getTeacher(@PathVariable Long id) {
-        return teacherService.getTeacher(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(teacherService.getTeacher(id));
     }
 
     @DeleteMapping("/{id}")
@@ -60,43 +55,28 @@ public class TeacherController {
     @PatchMapping("/{id}")
     ResponseEntity<?> updateTeacher(@PathVariable Long id, @RequestBody JsonMergePatch patch) {
         try {
-            UserRegistrationDto user = teacherService.getUserRegistrationDto(id).orElseThrow(() -> new TeacherNotFoundException("Teacher with ID: " + id + " not found"));
+            UserRegistrationDto user = teacherService.getUserRegistrationDto(id);
             UserRegistrationDto userPatched = applyPatch(user, patch);
             teacherService.updateTeacher(userPatched, id);
         } catch (JsonPatchException | JsonProcessingException e) {
             return ResponseEntity.internalServerError().build();
-        } catch (TeacherNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/homeworks")
     ResponseEntity<List<HomeworkListTeacherViewDto>> getHomeworkList(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(teacherService.getHomeworkList(id));
-        } catch (NoAccessToExactResourceException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        return ResponseEntity.ok(teacherService.getHomeworkList(id));
     }
 
     @GetMapping("/{id}/lessongroups")
     ResponseEntity<List<LessonGroupListTeacherViewDto>> getLessonGroupList(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(teacherService.getLessonGroupList(id));
-        } catch (NoAccessToExactResourceException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        return ResponseEntity.ok(teacherService.getLessonGroupList(id));
     }
 
     @GetMapping("/{id}/timetable")
     ResponseEntity<TimetableTeacherViewDto> getTimetable(@PathVariable Long id) {
-        try {
-            return teacherService.getTimetable(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-        } catch (NoAccessToExactResourceException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        return ResponseEntity.ok(teacherService.getTimetable(id));
     }
 
     private UserRegistrationDto applyPatch(UserRegistrationDto userToPatch, JsonMergePatch patch) throws JsonPatchException, JsonProcessingException {

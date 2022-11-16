@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,10 +10,9 @@ import java.math.BigDecimal;
 public class StudentLessonGroupBucketTeacherViewDto {
 
     private Long bucketId;
-    private  Long studentId;
+    private Long studentId;
     private String name;
     private String surname;
     private Boolean acceptIndividualPrize;
     private BigDecimal individualPrize;
-
 }

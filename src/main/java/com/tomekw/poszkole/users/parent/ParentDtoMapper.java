@@ -1,11 +1,10 @@
 package com.tomekw.poszkole.users.parent;
 
-
 import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
 import com.tomekw.poszkole.users.parent.dtos.ParentUpdateDto;
-import com.tomekw.poszkole.users.student.StudentDtoMapper;
 import com.tomekw.poszkole.users.student.Student;
+import com.tomekw.poszkole.users.student.StudentDtoMapper;
 import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +13,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ParentDtoMapper {
 
-
     private final StudentDtoMapper studentDtoMapper;
 
-    public ParentInfoDto mapToParentInfoDto(Parent parent){
+    public ParentInfoDto mapToParentInfoDto(Parent parent) {
         return new ParentInfoDto(parent.getId(),
                 parent.getName(),
                 parent.getSurname(),
@@ -28,7 +26,7 @@ public class ParentDtoMapper {
                 parent.getDebt());
     }
 
-    public ParentListDto mapToParentListDto(Parent parent){
+    public ParentListDto mapToParentListDto(Parent parent) {
         return new ParentListDto(parent.getId(),
                 parent.getName(),
                 parent.getSurname(),
@@ -36,7 +34,7 @@ public class ParentDtoMapper {
                 parent.getTelephoneNumber());
     }
 
-    public ParentUpdateDto mapToParentUpdateDto(Parent parent){
+    public ParentUpdateDto mapToParentUpdateDto(Parent parent) {
         return new ParentUpdateDto(
                 parent.getName(),
                 parent.getSurname(),

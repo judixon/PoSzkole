@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.payments;
 
-
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.users.parent.Parent;
 import com.tomekw.poszkole.users.student.Student;
@@ -53,8 +52,8 @@ public class Payment {
         return "Payment{" +
                 "id=" + id +
                 ", lessonToPay=" + lessonToPay.getId() +
-                ", studentBelongingPayment=" + studentBelongingPayment.getId()+studentBelongingPayment.getName()+studentBelongingPayment.getSurname() +
-                ", parentOfStudent=" + parentOfStudent.getId() + parentOfStudent.getName()+parentOfStudent.getSurname() +
+                ", studentBelongingPayment=" + studentBelongingPayment.getId() + studentBelongingPayment.getName() + studentBelongingPayment.getSurname() +
+                ", parentOfStudent=" + parentOfStudent.getId() + parentOfStudent.getName() + parentOfStudent.getSurname() +
                 ", cost=" + cost +
                 ", paymentStatus=" + paymentStatus +
                 ", dateTimeOfPaymentAppearance=" + dateTimeOfPaymentAppearance +

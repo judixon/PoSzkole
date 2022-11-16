@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.lesson.studentlessonbucket;
 
-
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.users.student.Student;
 import lombok.Data;
@@ -27,7 +26,6 @@ public class StudentLessonBucket {
 
     @Enumerated(EnumType.STRING)
     private StudentPresenceStatus studentPresenceStatus;
-
 
     public StudentLessonBucket(Student student, StudentPresenceStatus studentPresenceStatus, Lesson lesson) {
         this.student = student;

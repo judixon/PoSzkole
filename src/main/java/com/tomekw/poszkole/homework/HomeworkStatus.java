@@ -5,5 +5,4 @@ public enum HomeworkStatus {
     GIVEN,
     DONE,
     NOT_DONE;
-
 }

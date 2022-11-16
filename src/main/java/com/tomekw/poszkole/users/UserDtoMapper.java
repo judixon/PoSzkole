@@ -10,7 +10,6 @@ import com.tomekw.poszkole.users.teacher.Teacher;
 import com.tomekw.poszkole.users.userrole.UserRole;
 import com.tomekw.poszkole.users.userrole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,12 +20,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserDtoMapper {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRoleMapper userRoleMapper;
     private final UsernameUniquenessValidator usernameUniquenessValidator;
+    private final UserRegistrationDtoPasswordEncoder userRegistrationDtoPasswordEncoder;
 
-    public Teacher mapToTeacher(UserRegistrationDto userRegistrationDto){
-
+    public Teacher mapToTeacher(UserRegistrationDto userRegistrationDto) {
         usernameUniquenessValidator.validate(userRegistrationDto.getUsername());
 
         return new Teacher(
@@ -35,7 +33,7 @@ public class UserDtoMapper {
                 userRegistrationDto.getEmail(),
                 userRegistrationDto.getTelephoneNumber(),
                 userRegistrationDto.getUsername(),
-                "{bcrypt}" + passwordEncoder.encode(userRegistrationDto.getPassword()),
+                userRegistrationDtoPasswordEncoder.encodePassword(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
                 Collections.EMPTY_LIST,
@@ -44,8 +42,7 @@ public class UserDtoMapper {
         );
     }
 
-    public Student mapToStudent(UserRegistrationDto userRegistrationDto){
-
+    public Student mapToStudent(UserRegistrationDto userRegistrationDto) {
         usernameUniquenessValidator.validate(userRegistrationDto.getUsername());
 
         return new Student(userRegistrationDto.getName(),
@@ -53,7 +50,7 @@ public class UserDtoMapper {
                 userRegistrationDto.getEmail(),
                 userRegistrationDto.getTelephoneNumber(),
                 userRegistrationDto.getUsername(),
-                "{bcrypt}" + passwordEncoder.encode(userRegistrationDto.getPassword()),
+                userRegistrationDtoPasswordEncoder.encodePassword(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
                 null,
@@ -62,8 +59,7 @@ public class UserDtoMapper {
                 Collections.EMPTY_LIST);
     }
 
-    public Parent mapToParent(UserRegistrationDto userRegistrationDto){
-
+    public Parent mapToParent(UserRegistrationDto userRegistrationDto) {
         usernameUniquenessValidator.validate(userRegistrationDto.getUsername());
 
         return new Parent(userRegistrationDto.getName(),
@@ -71,7 +67,7 @@ public class UserDtoMapper {
                 userRegistrationDto.getEmail(),
                 userRegistrationDto.getTelephoneNumber(),
                 userRegistrationDto.getUsername(),
-                "{bcrypt}" + passwordEncoder.encode(userRegistrationDto.getPassword()),
+                userRegistrationDtoPasswordEncoder.encodePassword(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
                 Collections.EMPTY_LIST,
@@ -80,7 +76,7 @@ public class UserDtoMapper {
                 BigDecimal.ZERO);
     }
 
-    public UserRegistrationDto mapUserToUserRegistrationDto(User user){
+    public UserRegistrationDto mapUserToUserRegistrationDto(User user) {
         return new UserRegistrationDto(
                 user.getName(),
                 user.getSurname(),
@@ -92,7 +88,7 @@ public class UserDtoMapper {
         );
     }
 
-    public UserCredentialsDto mapToUserCredentialsDto(User user){
+    public UserCredentialsDto mapToUserCredentialsDto(User user) {
         return new UserCredentialsDto(
                 user.getUsername(),
                 user.getPassword().substring(8),

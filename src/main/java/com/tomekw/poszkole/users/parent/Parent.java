@@ -1,20 +1,16 @@
 package com.tomekw.poszkole.users.parent;
 
-
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.payments.Payment;
 import com.tomekw.poszkole.users.User;
-import com.tomekw.poszkole.users.userrole.UserRole;
 import com.tomekw.poszkole.users.student.Student;
+import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
-
-
 
 @Entity
 @NoArgsConstructor
@@ -46,8 +42,8 @@ public class Parent extends User {
     public String toString() {
         return "Parent{" +
                 "id=" + id +
-                ", studentList=" + studentList.stream().map(student -> student.getId()+" "+student.getName()+" "+ student.getSurname()) +
-                ", paymentList=" + paymentList.stream().map(payment -> payment.getId() + " "+ payment.getCost()) +
+                ", studentList=" + studentList.stream().map(student -> student.getId() + " " + student.getName() + " " + student.getSurname()) +
+                ", paymentList=" + paymentList.stream().map(payment -> payment.getId() + " " + payment.getCost()) +
                 ", wallet=" + wallet +
                 ", debt=" + debt +
                 '}';

@@ -20,7 +20,7 @@ import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.users.student.Student;
 import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.TeacherListDtoMapper;
+import com.tomekw.poszkole.users.teacher.TeacherDtoMapper;
 import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class LessonGroupService {
     private final StudentLessonGroupBucketRepository studentLessonGroupBucketRepository;
     private final LessonDtoMapper lessonDtoMapper;
     private final StudentLessonGroupBucketDtoMapper studentLessonGroupBucketDtoMapper;
-    private final TeacherListDtoMapper teacherListDtoMapper;
+    private final TeacherDtoMapper teacherDtoMapper;
     private final ResourceAccessChecker resourceAccessChecker;
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
 
@@ -141,7 +141,7 @@ public class LessonGroupService {
 
     TeacherListDto getTeacherOfLessonGroup(Long lessonGroupId) {
         resourceAccessChecker.checkLessonGroupDetailedDataAccessForParentOrStudent(lessonGroupId);
-        return teacherListDtoMapper.map(commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(lessonGroupId).getTeacher());
+        return teacherDtoMapper.mapToTeacherListDto(commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(lessonGroupId).getTeacher());
     }
 
     void updateLessonGroup(LessonGroupUpdateDto lessonGroupUpdateDto, Long lessonGroupId) {

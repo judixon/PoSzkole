@@ -14,17 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 public class LessonDto implements Serializable {
 
-    private  Long id;
-    private  LocalDateTime startDateTime;
+    private Long id;
+    private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private LessonStatus lessonStatus;
-    private  String lessonPlan;
-    private  String notes;
-    private  List<HomeworkContentDto> createdHomeworkList;
-    private  List<HomeworkContentDto> toCheckHomeworkList;
+    private String lessonPlan;
+    private String notes;
+    private List<HomeworkContentDto> createdHomeworkList;
+    private List<HomeworkContentDto> toCheckHomeworkList;
     private List<StudentLessonBucketDto> studentLessonBucketDtos;
-
-
-
-
 }

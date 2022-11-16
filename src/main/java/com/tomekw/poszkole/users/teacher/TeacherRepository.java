@@ -10,7 +10,4 @@ public interface TeacherRepository extends CrudRepository<Teacher,Long> {
     Optional<Teacher> findByUsername(String username);
 
     List<Teacher> findAll();
-
-
-
 }

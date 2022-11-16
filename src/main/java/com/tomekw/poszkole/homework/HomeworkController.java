@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.homework;
 
-
 import com.tomekw.poszkole.homework.mappers.HomeworkInfoDto;
 import com.tomekw.poszkole.homework.mappers.HomeworkSaveDto;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +18,18 @@ public class HomeworkController {
     private final HomeworkService homeworkService;
 
     @GetMapping
-    ResponseEntity<List<HomeworkInfoDto>> getAllHomeworks(){
+    ResponseEntity<List<HomeworkInfoDto>> getAllHomeworks() {
         return ResponseEntity.ok(homeworkService.getAllHomeworks());
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<HomeworkInfoDto> getHomework(@PathVariable Long id){
+    ResponseEntity<HomeworkInfoDto> getHomework(@PathVariable Long id) {
         return ResponseEntity.ok(homeworkService.getHomework(id));
     }
 
     @PostMapping
-    ResponseEntity<Long> saveHomework(@RequestBody HomeworkSaveDto homeworkSaveDto){
-       Long savedHomeworkId = homeworkService.saveHomework(homeworkSaveDto);
+    ResponseEntity<Long> saveHomework(@RequestBody HomeworkSaveDto homeworkSaveDto) {
+        Long savedHomeworkId = homeworkService.saveHomework(homeworkSaveDto);
         URI savedHomeworkUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedHomeworkId)
@@ -39,11 +38,10 @@ public class HomeworkController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteHomework(@PathVariable Long id){
+    ResponseEntity<?> deleteHomework(@PathVariable Long id) {
         homeworkService.deleteHomework(id);
         return ResponseEntity.noContent().build();
     }
-
 
 
 }

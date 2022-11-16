@@ -36,11 +36,11 @@ public class ParentController {
     @PostMapping
     ResponseEntity<?> registerParent(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedParentId = parentService.registerParent(userRegistrationDto);
-        URI savedTeacherUri = ServletUriComponentsBuilder.fromCurrentRequest()
+        URI savedParentUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedParentId)
                 .toUri();
-        return ResponseEntity.created(savedTeacherUri).body(savedParentId);
+        return ResponseEntity.created(savedParentUri).body(savedParentId);
     }
 
     @GetMapping("/{id}")

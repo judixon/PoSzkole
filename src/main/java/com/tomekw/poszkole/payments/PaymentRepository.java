@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PaymentRepository extends CrudRepository<Payment,Long> {
+public interface PaymentRepository extends CrudRepository<Payment, Long> {
 
     List<Payment> findAll();
 

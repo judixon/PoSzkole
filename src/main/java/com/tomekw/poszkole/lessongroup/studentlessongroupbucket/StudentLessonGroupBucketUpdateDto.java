@@ -7,9 +7,8 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class StudentLessonGroupBucketUpdateDto{
+public class StudentLessonGroupBucketUpdateDto {
 
     private final Boolean acceptIndividualPrize;
     private final BigDecimal individualPrize;
-
 }

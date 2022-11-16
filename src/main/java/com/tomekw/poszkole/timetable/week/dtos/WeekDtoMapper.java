@@ -12,8 +12,7 @@ public class WeekDtoMapper {
 
     private final LessonDtoMapper lessonDtoMapper;
 
-
-   public WeekTimetableTeacherViewDto mapToWeekTimetableTeacherViewDto(Week week){
+    public WeekTimetableTeacherViewDto mapToWeekTimetableTeacherViewDto(Week week) {
         return new WeekTimetableTeacherViewDto(
                 week.getId(),
                 week.getWeekStartDate(),

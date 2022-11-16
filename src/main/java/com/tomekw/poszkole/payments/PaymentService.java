@@ -26,13 +26,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PaymentService {
 
+    private static final String PAYMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Payment for student %s %s with ID:%s connected with lesson with ID:%s already exist.";
+    private static final String STUDENT_LESSON_GROUP_BUCKET_DOESNT_EXIST = "StudentLessonGroupBucket for given StudentLessonBucket with ID:%s doesn't exist.";
     private final PaymentRepository paymentRepository;
     private final ParentRepository parentRepository;
     private final PaymentDtoMapper paymentDtoMapper;
     private final ParentService parentService;
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
-    private static final String PAYMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Payment for student %s %s with ID:%s connected with lesson with ID:%s already exist.";
-    private static final String STUDENT_LESSON_GROUP_BUCKET_DOESNT_EXIST = "StudentLessonGroupBucket for given StudentLessonBucket with ID:%s doesn't exist.";
 
     PaymentDto getPayment(Long paymentId) {
         return paymentDtoMapper.mapToPaymentDto(commonRepositoriesFindMethods.getPaymentFromRepositoryById(paymentId));
@@ -69,9 +69,7 @@ public class PaymentService {
 
         StudentLessonGroupBucket studentLessonGroupBucket = getStudentLessonGroupBucketFromLessonBucket(studentLessonBucket);
 
-        BigDecimal lessonPrize = studentLessonGroupBucket.getAcceptIndividualPrize() ?
-                studentLessonGroupBucket.getIndividualPrize() :
-                studentLessonBucket.getLesson().getOwnedByGroup().getPrizePerStudent();
+        BigDecimal lessonPrize = getPrizeForLesson(studentLessonBucket, studentLessonGroupBucket);
 
         Payment payment = new Payment(
                 studentLessonBucket.getLesson(),
@@ -104,8 +102,8 @@ public class PaymentService {
                 studentLessonBucket.getStudent().getParent().getId(),
                 studentLessonBucket.getLesson().getId());
         if (paymentToCheckIfExists.isPresent()) {
-            throw new PaymentAlreadyExistsException(String.format(PAYMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE,studentLessonBucket.getStudent().getName(),
-                    studentLessonBucket.getStudent().getSurname(),studentLessonBucket.getStudent().getId(),studentLessonBucket.getLesson().getId()));
+            throw new PaymentAlreadyExistsException(String.format(PAYMENT_ALREADY_EXISTS_EXCEPTION_MESSAGE, studentLessonBucket.getStudent().getName(),
+                    studentLessonBucket.getStudent().getSurname(), studentLessonBucket.getStudent().getId(), studentLessonBucket.getLesson().getId()));
         }
     }
 
@@ -116,7 +114,13 @@ public class PaymentService {
                 .stream()
                 .filter(studentLessonGroupBucket1 -> studentLessonGroupBucket1.getStudent().equals(studentLessonBucket.getStudent()))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(STUDENT_LESSON_GROUP_BUCKET_DOESNT_EXIST,studentLessonBucket.getId())));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(STUDENT_LESSON_GROUP_BUCKET_DOESNT_EXIST, studentLessonBucket.getId())));
+    }
+
+    private BigDecimal getPrizeForLesson(StudentLessonBucket studentLessonBucket, StudentLessonGroupBucket studentLessonGroupBucket) {
+        return studentLessonGroupBucket.getAcceptIndividualPrize() ?
+                studentLessonGroupBucket.getIndividualPrize() :
+                studentLessonBucket.getLesson().getOwnedByGroup().getPrizePerStudent();
     }
 
     private void removePaymentFromParentPaymentList(Parent parent, Payment payment) {

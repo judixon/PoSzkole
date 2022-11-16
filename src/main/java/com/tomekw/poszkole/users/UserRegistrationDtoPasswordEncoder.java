@@ -1,7 +1,5 @@
 package com.tomekw.poszkole.users;
 
-
-import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,12 +8,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserRegistrationDtoPasswordEncoder {
 
+    private static final String BCRYPT_PREFIX = "{bcrypt}";
     private final PasswordEncoder passwordEncoder;
 
-
-
-    public UserRegistrationDto encodePassword(UserRegistrationDto incomingUserRegistrationDto){
-        incomingUserRegistrationDto.setPassword("{bcrypt}" + passwordEncoder.encode(incomingUserRegistrationDto.getPassword()));
-        return incomingUserRegistrationDto;
+    public String encodePassword(String password) {
+        return BCRYPT_PREFIX + passwordEncoder.encode(password);
     }
 }

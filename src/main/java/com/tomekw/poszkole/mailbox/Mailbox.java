@@ -23,7 +23,7 @@ public class Mailbox {
     @JoinTable(
             name = "mailbox_threads",
             joinColumns = @JoinColumn(name = "mailbox_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "mailbox_thread_id",referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "mailbox_thread_id", referencedColumnName = "id")
     )
     private List<MailboxThread> mailboxThreadList;
 

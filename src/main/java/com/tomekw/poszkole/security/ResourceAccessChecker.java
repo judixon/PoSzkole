@@ -26,7 +26,7 @@ public class ResourceAccessChecker {
     private static final String ADMIN_ROLE = "ROLE_ADMIN";
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
 
-    public void checkStudentDetailedDataAccess(Long requestedStudentId)  {
+    public void checkStudentDetailedDataAccess(Long requestedStudentId) {
         if (getUserRoles().contains(TEACHER_ROLE) || getUserRoles().contains(ADMIN_ROLE)) {
             return;
         } else if (getUserRoles().contains(STUDENT_ROLE)) {
@@ -36,7 +36,7 @@ public class ResourceAccessChecker {
         }
     }
 
-    public void checkParentDetailedDataAccess(Long requestedParentId)  {
+    public void checkParentDetailedDataAccess(Long requestedParentId) {
         if (getUserRoles().contains(TEACHER_ROLE) || getUserRoles().contains(ADMIN_ROLE)) {
             return;
         } else if (getUserRoles().contains(PARENT_ROLE)) {
@@ -44,7 +44,7 @@ public class ResourceAccessChecker {
         }
     }
 
-    public void checkTeacherDetailedDataAccess(Long requestedTeacherId)  {
+    public void checkTeacherDetailedDataAccess(Long requestedTeacherId) {
         if (getUserRoles().contains(ADMIN_ROLE)) {
             return;
         } else if (getUserRoles().contains(TEACHER_ROLE)) {
@@ -62,7 +62,7 @@ public class ResourceAccessChecker {
         }
     }
 
-    public void checkLessonGroupOperationsOnStudentsAccessForTeacher(Long requestedLessonGroupId)  {
+    public void checkLessonGroupOperationsOnStudentsAccessForTeacher(Long requestedLessonGroupId) {
         if (getUserRoles().contains(ADMIN_ROLE)) {
             return;
         } else if (getUserRoles().contains(TEACHER_ROLE)) {
@@ -70,7 +70,7 @@ public class ResourceAccessChecker {
         }
     }
 
-    public void checkLessonDetailedDataAccessForTeacher(Long requestedLessonId)  {
+    public void checkLessonDetailedDataAccessForTeacher(Long requestedLessonId) {
         if (getUserRoles().contains(ADMIN_ROLE)) {
             return;
         } else if (getUserRoles().contains(TEACHER_ROLE)) {

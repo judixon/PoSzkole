@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.users;
 
-
 import com.tomekw.poszkole.mailbox.Mailbox;
 import com.tomekw.poszkole.users.userrole.UserRole;
 import lombok.Data;
@@ -9,19 +8,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) //dla każdej klasy dziedziczącej będzie tworzona oddzielna tabela w DB
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-public abstract class User{
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
-
-
     private String name;
     private String surname;
     private String email;
@@ -32,7 +28,6 @@ public abstract class User{
 
     @Column(nullable = false)
     private String password;
-
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "mailbox_id", unique = true)

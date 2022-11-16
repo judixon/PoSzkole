@@ -1,37 +1,32 @@
 package com.tomekw.poszkole.users.student;
 
-import com.tomekw.poszkole.exceptions.NoAccessToExactResourceException;
-import com.tomekw.poszkole.exceptions.ParentNotFoundException;
-import com.tomekw.poszkole.exceptions.StudentNotFoundException;
 import com.tomekw.poszkole.homework.HomeworkDtoMapper;
 import com.tomekw.poszkole.homework.mappers.HomeworkListStudentParentViewDto;
 import com.tomekw.poszkole.lesson.LessonDtoMapper;
 import com.tomekw.poszkole.lesson.dtos.LessonStudentListViewDto;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
-import com.tomekw.poszkole.lessongroup.LessonGroupDtoMapper;
-import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListStudentViewDto;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.LessonGroupDtoMapper;
 import com.tomekw.poszkole.lessongroup.LessonGroupService;
+import com.tomekw.poszkole.lessongroup.dtos.LessonGroupListStudentViewDto;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.UserDtoMapper;
 import com.tomekw.poszkole.users.UserService;
 import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
-import com.tomekw.poszkole.users.UsernameUniquenessValidator;
 import com.tomekw.poszkole.users.parent.ParentDtoMapper;
 import com.tomekw.poszkole.users.parent.dtos.ParentInfoDto;
-import com.tomekw.poszkole.users.parent.ParentRepository;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoDto;
 import com.tomekw.poszkole.users.student.dtos.StudentListDto;
 import com.tomekw.poszkole.users.student.dtos.StudentUpdateDto;
-import com.tomekw.poszkole.users.userrole.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -43,10 +38,6 @@ public class StudentService {
     private final LessonGroupDtoMapper lessonGroupDtoMapper;
     private final LessonDtoMapper lessonDtoMapper;
     private final HomeworkDtoMapper homeworkDtoMapper;
-    private final UsernameUniquenessValidator usernameUniquenessValidator;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final UserRoleMapper userRoleMapper;
-    private final ParentRepository parentRepository;
     private final LessonGroupService lessonGroupService;
     private final ParentDtoMapper parentDtoMapper;
     private final ResourceAccessChecker resourceAccessChecker;
@@ -60,83 +51,70 @@ public class StudentService {
                 .toList();
     }
 
-    public void register(UserRegistrationDto userRegistrationDto) {
-        Student student = userDtoMapper.mapToStudent(userRegistrationDto);
-        studentRepository.save(student);
+    public Long registerStudent(UserRegistrationDto userRegistrationDto) {
+        return studentRepository.save(userDtoMapper.mapToStudent(userRegistrationDto)).getId();
     }
 
-    Optional<StudentInfoDto> getStudent(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkStudentDetailedDataAccess(id);
-        return studentRepository.findById(id).map(student -> studentDtoMapper.mapToStudentInfoDto(student, studentDtoMapper));
+    StudentInfoDto getStudent(Long studentId) {
+        resourceAccessChecker.checkStudentDetailedDataAccess(studentId);
+
+        return studentDtoMapper.mapToStudentInfoDto(commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId));
     }
 
-    void deleteStudent(Long id) {
-        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException("Student with ID: " + id + " not found."));
-
-        for (StudentLessonGroupBucket studentLessonGroupBucket : student.getStudentLessonGroupBucketList()) {
-            studentLessonGroupBucket.getLessonGroup().getStudentLessonGroupBucketList().remove(studentLessonGroupBucket);
-        }
-
-        for (StudentLessonBucket studentLessonBucket : student.getStudentLessonBucketList()) {
-            studentLessonBucket.getLesson().getStudentLessonBucketList().remove(studentLessonBucket);
-        }
-
-        student.getHomeworkList().forEach(homework -> homework.setHomeworkReceiver(null));
-        unlinkParentFromStudentLinkExists(student);
-        studentRepository.deleteById(id);
+    void deleteStudent(Long studentId) {
+        Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId);
+        removeStudentFromLessonGroups(student);
+        removeStudentFromLessons(student);
+        unlinkParentFromStudentIfLinked(student);
+        studentRepository.deleteById(studentId);
     }
 
-    List<LessonGroupListStudentViewDto> getLessonGroups(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+    List<LessonGroupListStudentViewDto> getLessonGroups(Long studentId) {
+        resourceAccessChecker.checkStudentDetailedDataAccess(studentId);
 
-        return studentRepository.findById(id)
-                .map(Student::getStudentLessonGroupBucketList)
-                .orElse(Collections.emptyList())
+        return commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId)
+                .getStudentLessonGroupBucketList()
                 .stream().map(StudentLessonGroupBucket::getLessonGroup)
                 .map(lessonGroupDtoMapper::mapToLessonGroupListStudentViewDto)
                 .toList();
     }
 
-    List<LessonStudentListViewDto> getLessons(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+    List<LessonStudentListViewDto> getLessons(Long studentId) {
+        resourceAccessChecker.checkStudentDetailedDataAccess(studentId);
 
-        return studentRepository.findById(id)
-                .map(Student::getStudentLessonBucketList)
-                .orElse(Collections.emptyList())
+        return commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId)
+                .getStudentLessonBucketList()
                 .stream()
                 .map(StudentLessonBucket::getLesson)
                 .map(lessonDtoMapper::mapToLessonStudentListViewDto)
                 .toList();
     }
 
-    List<HomeworkListStudentParentViewDto> getHomeworks(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+    List<HomeworkListStudentParentViewDto> getHomeworks(Long studentId) {
+        resourceAccessChecker.checkStudentDetailedDataAccess(studentId);
 
-        return studentRepository.findById(id)
-                .map(Student::getHomeworkList)
-                .orElse(Collections.emptyList())
+        return commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId)
+                .getHomeworkList()
                 .stream()
                 .map(homeworkDtoMapper::mapToHomeworkListStudentParentViewDto)
                 .toList();
     }
 
-    Optional<ParentInfoDto> getParent(Long id) throws NoAccessToExactResourceException {
-        resourceAccessChecker.checkStudentDetailedDataAccess(id);
+    ParentInfoDto getParent(Long studentId) {
+        resourceAccessChecker.checkStudentDetailedDataAccess(studentId);
 
-        return studentRepository.findById(id)
-                .map(Student::getParent).map(parentDtoMapper::mapToParentInfoDto);
-
+        return parentDtoMapper.mapToParentInfoDto(commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId).getParent());
     }
 
-    Optional<StudentUpdateDto> getStudentUpdateDto(Long id) {
-        return studentRepository.findById(id).map(studentDtoMapper::mapToStudentUpdateDto);
+    StudentUpdateDto getStudentUpdateDto(Long studentId) {
+        return studentDtoMapper.mapToStudentUpdateDto(commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId));
     }
 
     @Transactional
     void updateStudent(Long id, StudentUpdateDto studentUpdateDto) {
         Student student = commonRepositoriesFindMethods.getStudentFromRepositoryById(id);
 
-        userService.updateUserWithStandardUserData(student,studentUpdateDto);
+        userService.updateUserWithStandardUserData(student, studentUpdateDto);
 
         linkStudentWithParentIfPossible(studentUpdateDto, student);
 
@@ -147,9 +125,21 @@ public class StudentService {
         studentRepository.save(student);
     }
 
+    private void removeStudentFromLessonGroups(Student student) {
+        for (StudentLessonGroupBucket studentLessonGroupBucket : student.getStudentLessonGroupBucketList()) {
+            studentLessonGroupBucket.getLessonGroup().getStudentLessonGroupBucketList().remove(studentLessonGroupBucket);
+        }
+    }
+
+    private void removeStudentFromLessons(Student student) {
+        for (StudentLessonBucket studentLessonBucket : student.getStudentLessonBucketList()) {
+            studentLessonBucket.getLesson().getStudentLessonBucketList().remove(studentLessonBucket);
+        }
+    }
+
     private void linkStudentWithParentIfPossible(StudentUpdateDto studentUpdateDto, Student student) {
         studentUpdateDto.getParentId()
-                        .ifPresent(parentId -> student.setParent(commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)));
+                .ifPresent(parentId -> student.setParent(commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)));
     }
 
     private void addStudentToGivenGroups(StudentUpdateDto studentUpdateDto, Student student) {
@@ -164,7 +154,6 @@ public class StudentService {
         }
     }
 
-
     private List<Long> findIdsOfGroupsToRemoveStudentFrom(ArrayList<Long> actualState, ArrayList<Long> afterPatchState) {
         actualState.removeAll(afterPatchState);
         return actualState;
@@ -175,8 +164,8 @@ public class StudentService {
         return afterPatchState;
     }
 
-    private void unlinkParentFromStudentLinkExists(Student student){
-        if (Objects.nonNull(student.getParent())){
+    private void unlinkParentFromStudentIfLinked(Student student) {
+        if (Objects.nonNull(student.getParent())) {
             student.getParent().getStudentList().remove(student);
         }
     }

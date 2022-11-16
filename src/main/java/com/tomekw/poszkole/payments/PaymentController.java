@@ -23,7 +23,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    ResponseEntity<?> savePayment(PaymentSaveDto paymentSaveDto){
+    ResponseEntity<?> savePayment(PaymentSaveDto paymentSaveDto) {
         Long paymentId = paymentService.savePayment(paymentSaveDto);
         URI savedPaymentUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -38,7 +38,7 @@ public class PaymentController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deletePayment(@PathVariable Long id){
+    ResponseEntity<?> deletePayment(@PathVariable Long id) {
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
     }

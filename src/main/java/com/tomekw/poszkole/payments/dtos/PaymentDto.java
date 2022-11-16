@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PaymentDto implements Serializable {
 
-    private  Long id;
-    private  LocalDateTime lessonToPayStartDateTime;
-    private  LocalDateTime lessonToPayEndDateTime;
-    private  String lessonToPayOwnedByGroupName;
-    private  LessonGroupSubject lessonToPayOwnedByGroupLessonGroupSubject;
-    private  String studentBelongingPaymentName;
-    private  String studentBelongingPaymentSurname;
-    private  BigDecimal cost;
+    private Long id;
+    private LocalDateTime lessonToPayStartDateTime;
+    private LocalDateTime lessonToPayEndDateTime;
+    private String lessonToPayOwnedByGroupName;
+    private LessonGroupSubject lessonToPayOwnedByGroupLessonGroupSubject;
+    private String studentBelongingPaymentName;
+    private String studentBelongingPaymentSurname;
+    private BigDecimal cost;
     private PaymentStatus paymentStatus;
-    private  LocalDateTime dateTimeOfPaymentAppearance;
+    private LocalDateTime dateTimeOfPaymentAppearance;
 }

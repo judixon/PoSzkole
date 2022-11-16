@@ -6,7 +6,6 @@ public enum PaymentStatus {
     WAITING("waiting"),
     CANCELED("canceled");
 
-
     String description;
 
     PaymentStatus(String description) {

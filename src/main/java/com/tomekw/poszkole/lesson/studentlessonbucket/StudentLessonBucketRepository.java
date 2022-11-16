@@ -11,6 +11,4 @@ public interface StudentLessonBucketRepository extends CrudRepository<StudentLes
     @Query("SELECT slb FROM StudentLessonBucket slb WHERE slb.student.id = :studentId " +
             "AND slb.lesson.ownedByGroup.id = :lessonGroupId AND slb.lesson.startDateTime > :bottomDateTimeBorder")
     List<StudentLessonBucket> findFStudentLessonBucketsOfFutureLessonsInLessonGroup(Long studentId, Long lessonGroupId, LocalDateTime bottomDateTimeBorder);
-
-
 }

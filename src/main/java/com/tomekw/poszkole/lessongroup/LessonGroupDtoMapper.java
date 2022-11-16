@@ -1,14 +1,13 @@
 package com.tomekw.poszkole.lessongroup;
 
 
-import com.tomekw.poszkole.exceptions.TeacherNotFoundException;
 import com.tomekw.poszkole.lessongroup.dtos.*;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDtoMapper;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketTeacherViewDto;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
+import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
-import com.tomekw.poszkole.users.teacher.TeacherListDtoMapper;
+import com.tomekw.poszkole.users.teacher.TeacherDtoMapper;
 import com.tomekw.poszkole.users.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,13 +20,12 @@ import java.util.Objects;
 public class LessonGroupDtoMapper {
 
     private final TeacherRepository teacherRepository;
-    private final TeacherListDtoMapper teacherListDtoMapper;
+    private final TeacherDtoMapper teacherDtoMapper;
     private final StudentLessonGroupBucketDtoMapper studentLessonGroupBucketDtoMapper;
+    private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
 
     public LessonGroup mapToLessonGroup(LessonGroupCreateDto lessonGroupCreateDTO) {
-        Teacher teacher = teacherRepository.findById(lessonGroupCreateDTO.getTeacherId())
-                .orElseThrow(() -> new TeacherNotFoundException("Not found teacher with ID: " + lessonGroupCreateDTO.getTeacherId()));
-
+        Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryById(lessonGroupCreateDTO.getTeacherId());
         return new LessonGroup(
                 lessonGroupCreateDTO.getName(),
                 LessonGroupStatus.UNACTIVE,
@@ -41,24 +39,14 @@ public class LessonGroupDtoMapper {
     }
 
     public LessonGroupInfoDto mapToLessonGroupInfoDto(LessonGroup lessongGroup) {
-
         Teacher teacher = lessongGroup.getTeacher();
-
-        TeacherListDto teacherListDto;
-
-        if (Objects.nonNull(teacher)) {
-            teacherListDto = teacherListDtoMapper.map(teacher);
-        } else {
-            teacherListDto = new TeacherListDto(null, "brak", "brak", "brak", "brak");
-        }
-
         return new LessonGroupInfoDto(
                 lessongGroup.getId(),
                 lessongGroup.getName(),
                 lessongGroup.getLessonGroupStatus(),
                 lessongGroup.getPrizePerStudent(),
                 lessongGroup.getLessonGroupSubject(),
-                teacherListDto,
+                Objects.nonNull(teacher) ? teacherDtoMapper.mapToTeacherListDto(teacher) : null,
                 lessongGroup.getStudentLessonGroupBucketList().stream().map(studentLessonGroupBucketDtoMapper::mapToStudentGroupBucketDto).toList()
         );
     }
@@ -74,22 +62,17 @@ public class LessonGroupDtoMapper {
         );
     }
 
-    public LessonGroupUpdateDto mapToLessonGroupUpdateDto(LessonGroup lessonGroup){
-        Long teacherId = -1L;
-
-        if (Objects.nonNull(lessonGroup.getTeacher())){
-            teacherId=lessonGroup.getTeacher().getId();
-        }
+    public LessonGroupUpdateDto mapToLessonGroupUpdateDto(LessonGroup lessonGroup) {
         return new LessonGroupUpdateDto(
                 lessonGroup.getName(),
                 lessonGroup.getLessonGroupStatus().name(),
                 lessonGroup.getPrizePerStudent(),
                 lessonGroup.getLessonGroupSubject().name(),
-                teacherId
+                Objects.nonNull(lessonGroup.getTeacher()) ? lessonGroup.getTeacher().getId() : -1L
         );
     }
 
-    public LessonGroupListStudentViewDto mapToLessonGroupListStudentViewDto(LessonGroup lessonGroup){
+    public LessonGroupListStudentViewDto mapToLessonGroupListStudentViewDto(LessonGroup lessonGroup) {
         return new LessonGroupListStudentViewDto(
                 lessonGroup.getId(),
                 lessonGroup.getName(),
@@ -108,7 +91,4 @@ public class LessonGroupDtoMapper {
                 studentLessonGroupBucket.getAcceptIndividualPrize(),
                 studentLessonGroupBucket.getIndividualPrize());
     }
-
-
-
 }

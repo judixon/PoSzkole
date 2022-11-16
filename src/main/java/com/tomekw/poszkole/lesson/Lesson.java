@@ -1,10 +1,8 @@
 package com.tomekw.poszkole.lesson;
 
-
-
-import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,9 +19,11 @@ public class Lesson {
     private Long id;
 
     private LocalDateTime startDateTime;
+
     private LocalDateTime endDateTime;
 
     private String lessonPlan;
+
     private String notes;
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -36,12 +36,11 @@ public class Lesson {
     @OneToMany(mappedBy = "deadlineLesson")
     private List<Homework> toCheckHomeworkList;
 
-    @OneToMany(mappedBy = "lesson",cascade = {CascadeType.REMOVE,CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToMany(mappedBy = "lesson", cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})
     private List<StudentLessonBucket> studentLessonBucketList;
 
     @Enumerated(EnumType.STRING)
     private LessonStatus lessonStatus;
-
 
 
     public Lesson(LocalDateTime startDateTime, LocalDateTime endDateTime, String lessonPlan, String notes, LessonGroup ownedByGroup, List<Homework> createdHomeworkList, List<Homework> toCheckHomeworkList, List<StudentLessonBucket> studentLessonBucketList, LessonStatus lessonStatus) {

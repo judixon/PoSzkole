@@ -42,8 +42,8 @@ public class CommonRepositoriesFindMethods {
     }
 
     public LessonGroup getLessonGroupFromRepositoryById(Long lessonId) {
-        return  lessonGroupRepository.findById(lessonId)
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND,lessonId));
+        return lessonGroupRepository.findById(lessonId)
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.LESSON_GROUP_NOT_FOUND, lessonId));
     }
 
     public Teacher getTeacherFromRepositoryById(Long teacherId) {
@@ -51,9 +51,9 @@ public class CommonRepositoriesFindMethods {
                 .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND_BY_ID, teacherId));
     }
 
-    public Teacher getTeacherFromRepositoryByUsername(String username){
+    public Teacher getTeacherFromRepositoryByUsername(String username) {
         return teacherRepository.findByUsername((username))
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND_BY_USERNAME,username));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.TEACHER_NOT_FOUND_BY_USERNAME, username));
     }
 
     public Student getStudentFromRepositoryById(Long studentId) {
@@ -61,40 +61,38 @@ public class CommonRepositoriesFindMethods {
                 .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND_BY_ID, studentId));
     }
 
-    public Student getStudentFromRepositoryByUsername(String username){
+    public Student getStudentFromRepositoryByUsername(String username) {
         return studentRepository.findByUsername((username))
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND_BY_USERNAME,username));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_NOT_FOUND_BY_USERNAME, username));
     }
 
-    public Parent getParentFromRepositoryById(Long parentId){
+    public Parent getParentFromRepositoryById(Long parentId) {
         return parentRepository.findById(parentId)
                 .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.PARENT_NOT_FOUND_BY_ID, parentId));
     }
 
-    public Parent getParentFromRepositoryByUsername(String username){
+    public Parent getParentFromRepositoryByUsername(String username) {
         return parentRepository.findByUsername((username))
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.PARENT_NOT_FOUND_BY_USERNAME,username));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.PARENT_NOT_FOUND_BY_USERNAME, username));
     }
 
-    public Homework getHomeworkFromRepositoryById(Long homeworkId){
+    public Homework getHomeworkFromRepositoryById(Long homeworkId) {
         return homeworkRepository.findById(homeworkId)
                 .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.HOMEWORK_NOT_FOUND, homeworkId));
     }
 
-    public Payment getPaymentFromRepositoryById(Long paymentId){
+    public Payment getPaymentFromRepositoryById(Long paymentId) {
         return paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.PAYMENT_NOT_FOUND,paymentId));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.PAYMENT_NOT_FOUND, paymentId));
     }
 
-    public StudentLessonBucket getStudentLessonBucketFromRepositoryById(Long studentLessonBucketId){
+    public StudentLessonBucket getStudentLessonBucketFromRepositoryById(Long studentLessonBucketId) {
         return studentLessonBucketRepository.findById(studentLessonBucketId)
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND,studentLessonBucketId));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_BUCKET_NOT_FOUND, studentLessonBucketId));
     }
 
-    public StudentLessonGroupBucket getStudentLessonGroupBucketFromRepositoryById(Long studentLessonGroupBucketId){
+    public StudentLessonGroupBucket getStudentLessonGroupBucketFromRepositoryById(Long studentLessonGroupBucketId) {
         return studentLessonGroupBucketRepository.findById(studentLessonGroupBucketId)
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND,studentLessonGroupBucketId));
+                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.STUDENT_LESSON_GROUP_BUCKET_NOT_FOUND, studentLessonGroupBucketId));
     }
-
-
 }

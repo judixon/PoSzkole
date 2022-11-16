@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.lesson;
 
-
 import com.tomekw.poszkole.homework.HomeworkDtoMapper;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.dtos.LessonStudentListViewDto;
@@ -17,10 +16,7 @@ public class LessonDtoMapper {
     private final HomeworkDtoMapper homeworkDtoMapper;
     private final StudentLessonBucketDtoMapper studentLessonBucketDtoMapper;
 
-
-
-
-   public LessonDto mapToLessonDto(Lesson lesson){
+    public LessonDto mapToLessonDto(Lesson lesson) {
         return new LessonDto(lesson.getId(),
                 lesson.getStartDateTime(),
                 lesson.getEndDateTime(),
@@ -32,33 +28,33 @@ public class LessonDtoMapper {
                 lesson.getStudentLessonBucketList().stream().map(studentLessonBucketDtoMapper::mapToStudentLessonBucketDto).toList());
     }
 
-    public LessonTeacherTimetableViewDto mapToLessonTeacherTimetableViewDto(Lesson lesson){
-       return new LessonTeacherTimetableViewDto(
-               lesson.getId(),
-               lesson.getStartDateTime(),
-               lesson.getEndDateTime(),
-               lesson.getOwnedByGroup().getName(),
-               lesson.getOwnedByGroup().getLessonGroupStatus(),
-               lesson.getOwnedByGroup().getLessonGroupSubject()
-       );
+    public LessonTeacherTimetableViewDto mapToLessonTeacherTimetableViewDto(Lesson lesson) {
+        return new LessonTeacherTimetableViewDto(
+                lesson.getId(),
+                lesson.getStartDateTime(),
+                lesson.getEndDateTime(),
+                lesson.getOwnedByGroup().getName(),
+                lesson.getOwnedByGroup().getLessonGroupStatus(),
+                lesson.getOwnedByGroup().getLessonGroupSubject()
+        );
     }
 
-    public LessonStudentListViewDto mapToLessonStudentListViewDto(Lesson lesson){
-       return new LessonStudentListViewDto(lesson.getId(),
-               lesson.getStartDateTime(),
-               lesson.getEndDateTime(),
-               lesson.getOwnedByGroup().getName(),
-               lesson.getOwnedByGroup().getLessonGroupSubject(),
-               lesson.getOwnedByGroup().getTeacher().getName(),
-               lesson.getOwnedByGroup().getTeacher().getSurname(),
-               lesson.getOwnedByGroup().getTeacher().getId());
+    public LessonStudentListViewDto mapToLessonStudentListViewDto(Lesson lesson) {
+        return new LessonStudentListViewDto(lesson.getId(),
+                lesson.getStartDateTime(),
+                lesson.getEndDateTime(),
+                lesson.getOwnedByGroup().getName(),
+                lesson.getOwnedByGroup().getLessonGroupSubject(),
+                lesson.getOwnedByGroup().getTeacher().getName(),
+                lesson.getOwnedByGroup().getTeacher().getSurname(),
+                lesson.getOwnedByGroup().getTeacher().getId());
     }
 
-    public LessonUpdateDto mapToLessonUpdateDto(Lesson lesson){
-       return new LessonUpdateDto(
-               lesson.getLessonPlan(),
-               lesson.getNotes(),
-               lesson.getLessonStatus().name()
-       );
+    public LessonUpdateDto mapToLessonUpdateDto(Lesson lesson) {
+        return new LessonUpdateDto(
+                lesson.getLessonPlan(),
+                lesson.getNotes(),
+                lesson.getLessonStatus().name()
+        );
     }
 }

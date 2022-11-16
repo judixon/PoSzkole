@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class LessonUpdateDto {
 
-    private  String lessonPlan;
-    private  String notes;
-    private  String lessonStatus;
+    private String lessonPlan;
+    private String notes;
+    private String lessonStatus;
 }

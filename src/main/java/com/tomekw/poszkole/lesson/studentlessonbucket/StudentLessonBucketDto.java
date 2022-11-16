@@ -18,5 +18,4 @@ public class StudentLessonBucketDto {
     private final String lessonOwnedByGroupName;
     private final LessonGroupSubject lessonOwnedByGroupLessonGroupSubject;
     private final LessonStatus lessonLessonStatus;
-
 }

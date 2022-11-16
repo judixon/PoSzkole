@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 public class StudentLessonGroupBucketDto {
-    private  Long id;
-    private  StudentListDto student;
-    private  Boolean acceptIndividualPrize;
-    private  BigDecimal individualPrize;
+    private Long id;
+    private StudentListDto student;
+    private Boolean acceptIndividualPrize;
+    private BigDecimal individualPrize;
 }

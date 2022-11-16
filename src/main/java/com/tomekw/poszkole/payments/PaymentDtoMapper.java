@@ -43,7 +43,6 @@ public class PaymentDtoMapper {
         );
     }
 
-
     public PaymentTeacherAndParentListViewDto mapToPaymentTeacherListViewDto(Payment payment) {
         return new PaymentTeacherAndParentListViewDto(
                 payment.getId(),

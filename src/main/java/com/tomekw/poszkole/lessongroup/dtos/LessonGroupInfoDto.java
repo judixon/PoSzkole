@@ -1,7 +1,5 @@
 package com.tomekw.poszkole.lessongroup.dtos;
 
-
-
 import com.tomekw.poszkole.lessongroup.LessonGroupStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroupSubject;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.DTOs_Mapper.StudentLessonGroupBucketDto;
@@ -23,8 +21,4 @@ public class LessonGroupInfoDto {
     private LessonGroupSubject lessonGroupSubject;
     private TeacherListDto teacher;
     private List<StudentLessonGroupBucketDto> students;
-
-
-
-
 }

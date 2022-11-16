@@ -1,6 +1,5 @@
 package com.tomekw.poszkole.users.teacher;
 
-
 import com.tomekw.poszkole.lessongroup.LessonGroup;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.mailbox.Mailbox;
@@ -28,13 +27,9 @@ public class Teacher extends User {
     @OneToMany(mappedBy = "homeworkCreator", cascade = CascadeType.PERSIST)
     private List<Homework> homeworkList;
 
-
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "timetable_id")
     private Timetable timetable;
-
-
-
 
     public Teacher(String name, String surname, String email, String telephoneNumber, String username, String password, Mailbox mailbox, List<UserRole> roles, List<LessonGroup> lessonGroups, List<Homework> homeworkList, Timetable timetable) {
         super(name, surname, email, telephoneNumber, username, password, mailbox, roles);

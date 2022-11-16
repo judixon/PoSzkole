@@ -1,9 +1,9 @@
 package com.tomekw.poszkole.users.student;
 
-import com.tomekw.poszkole.lessongroup.LessonGroup;
-import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketDtoMapper;
+import com.tomekw.poszkole.lessongroup.LessonGroup;
+import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
 import com.tomekw.poszkole.users.parent.ParentDtoMapper;
 import com.tomekw.poszkole.users.parent.dtos.ParentListDto;
 import com.tomekw.poszkole.users.student.dtos.StudentInfoDto;
@@ -21,20 +21,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentDtoMapper {
 
-
-//    private final ParentDtoMapper parentDtoMapper;
     private final StudentLessonBucketDtoMapper studentLessonBucketDtoMapper;
 
-    public StudentInfoDto mapToStudentInfoDto(Student student, StudentDtoMapper studentDtoMapper){
-
-        ParentDtoMapper parentDtoMapper = new ParentDtoMapper(studentDtoMapper);
+    public StudentInfoDto mapToStudentInfoDto(Student student) {
+        ParentDtoMapper parentDtoMapper = new ParentDtoMapper(this);
 
         ParentListDto parentListDto = null;
 
-        if (Objects.nonNull(student.getParent())){
+        if (Objects.nonNull(student.getParent())) {
             parentListDto = parentDtoMapper.mapToParentListDto(student.getParent());
         }
-
         return new StudentInfoDto(student.getId(),
                 student.getName(),
                 student.getSurname(),
@@ -44,7 +40,7 @@ public class StudentDtoMapper {
         );
     }
 
-    public StudentListDto mapToStudentListDto(Student student){
+    public StudentListDto mapToStudentListDto(Student student) {
         return new StudentListDto(student.getId(),
                 student.getName(),
                 student.getSurname(),
@@ -52,7 +48,7 @@ public class StudentDtoMapper {
                 student.getTelephoneNumber());
     }
 
-    public StudentInfoParentViewDto mapToStudentInfoParentViewDto(Student student){
+    public StudentInfoParentViewDto mapToStudentInfoParentViewDto(Student student) {
         return new StudentInfoParentViewDto(
                 student.getId(),
                 student.getName(),
@@ -65,7 +61,7 @@ public class StudentDtoMapper {
         );
     }
 
-    private StudentInfoParentViewDto.HomeworkDto map(Homework homework){
+    private StudentInfoParentViewDto.HomeworkDto map(Homework homework) {
         return new StudentInfoParentViewDto.HomeworkDto(
                 homework.getHomeworkCreator().getId(),
                 homework.getHomeworkCreator().getName(),
@@ -81,7 +77,7 @@ public class StudentDtoMapper {
         );
     }
 
-    private StudentInfoParentViewDto.StudentGroupBucketDto map(StudentLessonGroupBucket studentLessonGroupBucket){
+    private StudentInfoParentViewDto.StudentGroupBucketDto map(StudentLessonGroupBucket studentLessonGroupBucket) {
         return new StudentInfoParentViewDto.StudentGroupBucketDto(
                 studentLessonGroupBucket.getAcceptIndividualPrize(),
                 studentLessonGroupBucket.getIndividualPrize(),
@@ -91,9 +87,7 @@ public class StudentDtoMapper {
         );
     }
 
-
-
-    public StudentUpdateDto mapToStudentUpdateDto(Student student){
+    public StudentUpdateDto mapToStudentUpdateDto(Student student) {
         return new StudentUpdateDto(
                 student.getName(),
                 student.getSurname(),
@@ -102,9 +96,8 @@ public class StudentDtoMapper {
                 student.getUsername(),
                 student.getPassword(),
                 student.getRoles().stream().map(UserRole::getName).toList(),
-                Objects.nonNull(student.getParent())? Optional.of(student.getParent().getId()) :Optional.empty(),
+                Objects.nonNull(student.getParent()) ? Optional.of(student.getParent().getId()) : Optional.empty(),
                 student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()
         );
     }
-
 }

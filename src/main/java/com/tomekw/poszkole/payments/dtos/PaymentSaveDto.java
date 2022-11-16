@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PaymentSaveDto {
 
-    private  Long lessonToPayId;
-    private  Long studentBelongingPaymentId;
-    private  Long studentsParentId;
-    private  BigDecimal cost;
+    private Long lessonToPayId;
+    private Long studentBelongingPaymentId;
+    private Long studentsParentId;
+    private BigDecimal cost;
     private PaymentStatus paymentStatus;
-    private  LocalDateTime dateTimeOfPaymentAppearance;
+    private LocalDateTime dateTimeOfPaymentAppearance;
 
 
 }
