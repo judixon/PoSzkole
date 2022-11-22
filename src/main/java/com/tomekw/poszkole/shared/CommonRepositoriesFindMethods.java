@@ -11,12 +11,12 @@ import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGro
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketRepository;
 import com.tomekw.poszkole.payment.Payment;
 import com.tomekw.poszkole.payment.PaymentRepository;
-import com.tomekw.poszkole.users.parent.Parent;
-import com.tomekw.poszkole.users.parent.ParentRepository;
-import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.student.StudentRepository;
-import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.TeacherRepository;
+import com.tomekw.poszkole.user.parent.Parent;
+import com.tomekw.poszkole.user.parent.ParentRepository;
+import com.tomekw.poszkole.user.student.Student;
+import com.tomekw.poszkole.user.student.StudentRepository;
+import com.tomekw.poszkole.user.teacher.Teacher;
+import com.tomekw.poszkole.user.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

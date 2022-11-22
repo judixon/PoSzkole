@@ -18,10 +18,10 @@ import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLess
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
-import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.TeacherDtoMapper;
-import com.tomekw.poszkole.users.teacher.dtos.TeacherListDto;
+import com.tomekw.poszkole.user.student.Student;
+import com.tomekw.poszkole.user.teacher.Teacher;
+import com.tomekw.poszkole.user.teacher.TeacherDtoMapper;
+import com.tomekw.poszkole.user.teacher.dtos.TeacherListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

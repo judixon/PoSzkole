@@ -6,8 +6,8 @@ import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGro
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucketDtoMapper;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos.StudentLessonGroupBucketTeacherViewDto;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
-import com.tomekw.poszkole.users.teacher.Teacher;
-import com.tomekw.poszkole.users.teacher.TeacherDtoMapper;
+import com.tomekw.poszkole.user.teacher.Teacher;
+import com.tomekw.poszkole.user.teacher.TeacherDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

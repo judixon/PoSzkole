@@ -4,8 +4,8 @@ import com.tomekw.poszkole.homework.dtos.HomeworkInfoDto;
 import com.tomekw.poszkole.homework.dtos.HomeworkSaveDto;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
-import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.teacher.Teacher;
+import com.tomekw.poszkole.user.student.Student;
+import com.tomekw.poszkole.user.teacher.Teacher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,7 @@ package com.tomekw.poszkole.lessongroup;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lessongroup.studentlessongroupbucket.StudentLessonGroupBucket;
-import com.tomekw.poszkole.users.teacher.Teacher;
+import com.tomekw.poszkole.user.teacher.Teacher;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

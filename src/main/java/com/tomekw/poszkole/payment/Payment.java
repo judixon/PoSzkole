@@ -1,8 +1,8 @@
 package com.tomekw.poszkole.payment;
 
 import com.tomekw.poszkole.lesson.Lesson;
-import com.tomekw.poszkole.users.parent.Parent;
-import com.tomekw.poszkole.users.student.Student;
+import com.tomekw.poszkole.user.parent.Parent;
+import com.tomekw.poszkole.user.student.Student;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.exceptions;
 
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
-import com.tomekw.poszkole.users.User;
+import com.tomekw.poszkole.user.User;
 
 public class NoAccessToExactResourceException extends RuntimeException{
 

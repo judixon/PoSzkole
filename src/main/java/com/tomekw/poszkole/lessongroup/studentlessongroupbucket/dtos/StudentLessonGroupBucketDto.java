@@ -1,6 +1,6 @@
 package com.tomekw.poszkole.lessongroup.studentlessongroupbucket.dtos;
 
-import com.tomekw.poszkole.users.student.dtos.StudentListDto;
+import com.tomekw.poszkole.user.student.dtos.StudentListDto;
 import lombok.Builder;
 
 import java.math.BigDecimal;

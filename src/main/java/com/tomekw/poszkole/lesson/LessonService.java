@@ -14,7 +14,7 @@ import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.timetable.TimetableService;
-import com.tomekw.poszkole.users.teacher.TeacherRepository;
+import com.tomekw.poszkole.user.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

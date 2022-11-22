@@ -1,12 +1,12 @@
 package com.tomekw.poszkole;
 
-import com.tomekw.poszkole.users.dtos.UserRegistrationDto;
+import com.tomekw.poszkole.user.dtos.UserRegistrationDto;
 
-import com.tomekw.poszkole.users.parent.ParentService;
-import com.tomekw.poszkole.users.student.StudentService;
-import com.tomekw.poszkole.users.teacher.TeacherService;
-import com.tomekw.poszkole.users.userrole.UserRole;
-import com.tomekw.poszkole.users.userrole.UserRoleRepository;
+import com.tomekw.poszkole.user.parent.ParentService;
+import com.tomekw.poszkole.user.student.StudentService;
+import com.tomekw.poszkole.user.teacher.TeacherService;
+import com.tomekw.poszkole.user.userrole.UserRole;
+import com.tomekw.poszkole.user.userrole.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

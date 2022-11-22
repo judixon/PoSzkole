@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.security;
 
-import com.tomekw.poszkole.users.UserService;
-import com.tomekw.poszkole.users.dtos.UserCredentialsDto;
+import com.tomekw.poszkole.user.UserService;
+import com.tomekw.poszkole.user.dtos.UserCredentialsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

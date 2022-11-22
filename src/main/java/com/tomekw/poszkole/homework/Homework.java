@@ -1,8 +1,8 @@
 package com.tomekw.poszkole.homework;
 
 import com.tomekw.poszkole.lesson.Lesson;
-import com.tomekw.poszkole.users.student.Student;
-import com.tomekw.poszkole.users.teacher.Teacher;
+import com.tomekw.poszkole.user.student.Student;
+import com.tomekw.poszkole.user.teacher.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

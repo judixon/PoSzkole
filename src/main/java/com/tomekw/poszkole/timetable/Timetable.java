@@ -1,7 +1,7 @@
 package com.tomekw.poszkole.timetable;
 
 import com.tomekw.poszkole.timetable.week.Week;
-import com.tomekw.poszkole.users.teacher.Teacher;
+import com.tomekw.poszkole.user.teacher.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

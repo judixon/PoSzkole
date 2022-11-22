@@ -10,10 +10,10 @@ import com.tomekw.poszkole.payment.dtos.PaymentDto;
 import com.tomekw.poszkole.payment.dtos.PaymentSaveDto;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
-import com.tomekw.poszkole.users.parent.Parent;
-import com.tomekw.poszkole.users.parent.ParentRepository;
-import com.tomekw.poszkole.users.parent.ParentService;
-import com.tomekw.poszkole.users.student.Student;
+import com.tomekw.poszkole.user.parent.Parent;
+import com.tomekw.poszkole.user.parent.ParentRepository;
+import com.tomekw.poszkole.user.parent.ParentService;
+import com.tomekw.poszkole.user.student.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
