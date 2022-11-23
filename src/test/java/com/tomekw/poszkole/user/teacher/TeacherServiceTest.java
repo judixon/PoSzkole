@@ -74,12 +74,12 @@ class TeacherServiceTest {
     @Test
     void getTeacher_returnsTeacherListDto_whenTeacherIsFound() {
         //given
-        Long teachersId = 1L;
+        Long teacherId = 1L;
 
         //when
         when(commonRepositoriesFindMethods.getTeacherFromRepositoryById(anyLong())).thenReturn(new Teacher());
         when(teacherDtoMapper.mapToTeacherListDto(any(Teacher.class))).thenReturn(TeacherListDto.builder().build());
-        TeacherListDto teacherListDto = teacherService.getTeacher(teachersId);
+        TeacherListDto teacherListDto = teacherService.getTeacher(teacherId);
 
         //then
         assertThat(teacherListDto).isNotNull();

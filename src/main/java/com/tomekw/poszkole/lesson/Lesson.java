@@ -3,8 +3,7 @@ package com.tomekw.poszkole.lesson;
 import com.tomekw.poszkole.homework.Homework;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +11,8 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder(toBuilder = true)
+@AllArgsConstructor
 @NoArgsConstructor
 public class Lesson {
     @Id

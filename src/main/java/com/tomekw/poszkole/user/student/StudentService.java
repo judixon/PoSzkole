@@ -96,7 +96,7 @@ public class StudentService {
         return commonRepositoriesFindMethods.getStudentFromRepositoryById(studentId)
                 .getHomeworkList()
                 .stream()
-                .map(homeworkDtoMapper::mapToHomeworkListStudentParentViewDto)
+                .map(homeworkDtoMapper::mapToHomeworkListDefaultViewDto)
                 .toList();
     }
 
@@ -143,14 +143,14 @@ public class StudentService {
     }
 
     private void addStudentToGivenGroups(StudentUpdateDto studentUpdateDto, Student student) {
-        for (Long grupId : findIdsOfGroupsToAddStudentTo(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
-            lessonGroupService.addStudentToGroup(student, grupId);
+        for (Long groupId : findIdsOfGroupsToAddStudentTo(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
+            lessonGroupService.addStudentToGroup(student, groupId);
         }
     }
 
     private void removeStudentFromGivenGroups(StudentUpdateDto studentUpdateDto, Student student) {
-        for (Long grupId : findIdsOfGroupsToRemoveStudentFrom(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
-            lessonGroupService.removeStudentFromGroup(student, grupId);
+        for (Long groupId : findIdsOfGroupsToRemoveStudentFrom(new ArrayList<>(student.getStudentLessonGroupBucketList().stream().map(StudentLessonGroupBucket::getLessonGroup).map(LessonGroup::getId).toList()), new ArrayList<>(studentUpdateDto.getLessonGroupsIds()))) {
+            lessonGroupService.removeStudentFromGroup(student, groupId);
         }
     }
 

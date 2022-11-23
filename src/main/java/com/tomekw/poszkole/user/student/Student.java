@@ -47,6 +47,7 @@ public class Student extends User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         return super.equals(o);
     }
 
@@ -57,9 +58,10 @@ public class Student extends User {
 
     @Override
     public String toString() {
+        String parentData = Objects.nonNull(this.parent)?parent.getName()+parent.getSurname():"Parent not linked with student";
         return "Student{" +
                 "ID=" + super.getId() +
-                ", parent=" + parent.getName() + " " + parent.getSurname() +
+                ", parent=" + parentData +
                 ", homeworkList=" + homeworkList.stream().map(Homework::getId) +
                 ", studentLessonBucketList=" + studentLessonBucketList.stream().map(StudentLessonBucket::getLesson).map(Lesson::getId) +
                 ", studentGroupBucketList=" + studentLessonGroupBucketList.stream().map(StudentLessonGroupBucket::getLessonGroup).map(lessonGroup -> lessonGroup.getId() + " " + lessonGroup.getName() + " " + lessonGroup.getLessonGroupSubject()) +

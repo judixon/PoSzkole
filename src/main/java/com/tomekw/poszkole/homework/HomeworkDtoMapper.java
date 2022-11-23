@@ -52,7 +52,7 @@ public class HomeworkDtoMapper {
                 .build();
     }
 
-    public HomeworkListDefaultViewDto mapToHomeworkListStudentParentViewDto(Homework homework) {
+    public HomeworkListDefaultViewDto mapToHomeworkListDefaultViewDto(Homework homework) {
         return HomeworkListDefaultViewDto.builder()
                 .homeworkReceiverId(homework.getHomeworkReceiver().getId())
                 .homeworkReceiverName(homework.getHomeworkReceiver().getName())

@@ -2,14 +2,15 @@ package com.tomekw.poszkole.lesson.studentlessonbucket;
 
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.user.student.Student;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@RequiredArgsConstructor
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentLessonBucket {
 
     @Id

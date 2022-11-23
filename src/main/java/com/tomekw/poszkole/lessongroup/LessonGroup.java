@@ -7,6 +7,7 @@ import com.tomekw.poszkole.user.teacher.Teacher;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class LessonGroup {
 
     @Id
@@ -56,8 +58,6 @@ public class LessonGroup {
         this.lessons = lessons;
     }
 
-    public LessonGroup() {
-    }
 
     @Override
     public String toString() {
