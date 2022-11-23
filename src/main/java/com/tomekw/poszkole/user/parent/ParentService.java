@@ -54,12 +54,13 @@ public class ParentService {
 
     ParentInfoDto getParent(Long parentId) {
         resourceAccessChecker.checkParentDetailedDataAccess(parentId);
-
-        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(parentId);
-        return parentDtoMapper.mapToParentInfoDto(parent);
+        return parentDtoMapper.mapToParentInfoDto(commonRepositoriesFindMethods.getParentFromRepositoryById(parentId));
     }
 
     void deleteParent(Long parentId) {
+        Parent parent = commonRepositoriesFindMethods.getParentFromRepositoryById(parentId);
+        unlinkPaymentsFromParent(parent);
+        unlinkStudentsFromParent(parent);
         parentRepository.deleteById(parentId);
     }
 
@@ -79,7 +80,7 @@ public class ParentService {
         return commonRepositoriesFindMethods.getParentFromRepositoryById(parentId)
                 .getPaymentList()
                 .stream()
-                .map(paymentDtoMapper::mapToPaymentTeacherListViewDto)
+                .map(paymentDtoMapper::mapToPaymentListViewDto)
                 .toList();
     }
 
@@ -133,6 +134,14 @@ public class ParentService {
                 .map(Payment::getCost)
                 .reduce(BigDecimal.ZERO, BigDecimal::subtract);
         parent.setDebt(debt);
+    }
+
+    private void unlinkStudentsFromParent(Parent parent) {
+        parent.getPaymentList().forEach(payment -> payment.setParentOfStudent(null));
+    }
+
+    private void unlinkPaymentsFromParent(Parent parent) {
+        parent.getStudentList().forEach(student -> student.setParent(null));
     }
 
     private void coverPaymentIfPossible(Payment payment, Parent parent) {

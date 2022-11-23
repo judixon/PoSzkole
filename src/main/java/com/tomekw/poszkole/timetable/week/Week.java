@@ -4,12 +4,10 @@ package com.tomekw.poszkole.timetable.week;
 import com.tomekw.poszkole.lesson.Lesson;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.mapping.Collection;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -48,13 +46,13 @@ public class Week {
     public Week(LocalDate weekStartDate, LocalDate weekEndDate) {
         this.weekStartDate = weekStartDate;
         this.weekEndDate = weekEndDate;
-        this.mondayLessons = Collections.EMPTY_LIST;
-        this.tuesdayLessons = Collections.EMPTY_LIST;
-        this.wednesdayLessons = Collections.EMPTY_LIST;
-        this.thursdayLessons = Collections.EMPTY_LIST;
-        this.fridayLessons = Collections.EMPTY_LIST;
-        this.saturdayLessons = Collections.EMPTY_LIST;
-        this.sundayLessons = Collections.EMPTY_LIST;
+        this.mondayLessons = new ArrayList<>();
+        this.tuesdayLessons = new ArrayList<>();
+        this.wednesdayLessons = new ArrayList<>();
+        this.thursdayLessons = new ArrayList<>();
+        this.fridayLessons = new ArrayList<>();
+        this.saturdayLessons = new ArrayList<>();
+        this.sundayLessons = new ArrayList<>();
     }
 
     @Override

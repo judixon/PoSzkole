@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +36,8 @@ public class UserDtoMapper {
                 userRegistrationDtoPasswordEncoder.encodePassword(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST,
+                new ArrayList<>(),
+                new ArrayList<>(),
                 new Timetable()
         );
     }
@@ -54,9 +54,9 @@ public class UserDtoMapper {
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
                 null,
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST);
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>());
     }
 
     public Parent mapToParent(UserRegistrationDto userRegistrationDto) {
@@ -70,8 +70,8 @@ public class UserDtoMapper {
                 userRegistrationDtoPasswordEncoder.encodePassword(userRegistrationDto.getPassword()),
                 new Mailbox(),
                 userRoleMapper.mapToUserRoleList(userRegistrationDto.getRoles()),
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST,
+                new ArrayList<>(),
+                new ArrayList<>(),
                 BigDecimal.ZERO,
                 BigDecimal.ZERO);
     }

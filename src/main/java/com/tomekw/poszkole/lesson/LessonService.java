@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -121,9 +120,9 @@ public class LessonService {
                 "none",
                 "none",
                 lessonGroup,
-                Collections.EMPTY_LIST,
-                Collections.EMPTY_LIST,
-                lessonSaveDto.startDateTime().plusDays(incrementDays).isAfter(LocalDateTime.now()) ? studentLessonBucketList : Collections.EMPTY_LIST,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                lessonSaveDto.startDateTime().plusDays(incrementDays).isAfter(LocalDateTime.now()) ? studentLessonBucketList : new ArrayList<>(),
                 LessonStatus.WAITING);
         lesson.getStudentLessonBucketList().forEach(studentLessonBucket -> studentLessonBucket.setLesson(lesson));
         return lesson;

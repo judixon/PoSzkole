@@ -11,7 +11,7 @@ import com.tomekw.poszkole.user.teacher.TeacherDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Service
@@ -31,9 +31,9 @@ public class LessonGroupDtoMapper {
                 .prizePerStudent(lessonGroupCreateDTO.prizePerStudent())
                 .lessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupCreateDTO.groupSubject().toUpperCase()))
                 .teacher(teacher)
-                .homeworkList(Collections.EMPTY_LIST)
-                .studentLessonGroupBucketList(Collections.EMPTY_LIST)
-                .lessons(Collections.EMPTY_LIST)
+                .homeworkList(new ArrayList<>())
+                .studentLessonGroupBucketList(new ArrayList<>())
+                .lessons(new ArrayList<>())
                 .build();
     }
 

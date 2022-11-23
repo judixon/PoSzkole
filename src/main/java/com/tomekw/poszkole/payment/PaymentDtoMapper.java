@@ -22,7 +22,7 @@ public class PaymentDtoMapper {
                 .build();
     }
 
-    public PaymentListViewDto mapToPaymentTeacherListViewDto(Payment payment) {
+    public PaymentListViewDto mapToPaymentListViewDto(Payment payment) {
         return PaymentListViewDto.builder()
                 .id(payment.getId())
                 .lessonToPayStartDateTime(payment.getLessonToPay().getStartDateTime())
