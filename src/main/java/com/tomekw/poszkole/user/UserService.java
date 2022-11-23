@@ -44,9 +44,9 @@ public class UserService {
         return Optional.empty();
     }
 
-    public void updateUserWithStandardUserData(User parent, UserRegistrationDto userRegistrationDto) {
-        validateUniquenessOfUsername(parent, userRegistrationDto);
-        updateStandardUserData(parent, userRegistrationDto);
+    public void updateUserWithStandardUserData(User user, UserRegistrationDto userRegistrationDto) {
+        validateUniquenessOfUsername(user, userRegistrationDto);
+        updateStandardUserData(user, userRegistrationDto);
     }
 
     private void validateUniquenessOfUsername(User user, UserRegistrationDto userRegistrationDto) {

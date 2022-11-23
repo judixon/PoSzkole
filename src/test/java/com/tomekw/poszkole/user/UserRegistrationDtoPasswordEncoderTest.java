@@ -20,7 +20,7 @@ class UserRegistrationDtoPasswordEncoderTest {
     private UserRegistrationDtoPasswordEncoder userRegistrationDtoPasswordEncoder;
 
     @Test
-    void shouldAddBcryptPrefixToGivenPassword() {
+    void encodePassword_shouldEncodeAndAddBcryptPrefixToGivenPassword() {
         //given
         final String password = "password";
         final String bcryptPrefix = "{bcrypt}";

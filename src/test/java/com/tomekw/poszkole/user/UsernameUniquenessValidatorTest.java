@@ -25,7 +25,7 @@ class UsernameUniquenessValidatorTest {
     private StudentRepository studentRepository;
 
     @Test
-    void shouldThrowNotUniqueUsernameException() {
+    void validate_shouldThrowNotUniqueUsernameException_whenUserWithGivenUsernameIsFoundInRepository() {
         //given
 
         //when

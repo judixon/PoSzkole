@@ -46,7 +46,7 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void updateUserWithStandardUserData() {
+    void updateUserWithStandardUserData_shouldSetNewValuesToUserFields() {
         //given
         Parent inputExampleUser = Parent.builder()
                 .name("Tom")
@@ -90,7 +90,7 @@ class UserServiceTest {
     }
 
     @Nested
-    class findCredentialsByUsernameTest {
+    class findCredentialsByUsername {
 
         @Test
         void shouldReturnOptionalWithCredentialsOfParent() {

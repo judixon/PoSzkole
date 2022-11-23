@@ -30,10 +30,10 @@ class UserRoleMapperTest {
                     String roleName = invocationOnMock.getArgument(0);
 
                     if (roleName.equals("ADMIN")) {
-                        return Optional.of(UserRole.builder().name("admin").build());
+                        return Optional.of(new UserRole());
                     }
                     if (roleName.equals("TEACHER")) {
-                        return Optional.of(UserRole.builder().name("teacher").build());
+                        return Optional.of(new UserRole());
                     }
                     return Optional.empty();
                 }
@@ -41,29 +41,25 @@ class UserRoleMapperTest {
     }
 
     @Test
-    void shouldReturnListOfRoles() {
+    void mapToUserRoleList_shouldReturnListOfRoles_whenAllGivenRolesAreFoundInRepo() {
         //given
         List<String> inputRoles = List.of("ADMIN", "TEACHER");
 
         //when
-        List<UserRole> expectedResult = List.of(UserRole.builder().name("admin").build(),
-                UserRole.builder().name("teacher").build());
-
         List<UserRole> outputRoles = userRoleMapper.mapToUserRoleList(inputRoles);
 
         //then
-        assertThat(expectedResult).isEqualTo(outputRoles);
+        assertThat(outputRoles).hasSize(2);
     }
 
     @Test
-    void shouldThrowRequestedUserRolesNotFoundException() {
+    void mapToUserRoleList_shouldThrowRequestedUserRolesNotFoundException_atLeastOneGivenRoleIsNotFoundInRepo() {
         //given
-        List<String> inputRoles = List.of("asd", "pops");
+        List<String> inputRoles = List.of("asd");
 
         //when
 
         //then
         assertThrows(RequestedUserRolesNotFoundException.class, () -> userRoleMapper.mapToUserRoleList(inputRoles));
     }
-
 }

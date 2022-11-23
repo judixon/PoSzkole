@@ -8,6 +8,7 @@ import com.tomekw.poszkole.user.User;
 import com.tomekw.poszkole.user.userrole.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Entity
 @Data
 @NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 public class Teacher extends User {
 
     @OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST})
@@ -39,8 +41,7 @@ public class Teacher extends User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (super.equals(o)) return true;
-        return false;
+        return super.equals(o);
     }
 
     @Override
