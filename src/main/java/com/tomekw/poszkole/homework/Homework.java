@@ -3,6 +3,8 @@ package com.tomekw.poszkole.homework;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.user.student.Student;
 import com.tomekw.poszkole.user.teacher.Teacher;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@Builder(toBuilder = true)
+@AllArgsConstructor
 @NoArgsConstructor
 public class Homework {
 

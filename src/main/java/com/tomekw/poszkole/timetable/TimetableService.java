@@ -6,11 +6,14 @@ import com.tomekw.poszkole.timetable.week.WeekService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class TimetableService {
 
-private final WeekService weekService;
+    private final WeekService weekService;
 
     public void addLessonToTimetable(Lesson lesson) {
         Timetable timetable = lesson.getOwnedByGroup().getTeacher().getTimetable();
@@ -30,7 +33,7 @@ private final WeekService weekService;
         for (Week w : timetable.getWeekList()) {
             if (lesson.getStartDateTime().toLocalDate().isAfter(w.getWeekStartDate().minusDays(1)) &&
                     lesson.getStartDateTime().toLocalDate().isBefore(w.getWeekEndDate().plusDays(1))) {
-               weekService.addLessonToWeek(lesson,w);
+                weekService.addLessonToWeek(lesson,w);
                 return true;
             }
         }
