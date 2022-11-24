@@ -145,7 +145,7 @@ public class ResourceAccessChecker {
     private void evaluateThatLessonBelongsToLessonGroupOwnedByTeacher(Long lessonId) {
         Teacher teacher = commonRepositoriesFindMethods.getTeacherFromRepositoryByUsername(getUsernameFromSecurityContext());
         Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(lessonId);
-        if (lesson.getOwnedByGroup().getTeacher().getUsername().equals(teacher.getUsername())) {
+        if (!lesson.getOwnedByGroup().getTeacher().getUsername().equals(teacher.getUsername())) {
             throw new NoAccessToExactResourceException(teacher, lesson, lessonId);
         }
     }
@@ -155,11 +155,11 @@ public class ResourceAccessChecker {
     }
 
     private HashSet<String> getUserRoles() {
-        return new HashSet<>(SecurityContextHolder.getContext()
+        return SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toCollection(HashSet::new));
     }
 }
