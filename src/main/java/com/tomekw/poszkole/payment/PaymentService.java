@@ -60,6 +60,10 @@ public class PaymentService {
     }
 
     void deletePayment(Long id) {
+        Payment payment = commonRepositoriesFindMethods.getPaymentFromRepositoryById(id);
+        Parent parent = payment.getParentOfStudent();
+        parent.getPaymentList().remove(payment);
+        parentService.refreshDebt(parent);
         paymentRepository.deleteById(id);
     }
 
