@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -159,6 +160,128 @@ class WeekServiceTest {
 
             //then
             assertThat(week.getSundayLessons()).hasSize(1);
+        }
+    }
+
+    @Nested
+    class removeLessonFromWeek {
+        @Test
+        void removeLessonFromWeekMondayLessonList_whenLessonStartDateTimeIsMonday() {
+            //given
+            Lesson mondayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 21), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .mondayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(mondayLesson, week);
+
+            //then
+            assertThat(week.getMondayLessons()).hasSize(0);
+        }
+
+        @Test
+        void removeLessonFromWeekTuesdayLessonList_whenLessonStartDateTimeIsTuesday() {
+            //given
+            Lesson tuesdayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 22), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .tuesdayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(tuesdayLesson, week);
+
+            //then
+            assertThat(week.getTuesdayLessons()).hasSize(0);
+        }
+
+        @Test
+        void removeLessonFromWeekWednesdayLessonList_whenLessonStartDateTimeIsWednesday() {
+            //given
+            Lesson wednesdayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 23), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .wednesdayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(wednesdayLesson, week);
+
+            //then
+            assertThat(week.getWednesdayLessons()).hasSize(0);
+        }
+
+        @Test
+        void removeLessonFromWeekThursdayLessonList_whenLessonStartDateTimeIsThursday() {
+            //given
+            Lesson thursdayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 24), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .thursdayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(thursdayLesson, week);
+
+            //then
+            assertThat(week.getThursdayLessons()).hasSize(0);
+        }
+
+        @Test
+        void removeLessonFromWeekFridayLessonList_whenLessonStartDateTimeIsFriday() {
+            //given
+            Lesson fridayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 25), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .fridayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(fridayLesson, week);
+
+            //then
+            assertThat(week.getFridayLessons()).hasSize(0);
+        }
+
+        @Test
+        void removeLessonFromWeekSaturdayLessonList_whenLessonStartDateTimeIsSaturday() {
+            //given
+            Lesson saturdayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 26), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .saturdayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(saturdayLesson, week);
+
+            //then
+            assertThat(week.getSaturdayLessons()).hasSize(0);
+        }
+
+        @Test
+        void removeLessonFromWeekSundayLessonList_whenLessonStartDateTimeIsSunday() {
+            //given
+            Lesson sundayLesson = Lesson.builder()
+                    .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 27), LocalTime.now()))
+                    .build();
+            Week week = Week.builder()
+                    .sundayLessons(new ArrayList<>())
+                    .build();
+
+            //when
+            weekService.removeLessonFromWeek(sundayLesson, week);
+
+            //then
+            assertThat(week.getSundayLessons()).hasSize(0);
         }
     }
 }

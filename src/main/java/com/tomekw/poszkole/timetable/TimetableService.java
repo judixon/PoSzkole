@@ -23,6 +23,12 @@ public class TimetableService {
         }
     }
 
+    public void removeLessonFromTimetable(Lesson lesson){
+        Timetable timetable = lesson.getOwnedByGroup().getTeacher().getTimetable();
+        Optional<Week> week = getWeekFromTimetableMatchedToLesson(lesson,timetable);
+        week.ifPresent(value -> weekService.removeLessonFromWeek(lesson, value));
+    }
+
     private void addNewWeekToTimetableWithLesson(Lesson lesson, Timetable timetable) {
         Week week = weekService.createNewWeekFromLesson(lesson);
         weekService.addLessonToWeek(lesson, week);
@@ -38,5 +44,15 @@ public class TimetableService {
             }
         }
         return false;
+    }
+
+    private Optional<Week> getWeekFromTimetableMatchedToLesson(Lesson lesson, Timetable timetable) {
+        for (Week week : timetable.getWeekList()) {
+            if (lesson.getStartDateTime().toLocalDate().isAfter(week.getWeekStartDate().minusDays(1)) &&
+                    lesson.getStartDateTime().toLocalDate().isBefore(week.getWeekEndDate().plusDays(1))) {
+                return Optional.of(week);
+            }
+        }
+        return Optional.empty();
     }
 }

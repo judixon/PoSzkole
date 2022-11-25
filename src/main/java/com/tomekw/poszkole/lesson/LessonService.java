@@ -9,11 +9,16 @@ import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketRepository;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentPresenceStatus;
 import com.tomekw.poszkole.lessongroup.LessonGroup;
+import com.tomekw.poszkole.payment.Payment;
+import com.tomekw.poszkole.payment.PaymentRepository;
 import com.tomekw.poszkole.payment.PaymentService;
 import com.tomekw.poszkole.security.ResourceAccessChecker;
 import com.tomekw.poszkole.shared.CommonRepositoriesFindMethods;
 import com.tomekw.poszkole.shared.DefaultExceptionMessages;
 import com.tomekw.poszkole.timetable.TimetableService;
+import com.tomekw.poszkole.user.parent.Parent;
+import com.tomekw.poszkole.user.student.Student;
+import com.tomekw.poszkole.user.student.StudentRepository;
 import com.tomekw.poszkole.user.teacher.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +42,8 @@ public class LessonService {
     private final ResourceAccessChecker resourceAccessChecker;
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
     private final TimetableService timetableService;
+    private final PaymentRepository paymentRepository;
+    private final StudentRepository studentRepository;
 
     List<LessonDto> getAllLessons() {
         return lessonRepository.findAll().stream().map(lessonDtoMapper::mapToLessonDto).toList();
@@ -49,8 +56,16 @@ public class LessonService {
 
     void deleteLesson(Long id) {
         resourceAccessChecker.checkLessonDetailedDataAccessForTeacher(id);
+
+        Lesson lesson = commonRepositoriesFindMethods.getLessonFromRepositoryById(id);
+
+        timetableService.removeLessonFromTimetable(lesson);
+
+        removeLessonFromMatchingPayments(id, lesson);
+
         lessonRepository.deleteById(id);
     }
+
 
     @Transactional
     List<LessonDto> saveLesson(LessonSaveDto lessonSaveDto) {
@@ -90,6 +105,11 @@ public class LessonService {
         menageStudentsPaymentsAccordingToItsPresenceStatus(studentLessonBucketToUpdate);
 
         studentLessonBucketRepository.save(studentLessonBucketToUpdate);
+    }
+
+    private void removeLessonFromMatchingPayments(Long id, Lesson lesson) {
+        paymentRepository.findPaymentsFromGivenLesson(lesson.getId())
+                .forEach(payment -> payment.setLessonToPay(null));
     }
 
     private List<Lesson> getLessonsSequenceToSaveToRepository(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {

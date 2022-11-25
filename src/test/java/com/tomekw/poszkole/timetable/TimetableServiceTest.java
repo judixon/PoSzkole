@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,8 +40,9 @@ class TimetableServiceTest {
         @Test
         void addsNewWeekWithLessonInside_whenThereIsNoMatchingWeekToAddLesson() {
             //given
+            Week week = new Week(LocalDate.of(2022, 11, 26), LocalDate.of(2022, 11, 27));
             Timetable timetable = Timetable.builder()
-                    .weekList(new ArrayList<>())
+                    .weekList(new ArrayList<>(List.of(week)))
                     .build();
             Teacher teacher = Teacher.builder()
                     .timetable(timetable)
@@ -61,12 +63,12 @@ class TimetableServiceTest {
             //then
             verify(weekService).createNewWeekFromLesson(any(Lesson.class));
             verify(weekService).addLessonToWeek(any(Lesson.class), any(Week.class));
-            assertThat(timetable.getWeekList()).hasSize(1);
+            assertThat(timetable.getWeekList()).hasSize(2);
         }
 
         @ParameterizedTest
         @MethodSource("addsLessonToWeekOfTimetable_whenRequiredWeekExistsInTimetableWeekListArgs")
-        void addsLessonToWeekOfTimetable_whenRequiredWeekExistsInTimetableWeekList() {
+        void addsLessonToWeekOfTimetable_whenRequiredWeekExistsInTimetableWeekList(Week week) {
             //given
             Timetable timetable = Timetable.builder()
                     .weekList(new ArrayList<>())
@@ -81,7 +83,6 @@ class TimetableServiceTest {
                     .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 24), LocalTime.now()))
                     .ownedByGroup(lessonGroup)
                     .build();
-            Week week = new Week(LocalDate.of(2022, 11, 21), LocalDate.of(2022, 11, 27));
             timetable.getWeekList().add(week);
 
             //when
@@ -101,6 +102,70 @@ class TimetableServiceTest {
                     Arguments.of(new Week(LocalDate.of(2022, 11, 21), LocalDate.of(2022, 11, 24)))
             );
         }
+
+        @Nested
+        class removeLessonFromTimetable{
+            @ParameterizedTest
+            @MethodSource("removeLessonFromTimetable_whenProperWeekIsFoundInTimetableArgs")
+            void removeLessonFromWeek_whenProperWeekIsFoundInTimetable(Week week){
+                //given
+                Timetable timetable = Timetable.builder()
+                        .weekList(new ArrayList<>(List.of(week)))
+                        .build();
+                Teacher teacher = Teacher.builder()
+                        .timetable(timetable)
+                        .build();
+                LessonGroup lessonGroup = LessonGroup.builder()
+                        .teacher(teacher)
+                        .build();
+                Lesson lesson = Lesson.builder()
+                        .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 24), LocalTime.now()))
+                        .ownedByGroup(lessonGroup)
+                        .build();
+
+                //when
+                doNothing().when(weekService).removeLessonFromWeek(any(Lesson.class),any(Week.class));
+                timetableService.removeLessonFromTimetable(lesson);
+                //then
+                verify(weekService).removeLessonFromWeek(any(Lesson.class),any(Week.class));
+            }
+            private static Stream<Arguments> removeLessonFromTimetable_whenProperWeekIsFoundInTimetableArgs() {
+                return Stream.of(
+                        Arguments.of(new Week(LocalDate.of(2022, 11, 21), LocalDate.of(2022, 11, 27))),
+                        Arguments.of(new Week(LocalDate.of(2022, 11, 24), LocalDate.of(2022, 11, 27))),
+                        Arguments.of(new Week(LocalDate.of(2022, 11, 21), LocalDate.of(2022, 11, 24)))
+                );
+            }
+
+            @Test
+            void doNotRemoveLessonFromWeek_whenProperWeekIsNotFoundInTimetable(){
+                //given
+                Week week = new Week(LocalDate.of(2022, 11, 26), LocalDate.of(2022, 11, 27));
+                Timetable timetable = Timetable.builder()
+                        .weekList(new ArrayList<>(List.of(week)))
+                        .build();
+                Teacher teacher = Teacher.builder()
+                        .timetable(timetable)
+                        .build();
+                LessonGroup lessonGroup = LessonGroup.builder()
+                        .teacher(teacher)
+                        .build();
+                Lesson lesson = Lesson.builder()
+                        .startDateTime(LocalDateTime.of(LocalDate.of(2022, 11, 24), LocalTime.now()))
+                        .ownedByGroup(lessonGroup)
+                        .build();
+
+                //when
+                timetableService.removeLessonFromTimetable(lesson);
+                //then
+                verify(weekService,times(0)).removeLessonFromWeek(any(Lesson.class),any(Week.class));
+            }
+
+        }
+
+
+
+
 
 
     }

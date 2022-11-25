@@ -55,4 +55,16 @@ public class WeekService {
             case SUNDAY -> w.getSundayLessons().add(lesson);
         }
     }
+
+    public void removeLessonFromWeek(Lesson lesson, Week week){
+        switch (lesson.getStartDateTime().toLocalDate().getDayOfWeek()) {
+            case MONDAY -> week.getMondayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+            case TUESDAY -> week.getTuesdayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+            case WEDNESDAY -> week.getWednesdayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+            case THURSDAY -> week.getThursdayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+            case FRIDAY -> week.getFridayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+            case SATURDAY -> week.getSaturdayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+            case SUNDAY -> week.getSundayLessons().removeIf(lesson1 -> lesson1.getId().equals(lesson.getId()));
+        }
+    }
 }

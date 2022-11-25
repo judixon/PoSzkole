@@ -59,12 +59,10 @@ public class PaymentService {
         return paymentRepository.save(payment).getId();
     }
 
-    void deletePayment(Long id) {
-        Payment payment = commonRepositoriesFindMethods.getPaymentFromRepositoryById(id);
+    private void removePaymentFromParent(Payment payment) {
         Parent parent = payment.getParentOfStudent();
         parent.getPaymentList().remove(payment);
         parentService.refreshDebt(parent);
-        paymentRepository.deleteById(id);
     }
 
     public void createPaymentFromStudentLessonBucket(StudentLessonBucket studentLessonBucket) {
@@ -99,6 +97,12 @@ public class PaymentService {
                 studentLessonBucket.getLesson().getId());
 
         manageParentDataIfPaymentAlreadyExists(potentiallyExistingPaymentForGivenData, parent, studentLessonBucket);
+    }
+
+    void deletePayment(Long id) {
+        Payment payment = commonRepositoriesFindMethods.getPaymentFromRepositoryById(id);
+        removePaymentFromParent(payment);
+        paymentRepository.deleteById(id);
     }
 
     private void checkIfPaymentAlreadyExistsBeforeCreatingNewOne(StudentLessonBucket studentLessonBucket) {
