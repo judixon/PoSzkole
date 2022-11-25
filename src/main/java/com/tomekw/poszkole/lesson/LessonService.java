@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -61,7 +62,7 @@ public class LessonService {
 
         timetableService.removeLessonFromTimetable(lesson);
 
-        removeLessonFromMatchingPayments(id, lesson);
+        removeLessonFromMatchingPayments(lesson);
 
         lessonRepository.deleteById(id);
     }
@@ -107,12 +108,12 @@ public class LessonService {
         studentLessonBucketRepository.save(studentLessonBucketToUpdate);
     }
 
-    private void removeLessonFromMatchingPayments(Long id, Lesson lesson) {
+    private void removeLessonFromMatchingPayments(Lesson lesson) {
         paymentRepository.findPaymentsFromGivenLesson(lesson.getId())
                 .forEach(payment -> payment.setLessonToPay(null));
     }
 
-    private List<Lesson> getLessonsSequenceToSaveToRepository(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {
+    private List<Lesson>  getLessonsSequenceToSaveToRepository(LessonGroup lessonGroup, LessonSaveDto lessonSaveDto) {
         LocalDate localDate = lessonSaveDto.startDateTime().toLocalDate();
         List<Lesson> lessons = new ArrayList<>();
         int daysIncrement = 0;
@@ -155,8 +156,6 @@ public class LessonService {
             incrementDays += 7;
         } else if (lessonSaveDto.lessonFrequencyStatus().equals(LessonFrequencyStatus.EVERY_SECOND_WEEK)) {
             incrementDays += 14;
-        } else {
-            throw new LessonFrequencyStatusUndefinedException();
         }
         return incrementDays;
     }
@@ -164,12 +163,11 @@ public class LessonService {
     private void updateLessonDataFromLessonUpdateDto(LessonUpdateDto lessonUpdateDto, Lesson lessonToUpdate) {
         lessonToUpdate.setLessonPlan(lessonUpdateDto.lessonPlan());
         lessonToUpdate.setNotes(lessonUpdateDto.notes());
-        lessonToUpdate.setLessonStatus(LessonStatus.valueOf(lessonUpdateDto.lessonStatus()));
+        lessonToUpdate.setLessonStatus(Objects.nonNull(lessonUpdateDto.lessonStatus())?LessonStatus.valueOf(lessonUpdateDto.lessonStatus()):null);
     }
 
     private StudentLessonBucket getStudentLessonBucketFromLessonByIds(Long lessonId, Long studentLessonBucketId) {
-        return lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new ResourceNotFoundException(DefaultExceptionMessages.LESSON_NOT_FOUND, lessonId))
+        return commonRepositoriesFindMethods.getLessonFromRepositoryById(lessonId)
                 .getStudentLessonBucketList()
                 .stream()
                 .filter(studentLessonBucket -> studentLessonBucket.getId().equals(studentLessonBucketId))
