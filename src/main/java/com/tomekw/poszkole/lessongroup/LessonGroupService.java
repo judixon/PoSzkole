@@ -3,6 +3,7 @@ package com.tomekw.poszkole.lessongroup;
 import com.tomekw.poszkole.exceptions.ResourceNotFoundException;
 import com.tomekw.poszkole.lesson.Lesson;
 import com.tomekw.poszkole.lesson.LessonDtoMapper;
+import com.tomekw.poszkole.lesson.LessonService;
 import com.tomekw.poszkole.lesson.dtos.LessonDto;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucket;
 import com.tomekw.poszkole.lesson.studentlessonbucket.StudentLessonBucketRepository;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,6 +45,7 @@ public class LessonGroupService {
     private final TeacherDtoMapper teacherDtoMapper;
     private final ResourceAccessChecker resourceAccessChecker;
     private final CommonRepositoriesFindMethods commonRepositoriesFindMethods;
+    private final LessonService lessonService;
 
     List<LessonGroupInfoDto> getAllLessonGroups() {
         return lessonGroupRepository.findAll().stream()
@@ -55,11 +58,12 @@ public class LessonGroupService {
     }
 
     Long saveGroup(LessonGroupCreateDto lessonGroupCreateDTO) {
-        LessonGroup group = lessonGroupDtoMapper.mapToLessonGroup(lessonGroupCreateDTO);
-        return lessonGroupRepository.save(group).getId();
+        return lessonGroupRepository.save(lessonGroupDtoMapper.mapToLessonGroup(lessonGroupCreateDTO)).getId();
     }
 
+    @Transactional
     void deleteLessonGroup(Long id) {
+        removeLessonsFromLessonGroup(id);
         lessonGroupRepository.deleteById(id);
     }
 
@@ -155,5 +159,11 @@ public class LessonGroupService {
         lessonGroup.setName(lessonGroupUpdateDto.name());
         lessonGroup.setPrizePerStudent(lessonGroupUpdateDto.prizePerStudent());
         lessonGroupRepository.save(lessonGroup);
+    }
+
+    private void removeLessonsFromLessonGroup(Long id) {
+        LessonGroup lessonGroup = commonRepositoriesFindMethods.getLessonGroupFromRepositoryById(id);
+        lessonGroup.getLessons().forEach(lesson -> lessonService.deleteLesson(lesson.getId()));
+        lessonGroup.setLessons(new ArrayList<>());
     }
 }

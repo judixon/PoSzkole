@@ -31,7 +31,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, apiException.responseHttpStatus());
     }
 
-    @ExceptionHandler(value = {LessonFrequencyStatusUndefinedException.class, PaymentAlreadyExistsException.class, StudentNotLinkedWithParentException.class })
+    @ExceptionHandler(value = {PaymentAlreadyExistsException.class, StudentNotLinkedWithParentException.class })
     public ResponseEntity<Object> handleExceptionsCausedByConflictInsideServer(RuntimeException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),

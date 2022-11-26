@@ -34,7 +34,7 @@ public class LessonGroup {
 
     private LessonGroupSubject lessonGroupSubject;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
