@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
-public abstract class User {
+public abstract class  User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
