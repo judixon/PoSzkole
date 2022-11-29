@@ -7,6 +7,7 @@
 * [Tools](#tools)
 * [Security information](#security-information)
 * [API documentation](#api-documentation)
+* [Test data](#test-data)
 * [Plans for future](#plans-for-future)
 
 ## General information
@@ -19,6 +20,43 @@ This application is dedicated to people and small businesses providing private l
 * Admin - this role is devided to Teachers. Administrators can create Teachers Accounts and have access to whole data of the application. They are able to delete other accounts.
 
 ### Functionalities
+**General**:
+* Creating accounts of Teachers, Parents and Students.
+	* *Usernames must be unique.* 
+* Updating data of accounts.
+	* *When setting new username it also must be unique.*
+* Deleting accounts
+	* *Deleting a student will remove him from all groups and lessons.*
+	* *Deleting a parent will delete all his payments.*
+	* *Deleting a teacher will leave all his groups without teacher - necessity of linking group with another teacher.*  	
+* Displaying data of accounts and any functional objects of this application.
+	* *There are some constraints connected with access to the particular data which are clearly explaind in Security paragraph. 
+* User authentication and authorisation.
+
+**Lesson Group**
+* Creating Lesson Group objects.
+	* *Each Lesson Group must have an assigned teacher initially.*
+	* *Each Lesson Group initial status is INACTIVE - it actually means nothing for backend logic, but for example in clients application You can only display in timetable lessons which come from groups with status ACTIVE.*	 
+* Updating data of Lesson Groups objects like name, subject, status, teacher owning the group, standard prize per lesson, lessons list and students list. 
+	* *Addind student to the group would cause adding him to lessons linked with the group, but only when a lesson start date-time is after date-time of adding student to the group.* 
+* Setting an individual prize per lesson for each student if required (only when student is added to the group).
+	* *Students are stored in Lesson Groups in special objects called Student Lesson Group Buckets - these objects store data about individual prize per lesson for particular student and a boolean value (acceptIndividualPrize) which determine if the prize for payment generated from Lesson object is individual or standard. * 
+* Deleting Lesson Groups objects.
+	* *It causes a deletion of all Lesson objects connected witch particular Lesson Group and as a result, every Payment object connected with deleted Lesson object won't have ane information about lesson from which the payment comes from.* 
+
+**Lesson**
+* Creating Lesson objects.
+	* *Lessons can be created only for the particular Lesson Group.*
+	* *Date-time of start and end of the lesson must be set during creation.* 
+	* *There is a possibility to create a sequence of lessons only by one request. First of all You need to set date variable (lessonSequenceBorder) which is the border of the lesson sequence - lessons would be created only up to this date. Next variable which is necessary to be set is frequency status (LessonFrequencyStatus) which accpets following values: EVERY_WEEK (lessons will be created every week, the same day and time of the week) and EVERY_SECOND_WEEK (lessons will be created every second week, the same day and time of the week).*
+	* *If You want to create just a single lesson, just specify start and end date-time and set lesson frequency status to SINGLE - that setting will ignore value of LessonSequenceBorder.* 
+	* *All students belonging to the group will by automaticly added to all lessons which date-time of starting is after date-time of creating lessons - so students won't be added to lessons that are created for the past and as a result, unable to be realized.*
+	* *Each new Lesson object initial status is WAITING - it can be changed into DONE or CANCELED. These values aren't conntected with any backend functionality, but they would be used for statistics module in the future, so actually it's only information data.*
+* Updating data of Lesson object like plan of the lesson, notes and lesson status.
+* Setting student presence status in particular lesson.
+	* *Students are stored in Lessons in special objects called Student Lesson Buckets - these objects store data about student presence status  and variable connected with this value (StudentPresenceStatus) accepts following values: PRESENT_PAYMENT, ABSENT_PAYMENT (for these two values, payments are automatically generated and saved in Parents account which is linked with the student, if there is enought money in parents wallet, these payments are automatically covered - switching from PRESENT_PAYMENT to ABSENT_PAYMENT and in the opposit way, won't generate additional payment), PRESENT_NO_PAYMENT, ABSENT_NO_PAYMENT, UNDETERMINED (for these three values, payment aren't generated, but if they were already generated, they are deleted and if they were already paid, the money is restored to parents account - parents debt is refreshed).* 
+* Deleting Lesson objects.
+	* *Lessons will be removed from teacher timetable and students data and all payments connected with that lesson won't have any information about that lesson.* 
 
 
 ## Technologies
@@ -40,12 +78,32 @@ This application is dedicated to people and small businesses providing private l
 
 ## Api documentation
 
+Detailed API documentation is provided be Swagger. If You want to see it in a raw JSON version, just run the application and enter the link given below:
+```
+http://localhost:8081/v2/api-docs
+```
+You can also check it out in more visually pleasant version in the link below:
+```
+http://localhost:8081/swagger-ui/index.html#/
+ ```
+ 
+## Test data
+For test purpose there is a class which initialize test data. It adds 4 users to the database, which are:
+1. [ADMIN, TEACHER] username: *teacheradmin*   password: *tacheradmin*
+2. [TEACHER] username: *teacher*   password: *teacher* 
+3. [STUDENT] username: *student*   password: *student*
+4. [PARENT] username: *parent*   password: *parent*
 
-### 
+You can find class initializing data by the following path:
+```
+src/main/java/com/tomekw/poszkole/DataInitialization.java
+```
 
 ## Plans for future
+* **Input data validation** - actually inputted data isn't validated. It isn't huge problem because now, only teacher are able to update or create data so the input is somehow controlled by responsibble users.
 * **Mailbox** - this functionality will provide internal mailbox which would be used for comunication mainly between teachers and students. This functionality will also allow teachers to handle homeworks and additional study materials. (The template of this functionality already exists in project, but haven't been completly implemented yet.)
 * **Homeworks** - this functionality will provide possibility of handling homeworks to students by teachers and to send solutions of these homeworks by students in text or by uploading graphic files. (The template of this functionality already exists in project, but haven't been completly implemented yet.)
 * **Keyclock** - actual authentication process is provided by Basic Auth. It's outdated solution, so there is a need to provide authentication by different identity and access management solution like Keycloak.
 * **Notifications** - this functionality will allow application to inform parents and students by email or SMS about canceled or rescheduled lessons, unpaid lessons, too high debt on parents account.
-* **Business Inteligence / Statistics panel** - this functionality will provide the possibility of controlling 
+* **Business Inteligence / Statistics panel** - this functionality will provide the possibility of controlling primary statistics like monthly or annual incomes, in the past or predicted incomes based on planned lessons. It would also allow to see statisitcs connected with exact students like their attendence to lessons or past and future incomes from student.
+
