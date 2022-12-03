@@ -38,7 +38,7 @@ public class StudentController {
     ResponseEntity<?> registerStudent(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedStudentId = studentService.registerStudent(userRegistrationDto);
         URI savedStudentUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{student-id}")
                 .buildAndExpand(savedStudentId)
                 .toUri();
         return ResponseEntity.created(savedStudentUri).body(savedStudentId);
@@ -72,7 +72,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getLessons(id));
     }
 
-    @GetMapping("/{id}/groups")
+    @GetMapping("/{id}/lesson-groups")
     ResponseEntity<List<LessonGroupListStudentViewDto>> getGroups(@PathVariable Long id) {
         return ResponseEntity.ok(studentService.getLessonGroups(id));
     }

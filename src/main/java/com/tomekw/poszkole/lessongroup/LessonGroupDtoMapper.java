@@ -27,7 +27,7 @@ public class LessonGroupDtoMapper {
 
         return LessonGroup.builder()
                 .name(lessonGroupCreateDTO.name())
-                .lessonGroupStatus(LessonGroupStatus.UNACTIVE)
+                .lessonGroupStatus(LessonGroupStatus.INACTIVE)
                 .prizePerStudent(lessonGroupCreateDTO.prizePerStudent())
                 .lessonGroupSubject(LessonGroupSubject.valueOf(lessonGroupCreateDTO.groupSubject().toUpperCase()))
                 .teacher(teacher)

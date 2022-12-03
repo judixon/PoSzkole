@@ -31,7 +31,7 @@ public class HomeworkController {
     ResponseEntity<Long> saveHomework(@RequestBody HomeworkSaveDto homeworkSaveDto) {
         Long savedHomeworkId = homeworkService.saveHomework(homeworkSaveDto);
         URI savedHomeworkUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{lessonId}")
+                .path("/{lesson-id}")
                 .buildAndExpand(savedHomeworkId)
                 .toUri();
         return ResponseEntity.created(savedHomeworkUri).body(savedHomeworkId);

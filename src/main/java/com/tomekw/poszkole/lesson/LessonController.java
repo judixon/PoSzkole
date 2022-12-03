@@ -63,8 +63,8 @@ public class LessonController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{lessonId}/students/{studentLessonBucketId}")
-    ResponseEntity<?> updateStudentLessonBucket(@PathVariable Long lessonId, @PathVariable Long studentLessonBucketId, @RequestBody JsonNode studentPresenceStatus) {
+    @PatchMapping("/{lesson-id}/student-lesson-buckets/{student-lesson-bucket-id}")
+    ResponseEntity<?> updateStudentLessonBucket(@PathVariable("lesson-id") Long lessonId, @PathVariable("student-lesson-bucket-id") Long studentLessonBucketId, @RequestBody JsonNode studentPresenceStatus) {
         lessonService.updateStudentLessonBucket(lessonId, studentLessonBucketId, studentPresenceStatus.get("studentPresenceStatus").asText());
         return ResponseEntity.noContent().build();
     }

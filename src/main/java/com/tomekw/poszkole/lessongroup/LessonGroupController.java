@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/lesson-groups")
 @RequiredArgsConstructor
 public class LessonGroupController {
 
@@ -81,14 +81,16 @@ public class LessonGroupController {
         return ResponseEntity.ok(lessonGroupService.getStudentGroupBuckets(id));
     }
 
-    @DeleteMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
-    ResponseEntity<?> deleteStudentGroupBucket(@PathVariable Long lessonGroupId, @PathVariable Long studentLessonGroupBucketId) {
+    @DeleteMapping("/{lesson-group-id}/student-lesson-group-buckets/{student-lesson-bucket-id}")
+    ResponseEntity<?> deleteStudentGroupBucket(@PathVariable("lesson-group-id") Long lessonGroupId,
+                                               @PathVariable("student-lesson-bucket-id") Long studentLessonGroupBucketId) {
         lessonGroupService.deleteStudentLessonGroupBucket(lessonGroupId, studentLessonGroupBucketId);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{lessonGroupId}/students/{studentLessonGroupBucketId}")
-    ResponseEntity<?> updateStudentGroupBucket(@PathVariable Long lessonGroupId, @PathVariable Long studentLessonGroupBucketId, @RequestBody JsonMergePatch patch) {
+    @PatchMapping("/{lesson-group-id}/student-lesson-group-buckets/{student-lesson-bucket-id}")
+    ResponseEntity<?> updateStudentGroupBucket(@PathVariable("lesson-group-id") Long lessonGroupId,
+                                               @PathVariable("student-lesson-bucket-id") Long studentLessonGroupBucketId, @RequestBody JsonMergePatch patch) {
         try {
             StudentLessonGroupBucketUpdateDto studentLessonGroupBucketToUpdate = lessonGroupService.getStudentLessonGroupBucketUpdateDto(studentLessonGroupBucketId, lessonGroupId);
             StudentLessonGroupBucketUpdateDto patchedStudentLessonGroupBucket = applyPatchStudentLessonGroupBucket(studentLessonGroupBucketToUpdate, patch);

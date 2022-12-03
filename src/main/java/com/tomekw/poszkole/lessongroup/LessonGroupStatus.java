@@ -3,7 +3,7 @@ package com.tomekw.poszkole.lessongroup;
 public enum LessonGroupStatus {
 
     ACTIVE("active"),
-    UNACTIVE("unactive");
+    INACTIVE("inactive");
 
     String description;
 

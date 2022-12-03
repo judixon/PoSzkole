@@ -35,7 +35,7 @@ public class TeacherController {
     ResponseEntity<Long> registerTeacher(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedTeacherId = teacherService.registerTeacher(userRegistrationDto);
         URI savedTeacherUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{teacher-id}")
                 .buildAndExpand(savedTeacherId)
                 .toUri();
         return ResponseEntity.created(savedTeacherUri).body(savedTeacherId);
@@ -69,7 +69,7 @@ public class TeacherController {
         return ResponseEntity.ok(teacherService.getHomeworkList(id));
     }
 
-    @GetMapping("/{id}/lessongroups")
+    @GetMapping("/{id}/lesson-groups")
     ResponseEntity<List<LessonGroupListTeacherViewDto>> getLessonGroupList(@PathVariable Long id) {
         return ResponseEntity.ok(teacherService.getLessonGroupList(id));
     }

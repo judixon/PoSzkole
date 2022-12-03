@@ -37,7 +37,7 @@ public class ParentController {
     ResponseEntity<?> registerParent(@RequestBody UserRegistrationDto userRegistrationDto) {
         Long savedParentId = parentService.registerParent(userRegistrationDto);
         URI savedParentUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
+                .path("/{parent-id}")
                 .buildAndExpand(savedParentId)
                 .toUri();
         return ResponseEntity.created(savedParentUri).body(savedParentId);
@@ -76,8 +76,8 @@ public class ParentController {
         return ResponseEntity.ok(parentService.getPayments(id));
     }
 
-    @GetMapping("/{parentId}/students/{studentId}")
-    ResponseEntity<StudentInfoParentViewDto> getStudent(@PathVariable Long parentId, @PathVariable Long studentId) {
+    @GetMapping("/{parent-id}/students/{student-id}")
+    ResponseEntity<StudentInfoParentViewDto> getStudent(@PathVariable("parent-id") Long parentId, @PathVariable("student-id") Long studentId) {
         return ResponseEntity.ok(parentService.getStudent(parentId, studentId));
     }
 
