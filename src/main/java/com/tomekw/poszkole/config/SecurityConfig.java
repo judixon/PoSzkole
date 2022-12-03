@@ -1,4 +1,4 @@
-package com.tomekw.poszkole.security;
+package com.tomekw.poszkole.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
