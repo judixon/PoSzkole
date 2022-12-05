@@ -12,6 +12,7 @@
 * [Security information](#security-information)
 * [API documentation](#api-documentation)
 * [Test data](#test-data)
+* [Docker image](#docker-image)
 * [Plans for future](#plans-for-future)
 
 ## General information
@@ -184,6 +185,19 @@ You can find class initializing data by the following path:
 ```
 src/main/java/com/tomekw/poszkole/DataInitialization.java
 ```
+
+##Docker image
+You can download docker image with this application by pulling it from Docker Hub using the command below:
+```
+docker pull judixon/poszkole:v1
+```
+
+And then run it using the next command:
+```
+docker run -e "SPRING_PROFILES_ACTIVE=dev" -p 80:8081 judixon/poszkole:v1
+```
+
+You can also change environment variable SPRING_PROFILES_ACTIVE to "prod" but then the application need to run with configured connection with PostgreSQL database. For the test purposes I recommend to create container with default "dev" profile (H2 database).
 
 ## Plans for future
 * **Input data validation** - actually inputted data isn't validated. It isn't huge problem because now, only teacher are able to update or create data so the input is somehow controlled by responsibble users.
