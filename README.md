@@ -80,7 +80,8 @@ This application is dedicated to people and small businesses providing private l
 * Spring Data
 * Spring Security
 * Project Lombok
-* MySQL
+* PostgreSQL
+* H2 Database
 * JUnit 5
 * Mockito
 
@@ -88,6 +89,8 @@ This application is dedicated to people and small businesses providing private l
 * IntelliJ IDEA
 * Postman
 * Swagger
+* Maven
+* Docker
 
 ## Security information
 In tables below, there are information about roles demanded from accounts requesting particular resource (endpoint).
